@@ -1,7 +1,7 @@
 package com.parkingapp.server.domain;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+// import java.util.Date;
 
 import javax.persistence.CascadeType;
 
@@ -27,38 +27,40 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	// @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	// @JoinColumn(name="user_id")
-    // @Column(name="location_id")
     @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="location_id")
     private Location locationId;
     @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     private UserInfo userId;
     @Column(name="start_date")
     private LocalDateTime startDate;
     @Column(name="end_date")
     private LocalDateTime endDate;
+    @Column(name="active")
+    private boolean active;
 
     public Booking() {
 
     }
 
-    public Booking(Location locationId, UserInfo userId, LocalDateTime startDate, LocalDateTime endDate) {
+    public Booking(Location locationId, UserInfo userId, LocalDateTime startDate, LocalDateTime endDate, boolean active) {
         this.locationId = locationId;
         this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.active = active;
     }
 
-    public Booking(int id, Location locationId, UserInfo userId, LocalDateTime startDate, LocalDateTime endDate) {
+    public Booking(int id, Location locationId, UserInfo userId, LocalDateTime startDate, LocalDateTime endDate, boolean active) {
         this.id = id;
         this.locationId = locationId;
         this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.active = active;
     }
+
 
     public int getId() {
         return id;
@@ -99,4 +101,18 @@ public class Booking {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+	@Override
+	public String toString() {
+		return "Booking [active=" + active + ", endDate=" + endDate + ", id=" + id + ", locationId=" + locationId
+				+ ", startDate=" + startDate + ", userId=" + userId + "]";
+	}
 }

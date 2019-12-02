@@ -1,5 +1,4 @@
-// Your personal API key.
-// Get it here: https://console.cloud.google.com/google/maps-apis
+// API key:  https://console.cloud.google.com/google/maps-apis
 const API_KEY = 'AIzaSyA46Qrg-800m-z9DJXdmmUG8vmpcKoakOM'
 const CALLBACK_NAME = 'gmapsCallback'
 
@@ -14,24 +13,18 @@ const initPromise = new Promise((resolve, reject) => {
 })
 
 export default function init () {
-  // If Google Maps already is initialized
-  // the `initPromise` should get resolved
-  // eventually.
   if (initialized) return initPromise
 
   initialized = true
-  // The callback function is called by
-  // the Google Maps script if it is
-  // successfully loaded.
+  // The callback function is called by the Google Maps script if it is successfully loaded.
   window[CALLBACK_NAME] = () => resolveInitPromise(window.google)
 
-  // We inject a new script tag into
-  // the `<head>` of our HTML to load
-  // the Google Maps script.
+  // We inject a new script tag into the `<head>` of our HTML to load the Google Maps script.
   const script = document.createElement('script')
   script.async = true
   script.defer = true
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=${CALLBACK_NAME}`
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=geometry&callback=${CALLBACK_NAME}`
+  // script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY`
   script.onerror = rejectInitPromise
   document.querySelector('head').appendChild(script)
 

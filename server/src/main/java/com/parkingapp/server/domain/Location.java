@@ -37,9 +37,15 @@ public class Location {
     private String postcode;
     @Transient 
     private String address;
+    @Column(name="gps_latitude")
+    private double latitude;
+    @Column(name="gps_longitude")
+    private double longitude;
+    @Column
+    private int spaces;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "locationId")
-	private List<Booking> bookings;
-
+    private List<Booking> bookings;
+    
     public Location() {
 
     }
@@ -60,6 +66,42 @@ public class Location {
         this.address1 = address1;
         this.address2 = address2;
         this.postcode = postcode;
+    }
+
+    public Location(int locationId, String country, String city, String address1, String address2, String postcode, double latitude, double longitude) {
+        this.locationId = locationId;
+        this.country = country;
+        this.city = city;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.postcode = postcode;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Location(String country, String city, String address1, String address2, String postcode, double latitude,
+           double longitude, int spaces) {
+        this.country = country;
+        this.city = city;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.postcode = postcode;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.spaces = spaces;
+}
+    
+    public Location(String country, String city, String address1, String address2, String postcode, String address,
+            double latitude, double longitude, List<Booking> bookings) {
+        this.country = country;
+        this.city = city;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.postcode = postcode;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.bookings = bookings;
     }
 
     public int getLocationId() {
@@ -110,6 +152,31 @@ public class Location {
         this.postcode = postcode;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+    
+    public int getSpaces() {
+        return spaces;
+    }
+
+    public void setSpaces(int spaces) {
+        this.spaces = spaces;
+    }
+	
+
     public List<Booking> getBookings() {
         return bookings;
     }
@@ -124,8 +191,8 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Location [address=" + address + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city
-                + ", country=" + country + ", locationId=" + locationId + ", postcode=" + postcode + "]";
+        return "Location [address=" + address + ", address1=" + address1 + ", address2=" + address2 + ", bookings="
+                + bookings + ", city=" + city + ", country=" + country + ", latitude=" + latitude + ", locationId="
+                + locationId + ", longitude=" + longitude + ", postcode=" + postcode + ", spaces=" + spaces + "]";
     }
-	
 }

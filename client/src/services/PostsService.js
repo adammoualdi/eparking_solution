@@ -11,24 +11,24 @@ export default {
     return Api.post('register', params)
   },
 
-  fetchPosts () {
-    return Api.get('posts')
+  getLocations () {
+    return Api.get('dashboard')
   },
 
-  addPost (params) {
-    return Api.post('posts', params)
+  getAvailableLocations (params) {
+    return Api.post('dashboard/available', params)
   },
 
-  updatePost (params) {
-    return Api.put('posts/' + params.id, params)
+  getUserDetails (params) {
+    return Api.get('profile/' + params)
   },
 
-  getPost (params) {
-    return Api.get('post/' + params.id)
+  bookParkingSlot (params) {
+    return Api.post('booking', params)
   },
 
-  deletePost (id) {
-    return Api.delete('posts/' + id)
+  getUserBookings (params) {
+    return Api.get('bookings/' + params)
   }
 
 }

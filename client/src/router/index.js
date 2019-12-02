@@ -2,10 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import Register from '@/components/Register'
-import Posts from '@/components/Posts'
-// import Test from '@/components/Test'
-import NewPost from '@/components/NewPost'
-import EditPost from '@/components/EditPost'
 import Login from '@/components/Login'
 import Authorisation from '@/components/Authorisation'
 import Landing from '@/components/Landing'
@@ -13,6 +9,7 @@ import Booking from '@/components/Booking'
 import Test from '@/components/Test'
 import MapSearch from '@/components/MapSearch'
 import Profile from '@/components/Profile'
+import UserBookings from '@/components/UserBookings'
 
 Vue.use(Router)
 
@@ -24,58 +21,63 @@ const router = new Router({
     {
       path: '/',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        requiresAuth: false
+      }
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: {
+        requiresAuth: false
+      }
     },
     {
       path: '/landing',
       name: 'Landing',
-      component: Landing
+      component: Landing,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
-      path: '/profile',
+      path: '/profile/:username',
       name: 'Profile',
-      component: Profile
+      component: Profile,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/search',
       name: 'MapSearch',
-      component: MapSearch
+      component: MapSearch,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/test',
       name: 'Test',
-      component: Test
+      component: Test,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
-      path: '/booking/:id',
+      path: '/booking',
       name: 'Booking',
-      component: Booking
-    },
-    {
-      path: '/posts',
-      name: 'Posts',
-      component: Posts,
+      component: Booking,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/posts/new',
-      name: 'NewPost',
-      component: NewPost,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/posts/:id',
-      name: 'EditPost',
-      component: EditPost,
+      path: '/bookings/:username',
+      name: 'UserBookings',
+      component: UserBookings,
       meta: {
         requiresAuth: true
       }
@@ -83,7 +85,10 @@ const router = new Router({
     {
       path: '/auth',
       name: 'Authorisation',
-      component: Authorisation
+      component: Authorisation,
+      meta: {
+        requiresAuth: false
+      }
     }
 
     // {
@@ -97,34 +102,15 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('BEFORE ROUTE')
   if (to.matched.some(record => record.meta.requiresAuth)) {
+    console.log('CHECKING JWT ')
     console.log('JWT ' + localStorage.getItem('jwt'))
-    if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === 'undefined') {
-      // next({
-      //   path: '/login',
-      //   params: { nextUrl: to.fullPath }
-      // })
+    if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined) {
       next({ name: 'Authorisation' })
-    // } else {
-    //   let user = JSON.parse(localStorage.getItem('user'))
-    //   if (to.matched.some(record => record.meta.is_admin)) {
-    //     if (user.is_admin === 1) {
-    //       next()
-    //     } else {
-    //       next({ name: 'Login' })
-    //     }
-    //   } else {
-    //     next()
-    //   }
     } else {
       next()
     }
-  // } else if (to.matched.some(record => record.meta.guest)) {
-  //   if (localStorage.getItem('jwt') === null) {
-  //     next()
-  //   } else {
-  //     next({ name: 'Login' })
-  //   }
   } else {
+    console.log('NOT CHECKING JWT')
     console.log('NEXT PIPELINE')
     next()
   }

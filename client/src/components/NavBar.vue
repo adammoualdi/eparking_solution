@@ -25,6 +25,7 @@ export default {
   data () {
     return {
       collapse: true,
+      username: null,
       menu: [
         {
           href: '/landing',
@@ -39,13 +40,14 @@ export default {
              */
         },
         {
-          href: '/profile',
+          href: '/profile/' + window.localStorage.getItem('username'),
           title: 'Profile',
           icon: 'fas fa-id-card'
         },
         {
-          title: 'Testing',
-          icon: 'fa fa-coffee'
+          href: '/bookings/' + window.localStorage.getItem('username'),
+          title: 'Bookings',
+          icon: 'fas fa-car'
         }
       ]
     }

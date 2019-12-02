@@ -4,22 +4,28 @@
         <b-row align-v="start">
             <b-col>
                 <b-form-input
+                        class="locationFormInput"
                         name="location"
+                        placeholder="Enter an address"
                         v-model="location">
                 </b-form-input>
+                <p class="error" v-show="invalidLoc">Location is required</p>
             </b-col>
         </b-row>
         <b-row align-v="center">
             <b-col>
-                <DatePicker v-model="arrivingTime"> </DatePicker>
-                <b-form-select name="arrivingTime" v-model="arrivingTime" :options="options"></b-form-select></b-col>
+                <Datetime type="datetime" v-model="$v.arrivingTime.$model" :minute-step=30></Datetime>
+                <!-- <p class="error" v-if="!$v.arrivingTime.required">this field is required</p> -->
+            </b-col>
             <b-col>
-                <DatePicker v-model="leavingTime"> </DatePicker>
-                <b-form-select name="leavingTime" v-model="leavingTime" :options="options"></b-form-select>
+                <Datetime type="datetime" v-model="$v.leavingTime.$model" @change="$v.leavingTime.$touch" :minute-step=30></Datetime>
+                <p class="error" v-show="invalidDate">Arrive date must be before leaving date</p>
+                <!-- <p class="error" v-if="!$v.arrivingTime.isValid">leaving time cannot be before arriving time</p> -->
             </b-col>
         </b-row>
         <b-row align-v="end">
             <b-col>
+              <button type="button" name="button" v-on:click="emitToParent">Search</button>
             </b-col>
         </b-row>
     </b-container>
@@ -27,48 +33,59 @@
 </template>
 
 <script>
-import DatePicker from '@/components/DatePicker'
+import DatePicker from '@/components/DateTimePicker'
+import { Datetime } from 'vue-datetime'
+// import { required } from 'vuelidate/lib/validators'
+// const check_times = (arrive, leave) => (arrive < leave)
+// import gmapsInit from '@/utils/gmaps'
+// import { Datetime } from 'vue-datetime';
 export default {
   name: 'MapSearch',
   components: {
-    DatePicker
+    DatePicker,
+    Datetime
   },
   data () {
     return {
       selected: null,
       location: null,
-      arrivingTime: null,
-      leavingTime: null,
-      options: [
-        { value: null, text: 'Please select a time' },
-        { value: '00', text: '00:00' },
-        { value: '01', text: '01:00' },
-        { value: '02', text: '02:00' },
-        { value: '03', text: '03:00' },
-        { value: '04', text: '04:00' },
-        { value: '05', text: '05:00' },
-        { value: '06', text: '06:00' },
-        { value: '07', text: '07:00' },
-        { value: '08', text: '08:00' },
-        { value: '09', text: '09:00' },
-        { value: '10', text: '10:00' },
-        { value: '11', text: '11:00' },
-        { value: '12', text: '12:00' },
-        { value: '13', text: '13:00' },
-        { value: '14', text: '14:00' },
-        { value: '15', text: '15:00' },
-        { value: '16', text: '16:00' },
-        { value: '17', text: '17:00' },
-        { value: '18', text: '18:00' },
-        { value: '19', text: '19:00' },
-        { value: '20', text: '20:00' },
-        { value: '21', text: '21:00' },
-        { value: '22', text: '22:00' },
-        { value: '23', text: '23:00' }
-      ],
-      range: {
-        start: new Date(), // Jan 16th, 2018
-        end: new Date() // Jan 19th, 2018
+      arrivingTime: ' ',
+      leavingTime: ' ',
+      invalidDate: false,
+      invalidLoc: false
+    }
+  },
+  validations: {
+    arrivingTime: {
+      // required
+    },
+    leavingTime: {
+      // required
+    }
+  },
+  async mounted () {
+    // const google = await gmapsInit()
+    // const geocoder = new google.maps.Geocoder()
+  },
+  methods: {
+    emitToParent (event) {
+      console.log(this.location)
+      this.invalidLoc = false
+      this.invalidDate = false
+      if (this.location === null) {
+        this.invalidLoc = true
+      } else if (this.arrivingTime >= this.leavingTime) {
+        this.invalidDate = true
+      } else {
+        var info = this.location
+        this.$emit('childToParent', info, this.arrivingTime, this.leavingTime)
+      }
+    },
+    isValid () {
+      if (this.arrivingTime <= this.leavingTime) {
+        return false
+      } else {
+        return true
       }
     }
   }
@@ -95,8 +112,22 @@ head {
 
 #MapSearchWrapper {
   display: block;
+  z-index: 20;
   /* float: right; */
 }
+
+/* .locationFormInput col{
+  width: 20px;
+} */
+
+/* .vdatetime-overlay {
+  width: calc(100% - 50px);
+  margin-left:50px;
+}
+
+.vdatetime-popup {
+
+} */
 
 /*
 #row1 {

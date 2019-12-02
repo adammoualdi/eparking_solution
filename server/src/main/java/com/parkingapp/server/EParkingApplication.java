@@ -1,6 +1,8 @@
 package com.parkingapp.server;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.parkingapp.server.domain.Booking;
 import com.parkingapp.server.domain.Car;
@@ -20,6 +22,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class EParkingApplication implements CommandLineRunner {
@@ -46,6 +50,9 @@ public class EParkingApplication implements CommandLineRunner {
 		UserInfo user2 = new UserInfo();
 		user2.setId(1);
 		user2.setUsername("username1");
+		user2.setFirstname("Adam");
+		user2.setLastname("Moualdi");
+		user2.setEmail("adammoualdi@hotmail.co.uk");
 		user2.setPassword(pe.encode("password123"));
 		user2.setRole(new Role(USER, "User"));
 		userRepo.save(user2);
@@ -71,8 +78,13 @@ public class EParkingApplication implements CommandLineRunner {
 		user3.setRole(new Role(TEST, "test"));
 		userRepo.save(user3);
 
-		Location loc = new Location("country", "city", "address1", "address2", "postcode");
+		// List<Booking> bookings = new ArrayList<>();
+
+		Location loc = new Location("United Kingdom", "Leicester", "address1", "address2", "LE1 7RH", 52.619497522, -1.121332848, 2);
 		locRepo.save(loc);
+
+		Location loc1 = new Location("United Kingdom", "Sheffield", "address1", "address2", "LE1 7RH", 53.37701, -1.46814, 5);
+		locRepo.save(loc1);
 
 		Car car = new Car(20, user2,"reg", "model");
 		carRepo.save(car);
@@ -82,29 +94,13 @@ public class EParkingApplication implements CommandLineRunner {
 		booking1.setLocationId(loc);
 		booking1.setUserId(user2);
 		booking1.setStartDate(LocalDateTime.now());
+		booking1.setActive(true);
 		bookingRepo.save(booking1);
+
+		// bookings.add(booking1);
 		
 		// Car car2 = new Car(2,user3,"reg2", "model2");
 		// carRepo.save(car2);
-		// LocationTest opLoc1 = new LocationTest();
-		// LocationTest opLoc2 = new LocationTest();
-		// LocationTest opLoc3 = new LocationTest();
-		 
-		//  opLoc1.setRegionId("UK");
-		//  opLoc2.setRegionId("UK");
-		//  opLoc3.setRegionId("UK");
-		 
-		//  opLoc1.setId("MAN");
-		//  opLoc2.setId("LON");
-		//  opLoc3.setId("GLA");
-		 
-		//  opLoc1.setName("Manchester");
-		//  opLoc2.setName("London");
-		//  opLoc3.setName("Glasgow");
-		 
-		//  locationRepo.save(opLoc1);
-		//  locationRepo.save(opLoc2);
-		//  locationRepo.save(opLoc3);
 		
 	}
 

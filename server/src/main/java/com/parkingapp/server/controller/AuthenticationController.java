@@ -47,7 +47,7 @@ public class AuthenticationController {
 		System.out.println(authenticationRequest.toString());
 		UserInfo user = userInfoRepo.findByUsername(authenticationRequest.getUsername());
 		// authenticationRequest.getRole().getRole()
-		return ResponseEntity.ok(new JwtResponse(token, user.getRole().getRole()));
+		return ResponseEntity.ok(new JwtResponse(token, user.getUsername(), user.getRole().getRole()));
 	}
 	
 	private void authenticate(String username, String password) throws Exception {

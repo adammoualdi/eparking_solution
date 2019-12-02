@@ -10,6 +10,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VCalendar from 'v-calendar'
 // import VueSidebarMenu from 'vue-sidebar-menu'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+import { Datetime } from 'vue-datetime'
+import 'vue-datetime/dist/vue-datetime.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -22,8 +24,11 @@ Vue.config.productionTip = false
 Vue.use(Vuelidate)
 Vue.use(BootstrapVue)
 Vue.use(VCalendar)
+Vue.use(Datetime)
 // Vue.use(VueSidebarMenu)
 // Vue.component('datepicker', Datepicker)
+
+// const bus = new Vue()
 
 /* eslint-disable no-new */
 new Vue({

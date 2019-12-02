@@ -2,34 +2,6 @@ package com.parkingapp.server.security;
 
 import org.springframework.context.annotation.Bean;
 
-//*************************************************************************
-// Security config file - enables authorisation for specific endpoints.
-// Usage of JWT.
-
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-
-//@EnableWebSecurity
-//@Configuration
-//public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//	@Bean
-//	public PasswordEncoder passwordEncoder(){
-//		PasswordEncoder encoder = new BCryptPasswordEncoder();
-//		return encoder;
-//	}
-//
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().disable();
-//    }
-//
-//}
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -81,8 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
+				// .addFilterBefore(corsFilter(), SessionManagementFilter.class) 
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/authenticate","/register","/dashboard").permitAll().
+				.authorizeRequests().antMatchers("/authenticate","/register","/dashboard","/dashboard/**", "/bookings/**", "/profile/**", "/booking").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

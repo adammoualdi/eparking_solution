@@ -6,6 +6,8 @@
 
 <script>
 import GoogleMapsApiLoader from "google-maps-api-loader";
+// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry">
+
 
 export default {
   props: {

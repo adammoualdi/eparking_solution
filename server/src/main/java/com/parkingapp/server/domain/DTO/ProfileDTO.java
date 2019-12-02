@@ -2,18 +2,6 @@ package com.parkingapp.server.domain.DTO;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
 import com.parkingapp.server.domain.Car;
 
 public class ProfileDTO {
@@ -22,14 +10,14 @@ public class ProfileDTO {
 	private String email;
 	private String firstname;
 	private String lastname;
-	private List<Car> cars;
+	private CarsDTO cars;
 	// private List<Booking> bookings;
 
 	public ProfileDTO() {
 		
     }
 
-    public ProfileDTO(String username, String email, String firstname, String lastname, List<Car> cars) {
+    public ProfileDTO(String username, String email, String firstname, String lastname, CarsDTO cars) {
         this.username = username;
         this.email = email;
         this.firstname = firstname;
@@ -69,11 +57,11 @@ public class ProfileDTO {
         this.lastname = lastname;
     }
 
-    public List<Car> getCars() {
+    public CarsDTO getCars() {
         return cars;
     }
 
-    public void setCars(List<Car> cars) {
+    public void setCars(CarsDTO cars) {
         this.cars = cars;
     }
     

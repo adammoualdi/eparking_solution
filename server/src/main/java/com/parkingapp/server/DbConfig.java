@@ -4,8 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-// THIS CLASS NEEDS TO BE CONFIGURED FOR OBVIOUS REASONS
- 
 
 @Configuration
 public class DbConfig {
