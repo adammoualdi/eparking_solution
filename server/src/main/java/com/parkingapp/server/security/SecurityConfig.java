@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable()
 				// .addFilterBefore(corsFilter(), SessionManagementFilter.class) 
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/authenticate","/register","/dashboard","/dashboard/**", "/bookings/**", "/profile/**", "/booking").permitAll().
+				.authorizeRequests().antMatchers("/authenticate","/register","/dashboard","/dashboard/**", "/bookings/**", "/profile/**", "/booking", "/locations", "/locations/**").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

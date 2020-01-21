@@ -63,6 +63,12 @@ public class JwtUserDetailsService implements UserDetailsService {
 		case EParkingApplication.ADMIN: 
 			roles.add("ROLE_ADMIN");
 			break;
+		case EParkingApplication.OWNER:
+			roles.add("ROLE_OWNER");
+			break;
+		case EParkingApplication.SECURITY:
+			roles.add("ROLE_SECURITY");
+			break;
 		}
 		return roles;
 	}

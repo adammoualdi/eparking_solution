@@ -1,7 +1,7 @@
 <template>
   <div id = "BookingWrapper">
     <div class="Nav">
-      <NavBar class="nav"> </NavBar>
+      <NavigationBar class="nav"> </NavigationBar>
     </div>
     <div class="BookingInfoWrapper">
       <div class="BookingContents">
@@ -24,11 +24,12 @@
 
 <script>
 import PostsService from '@/services/PostsService'
-import NavBar from '@/components/NavBar'
+import NavigationBar from '@/components/PARKINGUSER/NavigationBar'
+import swal from 'sweetalert'
 export default {
-  name: 'Booking',
+  name: 'LocationOverview',
   components: {
-    NavBar
+    NavigationBar
   },
   data () {
     return {
@@ -38,13 +39,12 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.params.times)
+    // console.log(this.$route.params.times)
     if (this.$route.params.location === undefined) {
       console.log('ERROR')
-      this.$router.push({ name: 'Landing' })
+      this.$router.push({ name: 'OwnerLanding' })
     }
     this.location = this.$route.params.location
-    this.userQuery = this.$route.params.times
   },
   mounted () {
   },
@@ -53,6 +53,7 @@ export default {
       console.log(this.location)
       console.log(this.userQuery)
       var uname = window.localStorage.getItem('username')
+      console.log(this.location)
       const response = await PostsService.bookParkingSlot({
         id: 1,
         locationId: {
@@ -69,7 +70,13 @@ export default {
         active: true
       })
       console.log(response.data)
-      this.$router.push({ name: 'Landing' })
+      const that = this
+      swal('Booked!', 'Your booking has been successfully made', 'success')
+        .then(function () {
+          console.log('GO TO')
+          that.$router.push({ name: 'Landing' })
+        })
+      // this.$router.push({ name: 'Landing' })
     }
   }
 }
@@ -81,14 +88,22 @@ export default {
     /* display: block; */
     height: 100%;
     /* position: absolute; */
-    width: calc(100% - 50px);
-    margin-left: 50px;
+    /* width: calc(100% - 50px); */
+    width: 100%;
+    /* margin-left: 50px; */
     padding-top: 60px;
 }
 
 .BookingWrapper {
     margin: 0px;
     padding: 0px;
+}
+
+.swal-modal {
+    /* margin-left: 50px; */
+    /* width: calc(100% - 60px); */
+    /* margin:10px; */
+    width: 95%;
 }
 
 </style>

@@ -1,5 +1,7 @@
 package com.parkingapp.server.domain;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity(name="users")
@@ -34,6 +37,8 @@ public class UserInfo {
 	private String password;
 	@Transient
 	private String password2;
+	@Column 
+	private LocalDate dofb;
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="role", referencedColumnName="id")
 	private Role role;
@@ -42,6 +47,10 @@ public class UserInfo {
 	private List<Car> cars;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
 	private List<Booking> bookings;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+	private List<Location> loc;
+	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "locationId") // FOR LOCATIONS
+    // private List<Booking> bookings;
 	
     // @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
     // private List<Email> emails;	
@@ -74,7 +83,7 @@ public class UserInfo {
 		this.cars = cars;
 	}
 
-	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2, List<Car> cars, List<Booking> bookings) {
+	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2, LocalDate dofb, List<Car> cars, List<Booking> bookings) {
 		this.id = id;
 		this.username = usern;
 		this.password = pass;
@@ -82,8 +91,25 @@ public class UserInfo {
 		this.firstname = first;
 		this.lastname = last;
 		this.password2 = pass2;
+		this.dofb = dofb;
 		this.cars = cars;
 		this.bookings = bookings;
+	}
+
+	public UserInfo(int id, String username, String email, String firstname, String lastname, String password,
+	String password2, LocalDate dofb, Role role, List<Car> cars, List<Booking> bookings, List<Location> loc) {
+		this.id = id;
+		this.username = username;
+		this.email = email;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.password = password;
+		this.password2 = password2;
+		this.dofb = dofb;
+		this.role = role;
+		this.cars = cars;
+		this.bookings = bookings;
+		this.loc = loc;
 	}
 
 	public UserInfo(String usern, String pass) {
@@ -165,17 +191,25 @@ public class UserInfo {
 		this.bookings = bookings;
 	}
 
+	public LocalDate getDofb() {
+		return dofb;
+	}
+
+	public void setDofb(LocalDate dofb) {
+		this.dofb = dofb;
+	}
+
 	@Override
 	public String toString() {
 		return username + " " + password + " " + firstname + " " + lastname + " " + email + " " + role;
 	}
 
-	// public LocationTest getLocation() {
-	// 	return location;
-	// }
+	public List<Location> getLoc() {
+		return loc;
+	}
 
-	// public void setLocation(LocationTest location) {
-	// 	this.location = location;
-	// }
+	public void setLoc(List<Location> loc) {
+		this.loc = loc;
+	}
 	
 }

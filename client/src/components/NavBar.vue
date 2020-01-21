@@ -28,7 +28,7 @@ export default {
       username: null,
       menu: [
         {
-          href: '/landing',
+          href: '/search',
           title: 'Parking',
           icon: 'fas fa-parking'
           /*

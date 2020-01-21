@@ -1,29 +1,113 @@
 <template>
-    <div id = "headerWrapper">
-<b-container class="bv-example-row bv-example-row-flex-cols">
-  <b-row align-v="start">
-    <b-col>
-      <b-form-input
-        name="location"
-        v-model="location">
-      </b-form-input>
-    </b-col>
-  </b-row>
-  <b-row align-v="center">
-    <b-col>
-      <DatePicker v-model="arrivingTime"> </DatePicker>
-      <b-form-select name="arrivingTime" v-model="arrivingTime" :options="options"></b-form-select></b-col>
-    <b-col>
-      <DatePicker v-model="leavingTime"> </DatePicker>
-      <b-form-select name="leavingTime" v-model="leavingTime" :options="options"></b-form-select>
-    </b-col>
-  </b-row>
-  <b-row align-v="end">
-    <b-col>
-    </b-col>
-  </b-row>
-</b-container>
+  <div id = "headerWrapper">
+    <div class="test" v-if="$mq === 'mobile'">
+      TEST
     </div>
+    <nav>
+      <ul>
+        <li>
+          <b-card title="Card title" sub-title="Card subtitle">
+            <b-card-text>
+            Some quick example text to build on the <em>card title</em> and make up the bulk of the card's
+            content.
+            </b-card-text>
+
+            <b-card-text>A second paragraph of text in the card.</b-card-text>
+
+            <a href="#" class="card-link">Card link</a>
+            <b-link href="#" class="card-link">Another link</b-link>
+          </b-card>
+        </li>
+        <li>
+          <b-card title="Card title" sub-title="Card subtitle">
+            <b-card-text>
+            Some quick example text to build on the <em>card title</em> and make up the bulk of the card's
+            content.
+            </b-card-text>
+
+            <b-card-text>A second paragraph of text in the card.</b-card-text>
+
+            <a href="#" class="card-link">Card link</a>
+            <b-link href="#" class="card-link">Another link</b-link>
+          </b-card>
+        </li>
+        <li>
+          <b-card title="Card title" sub-title="Card subtitle">
+            <b-card-text>
+            Some quick example text to build on the <em>card title</em> and make up the bulk of the card's
+            content.
+            </b-card-text>
+
+            <b-card-text>A second paragraph of text in the card.</b-card-text>
+
+            <a href="#" class="card-link">Card link</a>
+            <b-link href="#" class="card-link">Another link</b-link>
+          </b-card>
+        </li>
+        <li>
+          <b-card title="Card title" sub-title="Card subtitle">
+            <b-card-text>
+            Some quick example text to build on the <em>card title</em> and make up the bulk of the card's
+            content.
+            </b-card-text>
+
+            <b-card-text>A second paragraph of text in the card.</b-card-text>
+
+            <a href="#" class="card-link">Card link</a>
+            <b-link href="#" class="card-link">Another link</b-link>
+          </b-card>
+        </li>
+        <li>Link 5</li>
+        <li>Link 6</li>
+        <li>Link 7</li>
+        <li>Link 8</li>
+        <li>Link 9</li>
+        <li>Link 10</li>
+        <li>Link 11</li>
+        <li>Link 13</li>
+        <li>Link 13</li>
+        <li>Link 1</li>
+        <li>Link 2</li>
+        <li>Link 3</li>
+        <li>Link 4</li>
+        <li>Link 5</li>
+        <li>Link 6</li>
+        <li>Link 7</li>
+        <li>Link 8</li>
+        <li>Link 9</li>
+        <li>Link 10</li>
+        <li>Link 11</li>
+        <li>Link 13</li>
+        <li>Link 13</li>
+        <li>Link 1</li>
+        <li>Link 2</li>
+        <li>Link 3</li>
+        <li>Link 4</li>
+        <li>Link 5</li>
+        <li>Link 6</li>
+        <li>Link 7</li>
+        <li>Link 8</li>
+        <li>Link 9</li>
+        <li>Link 10</li>
+        <li>Link 11</li>
+        <li>Link 13</li>
+        <li>Link 13</li>
+        <li>Link 1</li>
+        <li>Link 2</li>
+        <li>Link 3</li>
+        <li>Link 4</li>
+        <li>Link 5</li>
+        <li>Link 6</li>
+        <li>Link 7</li>
+        <li>Link 8</li>
+        <li>Link 9</li>
+        <li>Link 10</li>
+        <li>Link 11</li>
+        <li>Link 13</li>
+        <li>Link 13</li>
+      </ul>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -125,4 +209,7 @@ head {
   padding: 0px;
   margin: 0px;
 }
+
+nav ul{height:100vh; width:18%;}
+nav ul{overflow:hidden; overflow-y:scroll;}
 </style>

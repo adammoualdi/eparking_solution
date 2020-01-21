@@ -10,6 +10,8 @@
 export default {
   name: 'Authorisation',
   data () {
+    return {
+    }
   }
 }
 </script>

@@ -94,12 +94,18 @@ module.exports = {
   }
 }
 
-// plugins: [
-//   new webpack.LoaderOptionsPlugin({
-//     options: {
-//       stylus: {
-//         import: [path.resolve(__dirname, '../src/assets/stylus/style.styl')]
-//       }
-//     }
-//   })
-// ]
+// const GoogleFontsPlugin = require("google-fonts-webpack-plugin")
+
+// module.exports = {
+// 	"entry": "src/router/index.js",
+// 	/* ... */
+// 	plugins: [
+// 		new GoogleFontsPlugin({
+// 			fonts: [
+// 				{ family: "Source Sans Pro" },
+// 				{ family: "Roboto", variants: [ "400", "700italic" ] }
+// 			]
+// 			/* ...options */
+// 		})
+// 	]
+// }

@@ -1,111 +1,129 @@
 <template>
-  <b-container class="wrapper">
-    <b-row align-h="center" class="mt-5">
-      <b-col cols="10">
-        <b-card class="p-3">
-          <h3 class="mb-4">Register</h3>
-          <div>
-            <b-form @submit.stop.prevent="onSubmit">
-              <b-form-group id="example-input-group-1" label="Name" label-for="example-input-1">
-                <b-form-input
-                  id="example-input-1"
-                  name="example-input-1"
-                  v-model="$v.form.username.$model"
-                  :state="$v.form.username.$dirty ? !$v.form.username.$error : null"
-                  aria-describedby="input-1-live-feedback"
-                ></b-form-input>
+  <div class="registerWrapper">
+    <div class="headerNav">
+      <NavigationBarReg></NavigationBarReg>
+    </div>
+    <b-container class="wrapper">
+      <b-row align-h="center">
+        <b-col cols="10">
+          <b-card class="p-3">
+            <h3 class="mb-4">Register</h3>
+            <div>
+              <b-form @submit.stop.prevent="onSubmit">
+                <b-form-group id="example-input-group-1" label="Name" label-for="example-input-1">
+                  <b-form-input
+                    id="example-input-1"
+                    name="example-input-1"
+                    v-model="$v.form.username.$model"
+                    :state="$v.form.username.$dirty ? !$v.form.username.$error : null"
+                    aria-describedby="input-1-live-feedback"
+                  ></b-form-input>
 
-                <b-form-invalid-feedback
-                  id="input-1-live-feedback"
-                >This is a required field and must be at least 3 characters.</b-form-invalid-feedback>
-              </b-form-group>
+                  <b-form-invalid-feedback
+                    id="input-1-live-feedback"
+                  >This is a required field and must be at least 3 characters.</b-form-invalid-feedback>
+                </b-form-group>
 
-              <b-form-group id="example-input-group-2" label="Email" label-for="example-input-2">
-                <b-form-input
-                  id="example-input-2"
-                  name="example-input-2"
-                  v-model="$v.form.email.$model"
-                  :state="$v.form.email.$dirty ? !$v.form.email.$error : null"
-                  aria-describedby="input-2-live-feedback"
-                ></b-form-input>
+                <b-form-group id="example-input-group-2" label="Email" label-for="example-input-2">
+                  <b-form-input
+                    id="example-input-2"
+                    name="example-input-2"
+                    v-model="$v.form.email.$model"
+                    :state="$v.form.email.$dirty ? !$v.form.email.$error : null"
+                    aria-describedby="input-2-live-feedback"
+                  ></b-form-input>
 
-                <b-form-invalid-feedback id="input-2-live-feedback">This is a required field.</b-form-invalid-feedback>
-              </b-form-group>
+                  <b-form-invalid-feedback id="input-2-live-feedback">This is a required field.</b-form-invalid-feedback>
+                </b-form-group>
 
-              <b-form-group
-                id="example-input-group-3"
-                label="First Name"
-                label-for="example-input-3"
-              >
-                <b-form-input
-                  id="example-input-3"
-                  name="example-input-3"
-                  v-model="$v.form.firstname.$model"
-                  :state="$v.form.firstname.$dirty ? !$v.form.firstname.$error : null"
-                  aria-describedby="input-3-live-feedback"
-                ></b-form-input>
+                <b-form-group
+                  id="example-input-group-3"
+                  label="First Name"
+                  label-for="example-input-3"
+                >
+                  <b-form-input
+                    id="example-input-3"
+                    name="example-input-3"
+                    v-model="$v.form.firstname.$model"
+                    :state="$v.form.firstname.$dirty ? !$v.form.firstname.$error : null"
+                    aria-describedby="input-3-live-feedback"
+                  ></b-form-input>
 
-                <b-form-invalid-feedback id="input-3-live-feedback">This is a required field.</b-form-invalid-feedback>
-              </b-form-group>
+                  <b-form-invalid-feedback id="input-3-live-feedback">This is a required field.</b-form-invalid-feedback>
+                </b-form-group>
 
-              <b-form-group
-                id="example-input-group-4"
-                label="Last Name"
-                label-for="example-input-4"
-              >
-                <b-form-input
-                  id="example-input-4"
-                  name="example-input-4"
-                  v-model="$v.form.lastname.$model"
-                  :state="$v.form.lastname.$dirty ? !$v.form.lastname.$error : null"
-                  aria-describedby="input-4-live-feedback"
-                ></b-form-input>
+                <b-form-group
+                  id="example-input-group-4"
+                  label="Last Name"
+                  label-for="example-input-4"
+                >
+                  <b-form-input
+                    id="example-input-4"
+                    name="example-input-4"
+                    v-model="$v.form.lastname.$model"
+                    :state="$v.form.lastname.$dirty ? !$v.form.lastname.$error : null"
+                    aria-describedby="input-4-live-feedback"
+                  ></b-form-input>
 
-                <b-form-invalid-feedback id="input-4-live-feedback">This is a required field.</b-form-invalid-feedback>
-              </b-form-group>
+                  <b-form-invalid-feedback id="input-4-live-feedback">This is a required field.</b-form-invalid-feedback>
+                </b-form-group>
 
-              <b-form-group id="example-input-group-5" label="Password" label-for="example-input-5">
-                <b-form-input
-                  id="example-input-5"
-                  name="example-input-5"
-                  type="password"
-                  v-model="$v.form.password.$model"
-                  :state="$v.form.password.$dirty ? !$v.form.password.$error : null"
-                  aria-describedby="input-5-live-feedback"
-                ></b-form-input>
+                <b-form-group id="example-input-group-5" label="Password" label-for="example-input-5">
+                  <b-form-input
+                    id="example-input-5"
+                    name="example-input-5"
+                    type="password"
+                    v-model="$v.form.password.$model"
+                    :state="$v.form.password.$dirty ? !$v.form.password.$error : null"
+                    aria-describedby="input-5-live-feedback"
+                  ></b-form-input>
 
-                <b-form-invalid-feedback id="input-5-live-feedback">This is a required field.</b-form-invalid-feedback>
-              </b-form-group>
+                  <b-form-invalid-feedback id="input-5-live-feedback">This is a required field.</b-form-invalid-feedback>
+                </b-form-group>
 
-              <b-form-group
-                id="example-input-group-6"
-                label="Confirm Password"
-                label-for="example-input-6"
-              >
-                <b-form-input
-                  id="example-input-6"
-                  name="example-input-6"
-                  type="password"
-                  v-model="$v.form.password2.$model"
-                  :state="$v.form.password2.$dirty ? !$v.form.password2.$error : null"
-                  aria-describedby="input-6-live-feedback"
-                ></b-form-input>
+                <b-form-group
+                  id="example-input-group-6"
+                  label="Confirm Password"
+                  label-for="example-input-6"
+                >
+                  <b-form-input
+                    id="example-input-6"
+                    name="example-input-6"
+                    type="password"
+                    v-model="$v.form.password2.$model"
+                    :state="$v.form.password2.$dirty ? !$v.form.password2.$error : null"
+                    aria-describedby="input-6-live-feedback"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="input-6-live-feedback">This is a required field.</b-form-invalid-feedback>
+                </b-form-group>
 
-                <b-form-invalid-feedback id="input-6-live-feedback">This is a required field.</b-form-invalid-feedback>
-              </b-form-group>
+                <b-form-group label="Type of user">
+                  <b-form-radio-group
+                    id="radio-slots"
+                    v-model="selected"
+                    :options="options"
+                    name="radio-options-slots"
+                  >
+                    <b-form-radio value="parkingUser" size="lg">Parking User</b-form-radio>
+                    <!-- Radios in the default slot will appear after any option generated radios -->
+                    <b-form-radio value="parkingOwner" size="lg">Parking Owner</b-form-radio>
+                  </b-form-radio-group>
+                </b-form-group>
 
-              <b-button type="submit" variant="primary" :disabled="$v.form.$invalid">Submit</b-button>
-            </b-form>
-          </div>
-        </b-card>
-      </b-col>
-    </b-row>
-  </b-container>
+                <b-button type="submit" variant="primary" :disabled="$v.form.$invalid">Submit</b-button>
+              </b-form>
+            </div>
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-container>
+  </div>
 </template>
 
 <script>
 import PostsService from '@/services/PostsService'
 import { validationMixin } from 'vuelidate'
+import NavigationBarReg from '@/components/NavigationBarReg'
 import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators'
 
 export default {
@@ -121,9 +139,12 @@ export default {
         password: null,
         password2: null,
         email: null,
-        food: null
+        dofb: null
       }
     }
+  },
+  components: {
+    NavigationBarReg
   },
   validations: {
     form: {
@@ -156,6 +177,9 @@ export default {
         minLength: minLength(6),
         maxLength: maxLength(20),
         sameAsPassword: sameAs('password')
+      },
+      dofb: {
+        required
       }
     }
   },
@@ -176,12 +200,15 @@ export default {
       // Form submit logic
     },
     async register () {
+      console.log(this.form.dofb)
       const response = await PostsService.register({
         username: this.form.username,
         email: this.form.email,
         firstname: this.form.firstname,
         lastname: this.form.lastname,
-        password: this.form.password
+        password: this.form.password,
+        password2: this.form.password2,
+        dofb: this.form.dofb
       })
       console.log(response.data.errorContent)
       // console.log('Error ' + this.error)
@@ -193,4 +220,22 @@ export default {
 </script>
 
 <style>
+
+.headerNav {
+  width: 100%;
+  height: 60px;
+  /* background-color: #2a2a2e; */
+  position: absolute;
+  /* margin-top: -60px; */
+  display: block;
+  padding: 0px;
+}
+
+.wrapper {
+  padding-top: 80px;
+}
+
+.navbar {
+  z-index: 9999;
+}
 </style>

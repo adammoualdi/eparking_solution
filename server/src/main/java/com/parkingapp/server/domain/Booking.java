@@ -28,7 +28,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
     @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinColumn(name="location_id")
+	@JoinColumn(name="locationId")
     private Location locationId;
     @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="userId")

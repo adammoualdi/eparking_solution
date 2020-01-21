@@ -8,16 +8,20 @@
 <script>
 // import MapSearch from '@/components/MapSearch'
 import gmapsInit from '@/utils/gmaps'
+import swal from 'sweetalert'
+// import { EventBus } from '@/services/EventBus.js'
 
 export default {
-  name: 'Map',
+  name: 'OwnerMap',
   data () {
     return {
       outputLocations: [],
       location: null,
       distances: [],
       sortedLocations: [],
-      geocoder: null
+      geocoder: null,
+      locInfoGlobal: null,
+      firstInit: false
     }
   },
   props: {
@@ -26,59 +30,136 @@ export default {
       required: true
       // default: () => []
     },
-    address: {}
+    address: null
     // times: 1
   },
   watch: {
     address: function () {
       this.getClosestLocations()
+      // bool value used to set validation events off after first round of init.
+      this.firstInit = true
     },
     locations: function () {
+      console.log('LOCATIONS ARRAY CHANGED')
       this.init()
     }
+  },
+  created () {
+    // this.locations = []
+    this.init()
   },
   // components: {
   //   MapSearch
   // },
   methods: {
     async init () {
+      console.log(this.locations)
       try {
         console.log('INIT')
         // console.log(this.$route.query)
         const google = await gmapsInit()
         this.geocoder = new google.maps.Geocoder()
-        const map = new google.maps.Map(this.$el)
+        var mapProp = {
+          center: {lat: 40.674, lng: -73.945},
+          zoom: 12,
+          styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+              featureType: 'administrative.locality',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'geometry',
+              stylers: [{color: '#263c3f'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#6b9a76'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#212a37'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#9ca5b3'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry',
+              stylers: [{color: '#746855'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#1f2835'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#f3d19c'}]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry',
+              stylers: [{color: '#2f3948'}]
+            },
+            {
+              featureType: 'transit.station',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry',
+              stylers: [{color: '#17263c'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#515c6d'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.stroke',
+              stylers: [{color: '#17263c'}]
+            }
+          ]
+        }
+        const map = new google.maps.Map(this.$el, mapProp)
 
         // disable default google maps UI e.g. zoom button.
         map.setOptions({disableDefaultUI: true})
         map.setOptions({zoomControl: false})
 
-        // InfoWindow content
-        // var content = '<div id="iw-container">' +
-        //                   '<div class="iw-title">Porcelain Factory of Vista Alegre</div>' +
-        //                   '<div class="iw-content">' +
-        //                     '<div class="iw-subTitle">History</div>' +
-        //                     '<img src="http://maps.marnoto.com/en/5wayscustomizeinfowindow/images/vistalegre.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="83">' +
-        //                     '<p>Founded in 1824, the Porcelain Factory of Vista Alegre was the first industrial unit dedicated to porcelain production in Portugal. For the foundation and success of this risky industrial development was crucial the spirit of persistence of its founder, José Ferreira Pinto Basto. Leading figure in Portuguese society of the nineteenth century farm owner, daring dealer, wisely incorporated the liberal ideas of the century, having become "the first example of free enterprise" in Portugal.</p>' +
-        //                     '<div class="iw-subTitle">Contacts</div>' +
-        //                     '<p>VISTA ALEGRE ATLANTIS, SA<br>3830-292 Ílhavo - Portugal<br>' +
-        //                     '<br>Phone. +351 234 320 600<br>e-mail: geral@vaa.pt<br>www: www.myvistaalegre.com</p>' +
-        //                   '</div>' +
-        //                   '<div class="iw-bottom-gradient"></div>' +
-        //                 '</div>'
-
-        // var infowindow = new google.maps.InfoWindow({
-        //   content: content
-        // })
         console.log('CHECKING LOCATIONS')
         console.log(this.locations)
         var setAddress
-        if (this.locations[0] === undefined) {
+        console.log(this.address)
+        if (JSON.stringify(this.address) === '{}') {
           console.log('UK')
           setAddress = 'England'
         } else {
-          console.log('LEICESTER')
-          setAddress = this.locations[0].country + ', ' + this.locations[0].city
+          console.log('LOCATION ' + this.address.loc)
+          setAddress = this.address.loc
+          // setAddress = this.locations[0].country + ', ' + this.locations[0].city
         }
         console.log('ADDRESS OBJ BEFORE')
         console.log(this.address)
@@ -86,22 +167,25 @@ export default {
         // on start, go to below address.
         this.geocoder.geocode({ address: setAddress }, (results, status) => {
           if (status !== 'OK' || !results[0]) {
-            throw new Error(status)
+            swal('Oops!', `We couldn't find any parking slots in your area!`, 'warning')
+            // throw new Error(status)
           }
           map.setCenter(results[0].geometry.location)
           map.fitBounds(results[0].geometry.viewport)
           if (this.locations[0] !== undefined) {
             const markerClickHandler = (marker) => {
-              console.log(marker.locationInfo)
-              this.$router.push({ name: 'Booking', params: {location: marker.locationInfo, times: that.address} })
-              // infowindow.open(map, marker)
-              // map.setZoom(13)
-              // map.setCenter(marker.getPosition())
+              this.locInfoGlobal = marker.locationInfo
+              console.log('LOCATIONINFO')
+              map.setZoom(13)
+              map.setCenter(marker.getPosition())
+              // SEND DATA BACK TO PARENT TO PASS TO LOCATIONVIEW COMPONENT
+              this.$emit('mapToLanding', this.locInfoGlobal, this.address)
+              // this.emitToParent(this.locInfoGloba)
+              // this.$router.push({ name: 'Booking', params: {location: this.locInfoGlobal, times: this.address} })
             }
-
-            // Create markers
             var markers = []
             var i = 0
+            // this.$emit('childToParent1')
             this.locations.forEach(function (location) {
               console.log('LOCATION')
               console.log(location)
@@ -126,7 +210,20 @@ export default {
               console.log('set visible')
               marker.setVisible(true)
               marker.addListener('click', () => markerClickHandler(marker))
+              // google.maps.event.addListener(infowindow, 'domready', function () {
+              //   console.log('DOM LOADED')
+              //   google.maps.event.addDomListener(contentBtn, 'click', function () {
+              //     console.log('SUCCESS')
+              //   })
+              // // Bind the click event on your button here
+              // // this.$router.push({ name: 'Booking', params: {location: marker.locationInfo, times: that.address} })
+              // })
+              // marker.addListener('mouseover', () => markerHoverHandler(marker))
+              // var infowindow = new google.maps.InfoWindow()
+              // infowindow.setContent('hello')
+              // infowindow.open(map, this)
             })
+            // reset index to 0
             i = 0
             // for (var i = 0; i < this.locations.length; i++) {
             //   var location = this.locations[i]
@@ -220,6 +317,11 @@ export default {
             //     marker.addListener('click', () => markerClickHandler(marker))
             //     return marker
             //   })
+          } else {
+            console.log(this.firstInit)
+            if (this.firstInit === true) {
+              swal('Oops!', `We couldn't find any parking slots in your area!`, 'warning')
+            }
           }
         })
       } catch (error) {
@@ -230,12 +332,11 @@ export default {
       console.log('test')
       this.geocoder.geocode({ address: this.address.loc }, (results, status) => {
         if (status !== 'OK' || !results[0]) {
-          throw new Error(status)
+          // throw new Error(status)
+          swal('Oops!', `We couldn't find any parking slots in your area!`, 'warning')
         }
         console.log(results[0].geometry)
       })
-    },
-    sortByCountry () {
     },
     sortByCity (city, locations) {
       for (var i = 0; i < locations.length; i++) {
@@ -249,14 +350,20 @@ export default {
       console.log('LOCATIONS AFTER SORT ' + locations[1])
       return locations
     },
-    sortDistances (distances) {
+    bookLocation () {
+      this.$router.push({ name: 'Booking', params: {location: this.locInfoGlobal, times: this.address} })
     },
-    splitMarkerObject (marker) {
+    infoWindowButtonClicked: function () {
+      console.log('test123')
+    },
+    emitToParent () {
+      console.log('BEFORE EMIT')
+      this.$emit('mapToLanding')
+      // var test = 'test'
+      // EventBus.$emit('mapToLanding', test)
+      // console.log(this.$emit('mapToLanding'))
+      console.log('MESSAGE EMIT')
     }
-  },
-  created () {
-    this.locations = []
-    this.init()
   }
 }
 </script>
@@ -276,10 +383,10 @@ body {
   /* float: right; */
   /* margin-left: 50px; */
   /* width: calc(100% - 50px); */
-  /* margin-top: 60px; */
+  padding-top: 60px;
   box-sizing: border-box;
   /* float: left; */
-  /* z-index: 1; */
+  z-index: 1;
   /* display: inline-block; */
 }
 
@@ -334,4 +441,9 @@ body {
   width: calc(100% - 50px);
   margin-top: 50px;
 } */
+
+.swal-modal {
+    margin-left: 50px;
+    width: calc(100% - 60px);
+}
 </style>

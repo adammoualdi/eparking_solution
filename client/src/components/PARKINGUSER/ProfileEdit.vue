@@ -1,7 +1,7 @@
 <template>
 <div id = "ProfileWrapper">
     <div class="Nav">
-        <NavBar class="nav"> </NavBar>
+        <NavigationBar class="nav"> </NavigationBar>
     </div>
     <div class="profileInfoWrapper">
         <b-container class ="wrapper">
@@ -50,11 +50,11 @@
 </template>
 
 <script>
-import NavBar from '@/components/NavBar'
+import NavBar from '@/components/PARKINGUSER/NavigationBar'
 export default {
   name: 'ProfileEdit',
   components: {
-    NavBar
+    NavigationBar
   },
   data () {
     return {

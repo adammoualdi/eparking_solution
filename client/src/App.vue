@@ -13,6 +13,10 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+@import url('https://fonts.googleapis.com/css?family=Kulim+Park&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Karla&display=swap');
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

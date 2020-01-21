@@ -12,7 +12,7 @@ public class LocationDTO {
     private double distance;
     private String arriveTime;
     private String leavingTime;
-    
+ 
     public LocationDTO() {
 
     }
@@ -137,5 +137,5 @@ public class LocationDTO {
                 + leavingTime + ", locationId=" + locationId + ", longitude=" + longitude + ", postcode=" + postcode
                 + "]";
     }
-	
+
 }

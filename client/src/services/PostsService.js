@@ -29,6 +29,22 @@ export default {
 
   getUserBookings (params) {
     return Api.get('bookings/' + params)
+  },
+
+  getOwnerLocations () {
+    return Api.get('locations/owners')
+  },
+
+  getAdminApprovals () {
+    return Api.get('locations/admin')
+  },
+
+  setApproval (params) {
+    return Api.post('locations/approve', params)
+  },
+
+  addLocation (params) {
+    return Api.post('locations/add', params)
   }
 
 }

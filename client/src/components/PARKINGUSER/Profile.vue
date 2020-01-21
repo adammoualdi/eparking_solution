@@ -1,7 +1,7 @@
 <template>
 <div id = "ProfileWrapper">
     <div class="Nav">
-        <NavBar class="nav"> </NavBar>
+        <NavigationBar class="nav"> </NavigationBar>
     </div>
     <div class="ProfileInfoWrapper">
         <b-container class ="wrapper">
@@ -25,6 +25,11 @@
                     </b-tabs>
                 </b-card>
             </div>
+            <SemipolarSpinner
+              :animation-duration="2000"
+              :size="65"
+              color="#ff1d5e"
+            />
         </b-container>
     </div>
 </div>
@@ -32,11 +37,13 @@
 
 <script>
 import PostsService from '@/services/PostsService'
-import NavBar from '@/components/NavBar'
+import NavigationBar from '@/components/PARKINGUSER/NavigationBar'
+import {SemipolarSpinner} from 'epic-spinners'
 export default {
   name: 'Profile',
   components: {
-    NavBar
+    NavigationBar,
+    SemipolarSpinner
   },
   data () {
     return {
@@ -65,12 +72,17 @@ export default {
 /* .profileWrapper {
 } */
 
+.wrapper {
+  padding-top: 0px;
+}
+
 .ProfileInfoWrapper {
     /* display: block; */
     height: 100%;
     /* position: absolute; */
-    width: calc(100% - 50px);
-    margin-left: 50px;
+    /* width: calc(100% - 50px); */
+    width: 100%;
+    /* margin-left: 50px; */
     padding-top: 60px;
 }
 

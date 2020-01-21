@@ -4,12 +4,15 @@ import Router from 'vue-router'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
 import Authorisation from '@/components/Authorisation'
-import Landing from '@/components/Landing'
-import Booking from '@/components/Booking'
+import Landing from '@/components/PARKINGUSER/Landing'
+import Booking from '@/components/PARKINGUSER/Booking'
 import Test from '@/components/Test'
-import MapSearch from '@/components/MapSearch'
-import Profile from '@/components/Profile'
-import UserBookings from '@/components/UserBookings'
+import MapSearch from '@/components/PARKINGUSER/MapSearch'
+import Profile from '@/components/PARKINGUSER/Profile'
+import UserBookings from '@/components/PARKINGUSER/UserBookings'
+import OwnerLanding from '@/components/OWNER/OwnerLanding'
+import AdminApproval from '@/components/ADMIN/AdminApproval'
+import LocationOverview from '@/components/OWNER/LocationOverview'
 
 Vue.use(Router)
 
@@ -35,11 +38,14 @@ const router = new Router({
       }
     },
     {
-      path: '/landing',
+      path: '/search',
       name: 'Landing',
       component: Landing,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        roles: {
+          role: 'User'
+        }
       }
     },
     {
@@ -47,15 +53,24 @@ const router = new Router({
       name: 'Profile',
       component: Profile,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        roles: {
+          role: 'User'
+        }
       }
     },
     {
       path: '/search',
       name: 'MapSearch',
       component: MapSearch,
+      props (route) {
+        return route.query || {}
+      },
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        roles: {
+          role: 'User'
+        }
       }
     },
     {
@@ -63,7 +78,7 @@ const router = new Router({
       name: 'Test',
       component: Test,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -71,7 +86,10 @@ const router = new Router({
       name: 'Booking',
       component: Booking,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        roles: {
+          role: 'User'
+        }
       }
     },
     {
@@ -79,7 +97,21 @@ const router = new Router({
       name: 'UserBookings',
       component: UserBookings,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        roles: {
+          role: 'User'
+        }
+      }
+    },
+    {
+      path: '/locations',
+      name: 'OwnerLanding',
+      component: OwnerLanding,
+      meta: {
+        requiresAuth: true,
+        roles: {
+          role: 'Owner'
+        }
       }
     },
     {
@@ -89,8 +121,26 @@ const router = new Router({
       meta: {
         requiresAuth: false
       }
+    },
+    {
+      path: '/approval',
+      name: 'AdminApproval',
+      component: AdminApproval,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/'
+    },
+    {
+      path: '/overview/:locationId',
+      name: 'LocationOverview',
+      component: LocationOverview,
+      meta: {
+        requiresAuth: true
+      }
     }
-
     // {
     //   path: '*',
     //   redirect: '/'
@@ -107,6 +157,9 @@ router.beforeEach((to, from, next) => {
     if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined) {
       next({ name: 'Authorisation' })
     } else {
+      // if (to.matched.some(record => record.meta.roles[0] !== localStorage.getItem('role'))) {
+      //   next({ name: 'Authorisation' })
+      // }
       next()
     }
   } else {

@@ -39,10 +39,9 @@ public class BookingController {
 
     @PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/booking", method = RequestMethod.POST)
-    public ResponseEntity<?> availableParkingLocations(
-                                                       @RequestHeader("Authorization") String token, 
+    public ResponseEntity<?> saveBooking(@RequestHeader("Authorization") String token, 
                                                        @RequestBody BookingDTO bookingDetails) throws Exception {
-        System.out.println("TEST---------------------------------------------------------------------");
+        System.out.println("BOOKING TEST---------------------------------------------------------------------");
         System.out.println(bookingDetails.toString());
 
         String usernameTok = jwtTokenUtil.getUsernameFromToken(token.substring(7,token.length()));
