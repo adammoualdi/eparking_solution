@@ -50,6 +50,8 @@ public class Location {
     @Column 
     private int costPerHour;
     @Column
+    private boolean sensors;
+    @Column
     private boolean approved;
     @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="userId")
@@ -117,6 +119,26 @@ public class Location {
         this.longitude = longitude;
         this.bookings = bookings;
     }
+
+    public Location(int locationId, String country, String city, String address1, String address2, String postcode,
+            String address, double latitude, double longitude, int spaces, int costPerHour, boolean sensors,
+            boolean approved, UserInfo userId, List<Booking> bookings) {
+        this.locationId = locationId;
+        this.country = country;
+        this.city = city;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.postcode = postcode;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.spaces = spaces;
+        this.costPerHour = costPerHour;
+        this.sensors = sensors;
+        this.approved = approved;
+        this.userId = userId;
+        this.bookings = bookings;
+        }
 
     public int getLocationId() {
         return locationId;
@@ -241,5 +263,21 @@ public class Location {
         this.longitude = longitude;
         this.spaces = spaces;
         this.userId = userId;
+    }
+
+    public int getCostPerHour() {
+        return costPerHour;
+    }
+
+    public void setCostPerHour(int costPerHour) {
+        this.costPerHour = costPerHour;
+    }
+
+    public boolean isSensors() {
+        return sensors;
+    }
+
+    public void setSensors(boolean sensors) {
+        this.sensors = sensors;
     }
 }

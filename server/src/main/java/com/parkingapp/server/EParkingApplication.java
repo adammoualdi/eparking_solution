@@ -29,6 +29,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
 public class EParkingApplication implements CommandLineRunner {
@@ -38,9 +39,6 @@ public class EParkingApplication implements CommandLineRunner {
 	@Autowired LocationRepo locRepo;
 	@Autowired CarRepository carRepo;
 	@Autowired BookingRepository bookingRepo;
-
-	BCryptPasswordEncoder pe = new  BCryptPasswordEncoder();
-
 
 	public final static int USER = 1;
 	public final static int ADMIN = 2;
@@ -53,6 +51,8 @@ public class EParkingApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) {
+
+		BCryptPasswordEncoder pe = new  BCryptPasswordEncoder();
 
 		UserInfo user2 = new UserInfo();
 		user2.setId(1);
@@ -79,6 +79,14 @@ public class EParkingApplication implements CommandLineRunner {
 		user.setPassword(pe.encode("password"));
 		user.setRole(new Role(ADMIN, "Admin"));
 		userRepo.save(user);
+
+		UserInfo security = new UserInfo();
+		// user.setId();
+		security.setUsername("security");
+		security.setPassword(pe.encode("password"));
+		security.setRole(new Role(SECURITY, "Security"));
+		security.setDefaultPassword(true);
+		userRepo.save(security);
 
 		UserInfo user3 = new UserInfo();
 		// user3.setId(11);

@@ -98,7 +98,9 @@ public class AdminController {
 	@RequestMapping(value = "/locations/approve", method = RequestMethod.POST)
 	public ResponseEntity<?> approveLocation(@RequestHeader("Authorization") String token,
                                              @RequestBody AdminLocationDTO location) throws Exception {
+		
 		Location loc = locationRepo.findByLocationId(location.getId());
+		
 		// Approved location - can now be used by system.
 		if (location.isApproved()) {
 			loc.setApproved(true);

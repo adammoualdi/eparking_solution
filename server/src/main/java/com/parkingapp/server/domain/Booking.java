@@ -39,6 +39,8 @@ public class Booking {
     private LocalDateTime endDate;
     @Column(name="active")
     private boolean active;
+    @Column(name="sensorId")
+    private int sensorId;
 
     public Booking() {
 

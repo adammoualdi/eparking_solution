@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:8080")
-public class BookingController {
+@CrossOrigin
+public class SecurityOverviewController {
 
     @Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -37,33 +36,29 @@ public class BookingController {
     @Autowired UserInfoRepo userRepo;
     @Autowired BookingRepository bookingRepo;
 
-    @PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = "/booking", method = RequestMethod.POST)
-    public ResponseEntity<?> saveBooking(@RequestHeader("Authorization") String token, 
-                                         @RequestBody BookingDTO bookingDetails) throws Exception {
+    @PreAuthorize("hasRole('SECURITY')")
+	@RequestMapping(value = "/security/bookings", method = RequestMethod.POST)
+    public ResponseEntity<?> getBookings(@RequestHeader("Authorization") String token, 
+                                        @RequestBody LocationsDistanceDTO clientDistances) throws Exception {
+        System.out.println("TEST---------------------------------------------------------------------");
+        System.out.println(clientDistances.toString());
+        // LocationsDistanceDTO tmp = clientDistances;
+        System.out.println(clientDistances.getArriveTime());
+        System.out.println(clientDistances.getLeavingTime());
+        System.out.println("GET BOOKINGS FOR THAT LOCATION");
 
-        String usernameTok = jwtTokenUtil.getUsernameFromToken(token.substring(7,token.length()));
-        UserInfo user = userRepo.findByUsername(usernameTok);
-
-        Location loc = locationRepo.findByLocationId(bookingDetails.getLocationId().getLocationId());                                            
-        Booking booking = new Booking();
-        
-        
-		booking.setLocationId(loc);
-		booking.setUserId(user);
-        booking.setStartDate(bookingDetails.getStartDate());
-        booking.setEndDate(bookingDetails.getEndDate());
-		booking.setActive(true);
-        
-        try {
-            bookingRepo.save(booking);
-        } catch (Exception e) {
-            // return ResponseEntity.ok()
+        System.out.println("Amount of locations: " + clientDistances.getLocations().size());
+        ArrayList<Booking> bookings = new ArrayList<Booking>();
+        for (int i = 0; i < clientDistances.getLocations().size(); i++) {
+            Location loc = locationRepo.findByLocationId(clientDistances.getLocations().get(i).getLocationId());
+            bookings = bookingRepo.findByLocationId(loc);
+            System.out.println("SIZE OF BOOKING ARRAY " + bookings.size());
         }
 
-	    return ResponseEntity.ok(bookingDetails);
-    }
+        // LocationsDistanceDTO output = new LocationsDistanceDTO();
+        // output.setLocations(locationsArray);
 
-
+        return ResponseEntity.ok(bookings);
+        }
     
 }

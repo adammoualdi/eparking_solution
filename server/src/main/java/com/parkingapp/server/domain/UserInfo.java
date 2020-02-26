@@ -39,6 +39,10 @@ public class UserInfo {
 	private String password2;
 	@Column 
 	private LocalDate dofb;
+	@Transient
+	private String roleName;
+	@Column
+	private boolean defaultPassword;
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="role", referencedColumnName="id")
 	private Role role;
@@ -62,7 +66,7 @@ public class UserInfo {
 		
 	}
 
-	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2) {
+	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2, String roleName) {
 		this.id = id;
 		this.username = usern;
 		this.password = pass;
@@ -70,9 +74,10 @@ public class UserInfo {
 		this.firstname = first;
 		this.lastname = last;
 		this.password2 = pass2;
+		this.roleName = roleName;
 	}
 	
-	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2, List<Car> cars) {
+	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2, List<Car> cars, String roleName) {
 		this.id = id;
 		this.username = usern;
 		this.password = pass;
@@ -81,9 +86,10 @@ public class UserInfo {
 		this.lastname = last;
 		this.password2 = pass2;
 		this.cars = cars;
+		this.roleName = roleName;
 	}
 
-	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2, LocalDate dofb, List<Car> cars, List<Booking> bookings) {
+	public UserInfo(int id, String usern, String pass, String email, String first, String last, String pass2, LocalDate dofb, List<Car> cars, List<Booking> bookings, String roleName) {
 		this.id = id;
 		this.username = usern;
 		this.password = pass;
@@ -94,10 +100,11 @@ public class UserInfo {
 		this.dofb = dofb;
 		this.cars = cars;
 		this.bookings = bookings;
+		this.roleName = roleName;
 	}
 
 	public UserInfo(int id, String username, String email, String firstname, String lastname, String password,
-	String password2, LocalDate dofb, Role role, List<Car> cars, List<Booking> bookings, List<Location> loc) {
+	String password2, LocalDate dofb, Role role, List<Car> cars, List<Booking> bookings, List<Location> loc, String roleName) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
@@ -110,6 +117,7 @@ public class UserInfo {
 		this.cars = cars;
 		this.bookings = bookings;
 		this.loc = loc;
+		this.roleName = roleName;
 	}
 
 	public UserInfo(String usern, String pass) {
@@ -174,6 +182,14 @@ public class UserInfo {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 	
 	public List<Car> getCars() {
 		return cars;
@@ -210,6 +226,14 @@ public class UserInfo {
 
 	public void setLoc(List<Location> loc) {
 		this.loc = loc;
+	}
+
+	public boolean isDefaultPassword() {
+		return defaultPassword;
+	}
+
+	public void setDefaultPassword(boolean defaultPassword) {
+		this.defaultPassword = defaultPassword;
 	}
 	
 }

@@ -86,16 +86,8 @@ public class UserBookingsController {
             tmpBookings.add(booking);
         }
 
-        System.out.println("TEST");
-        // System.out.println(tmpBookings.get(0).getLocationId().getCity());
-        // System.out.println(tmpBookings.get(1).getLocationId().getCity());
         UserBookingsDTO userBookings = new UserBookingsDTO(tmpBookings);
-        // Use profile DTO to pass information to frontend.
-        // profileInfo.setUsername(user.getUsername());
-        // profileInfo.setFirstname(user.getFirstname());
-        // profileInfo.setLastname(user.getLastname());
-        // profileInfo.setEmail(user.getEmail());
-        // profileInfo.setCars(user.getCars());
+
 	    return ResponseEntity.ok(userBookings);
 	}
 }

@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class MainController {
 
-	@Autowired UserInfoRepo userInfoRepo;
+	// @Autowired UserInfoRepo userInfoRepo;
 
-    @PreAuthorize("hasRole('USER')")
+    // @PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public ResponseEntity<?> test() throws Exception {
 	    return ResponseEntity.ok("success");

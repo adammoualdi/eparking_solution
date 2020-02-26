@@ -1,16 +1,6 @@
 package com.parkingapp.server.domain.DTO;
 
 import java.time.LocalDateTime;
-// import java.util.Date;
-
-import com.parkingapp.server.domain.Location;
-import com.parkingapp.server.domain.UserInfo;
-
-// import javax.persistence.Transient;
-
-/**
- * Saves instances of Roles in the Role entity
- * */
 
 public class BookingDTO {
 	private int id;

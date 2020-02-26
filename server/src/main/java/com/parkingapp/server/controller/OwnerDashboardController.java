@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:8080")
+@CrossOrigin
 public class OwnerDashboardController {
 
     @Autowired
@@ -42,7 +42,6 @@ public class OwnerDashboardController {
         String usernameTok = jwtTokenUtil.getUsernameFromToken(token.substring(7,token.length()));
         UserInfo user = userRepo.findByUsername(usernameTok);
         ArrayList<Location> loc = locationRepo.findByUserId(user);
-        // ArrayList<Location> test = locationRepo.findByCountry("United Kingdom");
         
         // Be able to store loc values into new list with DTO object.
         ArrayList<DashboardLocationDTO> tmpLocations = new ArrayList<>();
@@ -64,12 +63,6 @@ public class OwnerDashboardController {
                 // add DTO to temp array of that DTO object - to be returned.
                 tmpLocations.add(location);
             }
-            // System.out.println(temp.toString());
-            
-            // System.out.println(tmpLocations);
-            // test.get(1).setUserId(user);
-            // System.out.println(test.get(1).toString());
-            // locationRepo.save(test.get(1));
         }
 
         for (int ii = 0; ii < tmpLocations.size(); ii++) {
@@ -90,6 +83,7 @@ public class OwnerDashboardController {
         String usernameTok = jwtTokenUtil.getUsernameFromToken(token.substring(7,token.length()));
         UserInfo user = userRepo.findByUsername(usernameTok);
         location.setUserId(user);
+        System.out.println(location.isSensors());
         System.out.println(location.toString());
         locationRepo.save(location);
 	    return ResponseEntity.ok(location);

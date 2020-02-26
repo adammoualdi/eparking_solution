@@ -42,8 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	public PasswordEncoder passwordEncoder(){
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder;
 	}
 
 	@Bean
@@ -57,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// .addFilterBefore(corsFilter(), SessionManagementFilter.class) 
-				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/authenticate","/register","/dashboard","/dashboard/**", "/bookings/**", "/profile/**", "/booking", "/locations", "/locations/**").permitAll().
+				// dont authenticate this particular request as we use JWT tokens to authorize
+				.authorizeRequests().antMatchers("/authenticate","/authenticate/**","/register","/dashboard","/dashboard/**", "/bookings/**", "/profile/**", "/booking", "/locations", "/locations/**").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
@@ -66,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		// Add a filter to validate the tokens with every request
+		// Add a filter to validate the JWT tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 }

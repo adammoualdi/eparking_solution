@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:8080")
+@CrossOrigin
 public class DashboardController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class DashboardController {
     @Autowired BookingRepository bookingRepo;
 
     // Get all locations
-    @CrossOrigin(origins="https://localhost:8080")
+    // @CrossOrigin(origins="https://localhost:8080")
     // @PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public ResponseEntity<DashboardLocationsDTO> dashboard(@RequestHeader("Authorization") String token) throws Exception {
@@ -144,6 +144,7 @@ public class DashboardController {
         
         System.out.println("Amount of locations: " + clientDistances.getLocations().size());
         ArrayList<LocationDTO> locationsArray = new ArrayList<>();
+        System.out.println(clientDistances.getLocations().get(0).getLocationId());
         for (int i = 0; i < clientDistances.getLocations().size(); i++) {
             Location loc = locationRepo.findByLocationId(clientDistances.getLocations().get(i).getLocationId());
             ArrayList<Booking> bookings = bookingRepo.findAvailableLocation(loc, clientDistances.getArriveTime(), clientDistances.getLeavingTime());
