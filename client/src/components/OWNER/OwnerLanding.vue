@@ -57,8 +57,16 @@ export default {
   async mounted () {
     this.google = await gmapsInit()
     this.geocoder = new this.google.maps.Geocoder()
+    const that = this
     EventBus.$on('mapToLanding', function (payLoad) {
       console.log(payLoad)
+    })
+    // Event listener for user clicking on map
+    EventBus.$on('mapClick', function (payLoad, coords) {
+      console.log('TESTTTTTTTTTTTTTTTTTTTTTT')
+      that.setLocSearch(payLoad, coords)
+      // this.$emit('landingToAddLocation', 'test')
+      // this.showSearch = true
     })
   },
   components: {
@@ -78,10 +86,21 @@ export default {
       this.showSearch = false
     },
     getLocSearch () {
-      console.log('test')
+      // console.log('test')
+      // this.$emit('landingToAddLocation', 'test')
       this.showSearch = true
       // Reset current locations when search clicked
       // this.mapLocations = []
+    },
+    setLocSearch (payLoad, coords) {
+      this.showSearch = true
+      var address1 = payLoad[0].address_components[0].long_name
+      var address2 = payLoad[0].address_components[1].long_name
+      var city = payLoad[0].address_components[2].long_name
+      var postcode = payLoad[0].address_components[5].long_name
+      var loc = {address1, address2, city, postcode}
+      console.log(loc)
+      EventBus.$emit('landingToAddLocation', loc, coords)
     },
     async getLocations () {
       const response = await PostsService.getOwnerLocations()

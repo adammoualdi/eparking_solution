@@ -38,12 +38,12 @@
       </b-row>
       <b-row>
         <b-col>
-          <b-form-input
-                  class="locationFormInput"
-                  name="location"
-                  placeholder="Country"
-                  v-model="form.country">
-          </b-form-input>
+          <b-form-select
+            class="locationFormInput"
+            :options="countryOptions"
+            placeholder="Country"
+            v-model="form.country">
+          </b-form-select>
         </b-col>
       </b-row>
       <b-row>
@@ -76,6 +76,19 @@
           </b-form-input>
         </b-col>
       </b-row>
+      <b-row>
+        <b-col>
+          <b-form-group>
+            <b-form-radio-group
+              id="btn-radios-2"
+              v-model="form.sensors"
+              :options="options"
+              buttons
+              name="radios-btn-default"
+            ></b-form-radio-group>
+          </b-form-group>
+        </b-col>
+      </b-row>
       <b-row align-v="end">
           <b-col>
             <button class="searchBtn" type="button" name="button" v-on:click="emitToParent">Add location</button>
@@ -89,11 +102,9 @@
 import DatePicker from '@/components/DateTimePicker'
 import { Datetime } from 'vue-datetime'
 import PostsService from '@/services/PostsService'
-// import { required } from 'vuelidate/lib/validators'
-// const check_times = (arrive, leave) => (arrive < leave)
+import swal from 'sweetalert'
+import { EventBus } from '@/services/EventBus.js'
 import gmapsInit from '@/utils/gmaps'
-// import swal from 'sweetalert'
-// import { Datetime } from 'vue-datetime';
 export default {
   name: 'MapSearch',
   components: {
@@ -109,8 +120,19 @@ export default {
         city: '',
         postcode: '',
         spaces: null,
-        price: null
+        price: null,
+        sensors: false,
+        latitude: null,
+        longitude: null
       },
+      options: [
+        { text: 'Sensors', value: 'true' },
+        { text: 'No Sensors', value: 'false' }
+        // { text: 'Radio 4', value: 'radio4' }
+      ],
+      countryOptions: [
+        { text: 'United Kingdom' }
+      ],
       selected: null,
       location: null,
       arrivingTime: ' ',
@@ -131,10 +153,23 @@ export default {
     }
   },
   async mounted () {
+    console.log('ADD LOADING')
     // const google = await gmapsInit()
     // const geocoder = new google.maps.Geocoder()
     this.google = await gmapsInit()
     this.geocoder = new this.google.maps.Geocoder()
+    // Event listener for user clicking on map
+    const that = this
+    EventBus.$on('landingToAddLocation', function (payLoad, coords) {
+      console.log(coords)
+      that.form.address1 = payLoad.address1
+      that.form.address2 = payLoad.address2
+      that.form.city = payLoad.city
+      that.form.postcode = payLoad.postcode
+      that.form.longitude = coords.longitude
+      that.form.latitude = coords.latitude
+    })
+    // this.form.address1 =
   },
   methods: {
     async emitToParent (event) {
@@ -150,13 +185,7 @@ export default {
           // not working because inside local function
           that.invalidLocGoogle = true
           console.log(that.invalidLoc)
-          // swal('Type something:', {
-          //   content: 'input'
-          // })
-          //   .then((value) => {
-          //     swal(`You typed: ${value}`)
-          //     th
-          //   })
+          swal('Error!', 'Error finding location GPS', 'Error')
           // throw new Error(status)
           // NEED ERROR VALIDATION HERE FOR INCORRECT LOCATION QUERY
         } else {
@@ -165,7 +194,10 @@ export default {
         //   } else if (this.arrivingTime >= this.leavingTime) {
         //     this.invalidDate = true
         //   } else {
-          this.addLocation()
+          // that.form.latitude = results[0].geometry.location.lat()
+          // that.form.longitude = results[0].geometry.location.lng()
+          console.log(results)
+          this.addLocation(that.form)
           var info = location
           this.$emit('childToParent', info)
           console.log(this.$emit('childToParent', info))
@@ -176,11 +208,12 @@ export default {
     emitCloseSearch (event) {
       this.$emit('closeSearch')
     },
-    async addLocation () {
-      console.log(this.form)
-      const response = await PostsService.addLocation(this.form)
+    async addLocation (location) {
+      console.log(location)
+      const response = await PostsService.addLocation(location)
+      swal('Requested!', 'Your location has been requested - we will get back to you soon!', 'success')
       console.log(response)
-    },
+    }
     // isValid () {
     //   if (this.arrivingTime <= this.leavingTime) {
     //     return false
@@ -188,7 +221,6 @@ export default {
     //     return true
     //   }
     // },
-    async checkLocation () {}
   }
 }
 </script>

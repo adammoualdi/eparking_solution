@@ -42,8 +42,6 @@ import { Datetime } from 'vue-datetime'
 // import { required } from 'vuelidate/lib/validators'
 // const check_times = (arrive, leave) => (arrive < leave)
 import gmapsInit from '@/utils/gmaps'
-// import swal from 'sweetalert'
-// import { Datetime } from 'vue-datetime';
 export default {
   name: 'MapSearch',
   components: {

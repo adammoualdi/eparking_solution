@@ -132,7 +132,7 @@ import NavigationBarReg from '@/components/NavigationBarReg'
 import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators'
 
 export default {
-  name: 'Register',
+  name: 'OwnerRegister',
   mixins: [validationMixin],
   data () {
     return {
@@ -214,7 +214,7 @@ export default {
         password: this.form.password,
         password2: this.form.password2,
         dofb: this.form.dofb,
-        roleName: 'USER'
+        roleName: 'OWNER'
       })
       console.log(response.data.errorContent)
       // console.log('Error ' + this.error)

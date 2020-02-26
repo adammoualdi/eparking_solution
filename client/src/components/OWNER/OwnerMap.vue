@@ -9,6 +9,7 @@
 // import MapSearch from '@/components/MapSearch'
 import gmapsInit from '@/utils/gmaps'
 import swal from 'sweetalert'
+import { EventBus } from '@/services/EventBus.js'
 // import { EventBus } from '@/services/EventBus.js'
 
 export default {
@@ -21,7 +22,8 @@ export default {
       sortedLocations: [],
       geocoder: null,
       locInfoGlobal: null,
-      firstInit: false
+      firstInit: false,
+      results: null
     }
   },
   props: {
@@ -46,6 +48,7 @@ export default {
   },
   created () {
     // this.locations = []
+    this.$emit('mapClick', 'test')
     this.init()
   },
   // components: {
@@ -59,91 +62,7 @@ export default {
         // console.log(this.$route.query)
         const google = await gmapsInit()
         this.geocoder = new google.maps.Geocoder()
-        var mapProp = {
-          center: {lat: 40.674, lng: -73.945},
-          zoom: 12,
-          styles: [
-            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
-            {
-              featureType: 'administrative.locality',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
-            },
-            {
-              featureType: 'poi',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
-            },
-            {
-              featureType: 'poi.park',
-              elementType: 'geometry',
-              stylers: [{color: '#263c3f'}]
-            },
-            {
-              featureType: 'poi.park',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#6b9a76'}]
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry',
-              stylers: [{color: '#38414e'}]
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry.stroke',
-              stylers: [{color: '#212a37'}]
-            },
-            {
-              featureType: 'road',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#9ca5b3'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry',
-              stylers: [{color: '#746855'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry.stroke',
-              stylers: [{color: '#1f2835'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#f3d19c'}]
-            },
-            {
-              featureType: 'transit',
-              elementType: 'geometry',
-              stylers: [{color: '#2f3948'}]
-            },
-            {
-              featureType: 'transit.station',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'geometry',
-              stylers: [{color: '#17263c'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#515c6d'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.stroke',
-              stylers: [{color: '#17263c'}]
-            }
-          ]
-        }
-        const map = new google.maps.Map(this.$el, mapProp)
+        const map = new google.maps.Map(this.$el)
 
         // disable default google maps UI e.g. zoom button.
         map.setOptions({disableDefaultUI: true})
@@ -180,8 +99,6 @@ export default {
               map.setCenter(marker.getPosition())
               // SEND DATA BACK TO PARENT TO PASS TO LOCATIONVIEW COMPONENT
               this.$emit('mapToLanding', this.locInfoGlobal, this.address)
-              // this.emitToParent(this.locInfoGloba)
-              // this.$router.push({ name: 'Booking', params: {location: this.locInfoGlobal, times: this.address} })
             }
             var markers = []
             var i = 0
@@ -210,119 +127,34 @@ export default {
               console.log('set visible')
               marker.setVisible(true)
               marker.addListener('click', () => markerClickHandler(marker))
-              // google.maps.event.addListener(infowindow, 'domready', function () {
-              //   console.log('DOM LOADED')
-              //   google.maps.event.addDomListener(contentBtn, 'click', function () {
-              //     console.log('SUCCESS')
-              //   })
-              // // Bind the click event on your button here
-              // // this.$router.push({ name: 'Booking', params: {location: marker.locationInfo, times: that.address} })
-              // })
-              // marker.addListener('mouseover', () => markerHoverHandler(marker))
-              // var infowindow = new google.maps.InfoWindow()
-              // infowindow.setContent('hello')
-              // infowindow.open(map, this)
             })
             // reset index to 0
             i = 0
-            // for (var i = 0; i < this.locations.length; i++) {
-            //   var location = this.locations[i]
-            //   console.log('LOCATION')
-            //   console.log(location)
-            //   var latLng = new google.maps.LatLng(location.latitude, location.longitude)
-            //   console.log(this.locations[i].postcode)
-            //   console.log('length ' + this.locations.length)
-            //   // Creating a marker and putting it on the map
-            //   var marker = new google.maps.Marker({
-            //     position: latLng,
-            //     map: map
-            //   })
-            //   // create markers array
-            //   markers[i] = marker
-            //   // HOW TO GET LAT AND LONG FROM MARKER OBJECT
-            //   // var markerTest = markers[i].getPosition().lat()
-            //   // console.log(markerTest)
-            //   // marker.setVisible(false)
-            //   marker.addListener('click', () => markerClickHandler(marker))
-            //   // return marker
-            // }
-
-            // this.getLocations()
-            // create constant of global this to be able to pass through event listener.
-            console.log('that' + that.locations[0].postcode)
-            // Add listener when map is clicked
-            // google.maps.event.addListener(map, 'click', (event) => {
-            //   geocoder.geocode({
-            //     'latLng': event.latLng
-            //   }, function (results, status) {
-            //     if (status === google.maps.GeocoderStatus.OK) {
-            //       if (results[0]) {
-            //         // this.getLocations() // results[0].address_components
-            //         // that.sortByCountry(country)
-            //         console.log(results[0].address_components[3].long_name)
-            //         console.log('BEFORE PASSING TO METHOD CITY: ' + results[0].address_components[3].long_name + ' CITY LOC: ' + that.locations)
-            //         // JUST TO TEST SORT
-            //         // var filteredLocations = that.locations
-            //         var filteredLocations = that.sortByCity(results[0].address_components[3].long_name, that.locations)
-            //         that.getClosestLocations()
-            //         // var closest = -1
-            //         console.log('FILTERED: ' + filteredLocations.length)
-            //         for (i = 0; i < filteredLocations.length; i++) {
-            //           var loc = new google.maps.LatLng(filteredLocations[i].latitude, filteredLocations[i].longitude)
-            //           console.log(event.latLng)
-            //           console.log(loc)
-            //           var d = google.maps.geometry.spherical.computeDistanceBetween(loc, event.latLng)
-            //           console.log(filteredLocations[i])
-            //           that.distances[i] = [filteredLocations[i].latitude, filteredLocations[i].longitude, d]
-            //           // console.log(that.distances)
-            //           // console.log(results[0].address_components)
-            //           // alert(results[0].formatted_address)
-            //         }
-            //         // sort distances so we can get closest x
-            //         // that.sortDistances()
-            //         var closestDistances = that.distances
-            //         console.log(closestDistances)
-            //         closestDistances.sort((a, b) => (a[2] > b[2]) ? 1 : -1)
-            //         filteredLocations.splice(0, 9)
-            //         console.log('SORTED: ' + closestDistances)
-            //         console.log(closestDistances[0])
-
-            //         console.log(markers)
-            //         for (i = 0; i < markers.length; i++) {
-            //           // only looping through 10 values for closestDistances
-            //           for (var ii = 0; ii < closestDistances.length; ii++) {
-            //             console.log(markers[i].getPosition().lat() + '===' + closestDistances[ii][0] + ' ' + markers[i].getPosition().lng() + '===' + closestDistances[ii][1])
-            //             if (markers[i].getPosition().lat() === closestDistances[ii][0] &&
-            //                 markers[i].getPosition().lng() === closestDistances[ii][1]) {
-            //               console.log('SET TO TRUE')
-            //               markers[i].setVisible(true)
-            //             }
-            //           }
-            //         }
-            //       }
-            //     }
-            //   })
-            // })
-
-            // this.locations
-            //   // .map(x => new google.maps.Marker({ ...x, map }))
-            //   .map((location) => {
-            //     const marker = new google.maps.Marker({
-            //       ...location,
-            //       map
-            //       // icon: {
-            //       //   url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-            //       // }
-            //     })
-            //     marker.addListener('click', () => markerClickHandler(marker))
-            //     return marker
-            //   })
           } else {
             console.log(this.firstInit)
             if (this.firstInit === true) {
               swal('Oops!', `We couldn't find any parking slots in your area!`, 'warning')
             }
           }
+
+          // Event listener to click on map
+          // Allows users to plot parking location on the map for accurate GPS coords.
+          google.maps.event.addListener(map, 'click', (event) => {
+            this.geocoder.geocode({
+              'latLng': event.latLng
+            }, function (results, status) {
+              console.log('TEST')
+              EventBus.$emit('mapClick', results, event.latLng)
+              if (status === google.maps.GeocoderStatus.OK) {
+                var marker = new google.maps.Marker({
+                  position: event.latLng,
+                  map: map
+                  // locationInfo: location,
+                })
+                marker.setVisible(true)
+              }
+            })
+          })
         })
       } catch (error) {
         console.error(error)
@@ -337,32 +169,6 @@ export default {
         }
         console.log(results[0].geometry)
       })
-    },
-    sortByCity (city, locations) {
-      for (var i = 0; i < locations.length; i++) {
-        console.log('CITY: ' + city + ' CITY LOC: ' + locations[i].city)
-        if (city !== locations[i].city) {
-          console.log('DELETED')
-          locations.splice(i, i + 1)
-        }
-      }
-      console.log('LOCATIONS AFTER SORT ' + locations[0])
-      console.log('LOCATIONS AFTER SORT ' + locations[1])
-      return locations
-    },
-    bookLocation () {
-      this.$router.push({ name: 'Booking', params: {location: this.locInfoGlobal, times: this.address} })
-    },
-    infoWindowButtonClicked: function () {
-      console.log('test123')
-    },
-    emitToParent () {
-      console.log('BEFORE EMIT')
-      this.$emit('mapToLanding')
-      // var test = 'test'
-      // EventBus.$emit('mapToLanding', test)
-      // console.log(this.$emit('mapToLanding'))
-      console.log('MESSAGE EMIT')
     }
   }
 }
@@ -434,16 +240,4 @@ body {
   background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
 }
 
-/* .MapSearch {
-  margin-left: 50px;
-  z-index: 10000000;
-  /* position: absolute;
-  width: calc(100% - 50px);
-  margin-top: 50px;
-} */
-
-.swal-modal {
-    margin-left: 50px;
-    width: calc(100% - 60px);
-}
 </style>

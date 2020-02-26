@@ -41,7 +41,7 @@
             <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
           </div>
           <div>
-            <a href="/register" v-on:click="changeRegisterVar" v-b-modal.modal1>Haven't got an account? Register here</a>
+            <a href="javascript:void(0)" v-on:click="changeRegisterVar" v-b-modal.modal1>Haven't got an account? Register here</a>
           </div>
         </div>
       </b-form>
@@ -50,12 +50,12 @@
         </b-col>
       </b-row>
     </b-container>
-    <!-- <div v-if=registerChoice class="RegisterChoices">
+    <div v-if=registerChoice class="RegisterChoices">
       <div class="RegisterChoiceInfo">
-        <b-container class="bv-example-row bv-example-row-flex-cols">
+        <b-container class="OptionsContainer">
           <b-row align-v="start">
               <b-col>
-                <h2>WHAT SERVICE DO YOU NEED?</h2>
+                <!-- <h2>What service do you need?</h2> -->
               </b-col>
           </b-row>
           <b-row align-v="center">
@@ -68,7 +68,7 @@
           </b-row>
         </b-container>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -83,19 +83,17 @@ export default {
   data () {
     return {
       form: {
-        email: '',
         username: '',
         password: '',
         checked: []
       },
       registerChoice: false,
       extErrors: [],
-      // email: '',
       token: '',
-      password: '',
       formSubmitted: false,
       invalidLogin: false,
-      error: null
+      error: null,
+      response: null
     }
   },
   components: {
@@ -123,15 +121,16 @@ export default {
     // },
     async login () {
       this.extErrors = []
-      console.log('--------------- username: ' + this.form.email)
+      console.log('--------------- password: ' + this.form.username)
       console.log('--------------- password: ' + this.form.password)
       const that = this
-      const response = await PostsService.login({
+      this.response = await PostsService.login({
         username: this.form.username,
         password: this.form.password
       }).catch(function () {
         that.error = 'ERROR'
       })
+      // console.log(this.response.data)
 
       // Remove local storage items if they already exist in browser
       localStorage.removeItem('jwt')
@@ -139,13 +138,14 @@ export default {
       localStorage.removeItem('username')
 
       // Check if response error from API login
-      if (response !== undefined) {
-        console.log('check tok ' + response.data.token)
+      if (this.response !== undefined) {
+        console.log('check tok ' + this.response.data.token)
 
         // Set items in local storage for later use
-        window.localStorage.setItem('jwt', response.data.token)
-        window.localStorage.setItem('role', response.data.role)
-        window.localStorage.setItem('username', response.data.username)
+        window.localStorage.setItem('jwt', this.response.data.token)
+        window.localStorage.setItem('role', this.response.data.role)
+        window.localStorage.setItem('username', this.response.data.username)
+        this.route()
         // var tok = window.localStorage.getItem('jwt')
         // var role = window.localStorage.getItem('role')
         // var uname = window.localStorage.getItem('username')
@@ -153,27 +153,35 @@ export default {
         // console.log('token after login: ' + tok)
         // console.log(uname)
         // console.log('LOGIN STATUS' + response.data.status)
-
-        // Check what user route to persue
-        if (response.data.role === 'User') {
-          this.$router.push({ name: 'Landing' })
-        } else if (response.data.role === 'Owner') {
-          this.$router.push({ name: 'OwnerLanding' })
-        } else if (response.data.role === 'Admin') {
-          this.$router.push({ name: 'AdminApproval' })
-        }
-      } else {
-        // console.log(response.data.errors)
-        // console.log(response.data)
-        // console.log(response.data.message)
-        console.log('ERROR LOGGING IN')
-        this.extErrors.push('Error logging in')
-        this.invalidLogin = true
-        // console.log(this.extErrors)
-        // var error = response.data.errors[0]
-        // console.log(error)
-        // return error
       }
+    },
+    route () {
+      // Check what user route to persue
+      if (this.response.data.role === 'User') {
+        this.$router.push({ name: 'Landing' })
+      } else if (this.response.data.role === 'Owner') {
+        this.$router.push({ name: 'OwnerLanding' })
+      } else if (this.response.data.role === 'Admin') {
+        this.$router.push({ name: 'AdminApproval' })
+      } else if (this.response.data.role === 'Security') {
+        console.log(this.response.data.defaultPassword)
+        // If first time security user has logged in
+        if (this.response.data.defaultPassword === true) {
+          this.$router.push({ name: 'PasswordChange' })
+        } else {
+          this.$router.push({ name: 'SecurityOverview' })
+        }
+      }
+      // console.log(response.data.errors)
+      // console.log(response.data)
+      // console.log(response.data.message)
+      console.log('ERROR LOGGING IN')
+      this.extErrors.push('Error logging in')
+      this.invalidLogin = true
+      // console.log(this.extErrors)
+      // var error = response.data.errors[0]
+      // console.log(error)
+      // return error
     },
     changeRegisterVar () {
       this.registerChoice = true
@@ -183,7 +191,7 @@ export default {
       this.$router.push({ name: 'Register' })
     },
     ownerRegister () {
-      this.$router.push({ name: 'Register' })
+      this.$router.push({ name: 'OwnerRegister' })
     }
   }
 }
@@ -209,18 +217,27 @@ export default {
 
 .RegisterChoiceInfo {
   /* opacity: 50%; */
+  background: white;
   padding: 10px;
   z-index: 9999;
   padding-top: 100px;
+  height: 200px;
+  width: 400px;
   /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif */
   /* position: absolute; */
   /* margin-left: calc(100vw - 80px); */
   /* padding-top: 100px; */
   /* top: 40%; */
-  /* text-align: center; */
+  text-align: center;
+  display: inline-block;
   /* left: 50vw; */
+  /* padding-left: 50vw; */
   /* -webkit-transform: translate(-50%, -50%); */
   /* transform: translate(-50%, -50%); */
+}
+
+.OptionsContainer {
+  text-align: center;
 }
 
 .bv-example-row {
@@ -231,7 +248,7 @@ export default {
 
 .RegisterChoiceInfo h2 {
   /* font-family: 'Kulim Park', sans-serif; */
-  font-family: 'Karla', sans-serif;
+  /* font-family: 'Karla', sans-serif; */
   text-align: center;
 }
 

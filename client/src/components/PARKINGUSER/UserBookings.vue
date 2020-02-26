@@ -27,9 +27,6 @@
                                     {{ booking.locationId.postcode }} <br>
 
                                 </td>
-                                <!-- <td>test123</td> -->
-                                <!-- <td align="center"> -->
-                                <!-- </td> -->
                             </tr>
                         </table>
                     </b-tab>
@@ -46,11 +43,7 @@
                                     {{ booking.locationId.country }} <br>
                                     {{ booking.locationId.city }} <br>
                                     {{ booking.locationId.postcode }} <br>
-
                                 </td>
-                                <!-- <td>test123</td> -->
-                                <!-- <td align="center"> -->
-                                <!-- </td> -->
                             </tr>
                         </table>
                     </b-tab>
@@ -177,12 +170,6 @@ export default {
 h4 {
     margin: 0px;
 }
-
-/* .profileContainer { */
-    /* width: calc(100% - 50px); */
-    /* margin-left: 50px; */
-    /* box-sizing: border-bo    x; */
-/* } */
 
 table {
     border-radius: 50px;

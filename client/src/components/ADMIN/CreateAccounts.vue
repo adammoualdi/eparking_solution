@@ -7,10 +7,10 @@
       <b-row align-h="center">
         <b-col cols="10">
           <b-card class="p-3">
-            <h3 class="mb-4">Register</h3>
+            <h3 class="mb-4">Request Security Accounts</h3>
             <div>
               <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group id="example-input-group-1" label="Name" label-for="example-input-1">
+                <b-form-group id="example-input-group-1" label="Username" label-for="example-input-1">
                   <b-form-input
                     id="example-input-1"
                     name="example-input-1"
@@ -68,51 +68,22 @@
                   <b-form-invalid-feedback id="input-4-live-feedback">This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group id="example-input-group-5" label="Password" label-for="example-input-5">
-                  <b-form-input
-                    id="example-input-5"
-                    name="example-input-5"
-                    type="password"
-                    v-model="$v.form.password.$model"
-                    :state="$v.form.password.$dirty ? !$v.form.password.$error : null"
-                    aria-describedby="input-5-live-feedback"
-                  ></b-form-input>
-
-                  <b-form-invalid-feedback id="input-5-live-feedback">This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
-
                 <b-form-group
-                  id="example-input-group-6"
-                  label="Confirm Password"
-                  label-for="example-input-6"
+                  id="example-input-group-5"
+                  label="Date of birth"
+                  label-for="example-input-5"
                 >
                   <b-form-input
-                    id="example-input-6"
-                    name="example-input-6"
-                    type="password"
-                    v-model="$v.form.password2.$model"
-                    :state="$v.form.password2.$dirty ? !$v.form.password2.$error : null"
-                    aria-describedby="input-6-live-feedback"
-                  ></b-form-input>
-                  <b-form-invalid-feedback id="input-6-live-feedback">This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group
-                  id="example-input-group-7"
-                  label="Date of birth"
-                  label-for="example-input-7">
-
-                  <b-form-input
                     type="date"
-                    id="example-input-7"
-                    name="example-input-7"
+                    id="example-input-5"
+                    name="example-input-5"
                     v-model="$v.form.dofb.$model"
                     :state="$v.form.dofb.$dirty ? !$v.form.dofb.$error : null"
-                    aria-describedby="input-7-live-feedback"
+                    aria-describedby="input-5-live-feedback"
                     placeholder="Enter the users date of birth">
-                </b-form-input>
+                  </b-form-input>
 
-                  <b-form-invalid-feedback id="input-7-live-feedback">This is a required field.</b-form-invalid-feedback>
+                  <b-form-invalid-feedback id="input-5-live-feedback">This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-button type="submit" variant="primary" :disabled="$v.form.$invalid">Submit</b-button>
@@ -129,10 +100,23 @@
 import PostsService from '@/services/PostsService'
 import { validationMixin } from 'vuelidate'
 import NavigationBarReg from '@/components/NavigationBarReg'
-import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
+// var currentTime = new Date()
+// console.log(currentTime)
+// console.log(currentTime - 18)
+// const checkAge = (value) => {
+//   console.log(value)
+//   if (currentTime - 18 < value) {
+//     return true
+//   } else {
+//     return false
+//   }
+// }
 
+// const currentDate = moment(new Date()).startOf('day')
+// const minDate = window.vuelidate.withParams({minDate: currentDate.format('DD.MM.YYYY')}, value => moment(value, 'DD.MM.YYYY', true).isSameOrAfter(currentDate))
 export default {
-  name: 'Register',
+  name: 'CreateAccounts',
   mixins: [validationMixin],
   data () {
     return {
@@ -141,10 +125,8 @@ export default {
         username: null,
         firstname: null,
         lastname: null,
-        password: null,
-        password2: null,
-        email: null,
-        dofb: null
+        dofb: null,
+        email: null
       }
     }
   },
@@ -172,19 +154,9 @@ export default {
         minLength: minLength(2),
         maxLength: maxLength(20)
       },
-      password: {
-        required,
-        minLength: minLength(6),
-        maxLength: maxLength(20)
-      },
-      password2: {
-        required,
-        minLength: minLength(6),
-        maxLength: maxLength(20),
-        sameAsPassword: sameAs('password')
-      },
       dofb: {
         required
+        // minDate
       }
     }
   },
@@ -211,10 +183,10 @@ export default {
         email: this.form.email,
         firstname: this.form.firstname,
         lastname: this.form.lastname,
-        password: this.form.password,
-        password2: this.form.password2,
+        password: 'fakepassword',
+        password2: 'fakepassword',
         dofb: this.form.dofb,
-        roleName: 'USER'
+        roleName: 'SECURITY'
       })
       console.log(response.data.errorContent)
       // console.log('Error ' + this.error)

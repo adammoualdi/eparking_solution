@@ -8,13 +8,9 @@
 
             <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav>
-                <b-nav-item href="/locations">Requests
+                <b-nav-item href="/security/overview">Overview
                     <!-- <router-link to="/search">Parking Locations</router-link> -->
                 </b-nav-item>
-                <b-nav-item href="/accounts/security">Security accounts </b-nav-item>
-                <!-- <b-nav-item v-bind:href="profile">Profile</b-nav-item> -->
-                <!-- <b-nav-item v-bind:href="bookings">Bookings</b-nav-item> -->
-                <!-- <b-nav-item href="#" disabled>Disabled</b-nav-item> -->
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->
@@ -28,9 +24,11 @@
 </template>
 
 <script>
+// import { SidebarMenu } from 'vue-sidebar-menu'
+// import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 export default {
-  name: 'NavigationBar',
+  name: 'NavigationBarSecurity',
   data () {
     return {
       collapse: true,
@@ -40,8 +38,6 @@ export default {
     }
   },
   mounted () {
-    this.profile = '/profile/' + window.localStorage.getItem('username')
-    this.bookings = '/bookings/' + window.localStorage.getItem('username')
   }
 }
 </script>

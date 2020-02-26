@@ -45,6 +45,10 @@ export default {
 
   addLocation (params) {
     return Api.post('locations/add', params)
+  },
+
+  changePassword (params) {
+    return Api.post('authenticate/changepassword', params)
   }
 
 }

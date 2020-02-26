@@ -7,39 +7,44 @@
         <!-- <b-tabs card> -->
             <!-- <b-tab title="Old" active> -->
         <div v-if="isMounted">
-            <div class="table-wrap" v-if="locations.length > 0">
-                <table>
-                    <tr>
-                    <td width="90%">Location</td>
-                    <td width="80%">Automatic checks</td>
-                    <td width="50%" align="center">Action</td>
-                    </tr>
-                    <tr v-for="(location, index) in locations" :key="index" class="border_bottom" >
-                    <td>{{ location.country + ', ' + location.city + ', ' + location.address1 + ', ' + location.address2 }} <br>
-                        {{ location.postcode }} <br>
-                        {{ 'Spaces: ' + location.spaces }} <br>
-                        {{ 'Parking owner: ' + location.userId.firstname + ' ' + location.userId.firstname }} <br>
-                        {{ 'Email: ' + location.userId.email }}
-                    </td>
-                    <td>
-                        <div v-if="location.warning">
-                            <font-awesome-icon class="WarningIcon" icon="exclamation-circle" size="2x"> </font-awesome-icon>
-                        </div>
-                        <div v-else>
-                            <font-awesome-icon class="OkIcon" icon="check-circle" size="2x"> </font-awesome-icon>
-                        </div>
-                    </td>
-                    <td align="center">
-                        <!-- <router-link v-bind:to="{ name: 'EditPost', params: { id: post._id } }">Edit</router-link> | -->
-                        <a href="javascript:void(0)" @click="approveLocation(location, true)">Approve</a>
-                        <a href="javascript:void(0)" @click="approveLocation(location, false)">Disapprove</a>
-                    </td>
-                    </tr>
-                </table>
-            </div>
-            <div v-else>
-                There are no requests
-            </div>
+            <!-- <b-tabs content-class="mt-3"> -->
+                <!-- <b-tab title="Locations" active> -->
+                    <div class="table-wrap" v-if="locations.length > 0">
+                        <table>
+                            <tr>
+                            <td width="90%">Location</td>
+                            <td width="80%">Automatic checks</td>
+                            <td width="50%" align="center">Action</td>
+                            </tr>
+                            <tr v-for="(location, index) in locations" :key="index" class="border_bottom" >
+                            <td>{{ location.country + ', ' + location.city + ', ' + location.address1 + ', ' + location.address2 }} <br>
+                                {{ location.postcode }} <br>
+                                {{ 'Spaces: ' + location.spaces }} <br>
+                                {{ 'Parking owner: ' + location.userId.firstname + ' ' + location.userId.firstname }} <br>
+                                {{ 'Email: ' + location.userId.email }}
+                            </td>
+                            <td>
+                                <div v-if="location.warning">
+                                    <font-awesome-icon class="WarningIcon" icon="exclamation-circle" size="2x"> </font-awesome-icon>
+                                </div>
+                                <div v-else>
+                                    <font-awesome-icon class="OkIcon" icon="check-circle" size="2x"> </font-awesome-icon>
+                                </div>
+                            </td>
+                            <td align="center">
+                                <!-- <router-link v-bind:to="{ name: 'EditPost', params: { id: post._id } }">Edit</router-link> | -->
+                                <a href="javascript:void(0)" @click="approveLocation(location, true)">Approve</a>
+                                <a href="javascript:void(0)" @click="approveLocation(location, false)">Disapprove</a>
+                            </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div v-else>
+                        There are no requests
+                    </div>
+                <!-- </b-tab> -->
+                <!-- <b-tab title="Users" active> USERS </b-tab> -->
+            <!-- </b-tabs> -->
         </div>
         <div v-else class="Loading">
             <SemipolarSpinner
@@ -136,12 +141,6 @@ export default {
     margin-top:200px;
     /* border-color: black; */
 }
-
-/* .profileContainer { */
-    /* width: calc(100% - 50px); */
-    /* margin-left: 50px; */
-    /* box-sizing: border-bo    x; */
-/* } */
 
 table {
     border-radius: 50px;

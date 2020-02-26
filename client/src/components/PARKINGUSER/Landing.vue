@@ -144,7 +144,6 @@ export default {
         var aTime = this.$route.query.start
         var lTime = this.$route.query.end
         this.userQuery = {loc, aTime, lTime}
-
         this.getLocationInfo()
       }
     },
@@ -175,36 +174,19 @@ export default {
       })
     },
     async filterLocations () {
-      console.log('FILTER LOCATIONS---------------')
-      console.log(this.locations)
       var locations = []
-      // locations.splice(0, locations.length)
-      // console.log(locations)
-      // console.log(locations.length)
-      // console.log('CHECKING LOCATIONS ARRAY ')
-      // console.log(this.locations)
-      // console.log(this.locations.length)
-      console.log(this.userQuery)
       for (var i = 0; i < this.locations.length; i++) {
         var loc = new this.google.maps.LatLng(this.locations[i].latitude, this.locations[i].longitude)
-        console.log(loc)
         var d = this.google.maps.geometry.spherical.computeDistanceBetween(loc, this.userLoc)
         if (d < 5000) {
-          console.log('filter loc')
           var tmp = this.locations[i]
           var tmpObject = {locationId: tmp.id, country: tmp.country, city: tmp.city, address1: tmp.address1, address2: tmp.address2, postcode: tmp.postcode, distance: d, latitude: tmp.latitude, longitude: tmp.longitude, arriveTime: this.userQuery.aTime, leavingTime: this.userQuery.lTime}
-          console.log('ADDED ')
-          console.log(tmpObject)
           locations[i] = tmpObject
         }
-        console.log(d)
       }
-      // a[1] > b[1] second element in distances array.
+      // Remove any empty objects
+      locations = locations.filter(value => Object.keys(value).length !== 0)
       console.log(locations)
-      // locations.sort((a, b) => (a[1] > b[1]) ? 1 : -1)
-      // filteredLocations.splice(0, 9)
-      // console.log('SORTED: ' + locations)
-      // console.log(locations)
       var object = {arriveTime: this.userQuery.aTime, leavingTime: this.userQuery.lTime, locations}
       console.log(object)
       const response = await PostsService.getAvailableLocations(object)

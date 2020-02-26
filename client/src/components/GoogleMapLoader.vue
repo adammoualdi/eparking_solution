@@ -5,22 +5,21 @@
 </template>
 
 <script>
-import GoogleMapsApiLoader from "google-maps-api-loader";
+import GoogleMapsApiLoader from 'google-maps-api-loader'
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry">
-
 
 export default {
   props: {
     mapConfig: Object,
     apiKey: String
   },
-  data() {
+  data () {
     return {
       google: null,
       map: null
-    };
+    }
   },
-  async mounted() {
+  async mounted () {
     const googleMapApi = await GoogleMapsApiLoader({
       apiKey: this.apiKey
     })
@@ -29,7 +28,7 @@ export default {
   },
 
   methods: {
-    initializeMap() {
+    initializeMap () {
       const mapContainer = this.$refs.googleMap
       this.map = new this.google.maps.Map(mapContainer, this.mapConfig)
     }

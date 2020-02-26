@@ -13,6 +13,10 @@ import UserBookings from '@/components/PARKINGUSER/UserBookings'
 import OwnerLanding from '@/components/OWNER/OwnerLanding'
 import AdminApproval from '@/components/ADMIN/AdminApproval'
 import LocationOverview from '@/components/OWNER/LocationOverview'
+import CreateAccounts from '@/components/ADMIN/CreateAccounts'
+import OwnerRegister from '@/components/OWNER/OwnerRegister'
+import PasswordChange from '@/components/PasswordChange'
+import SecurityOverview from '@/components/SECURITY/SecurityOverview'
 
 Vue.use(Router)
 
@@ -33,6 +37,14 @@ const router = new Router({
       path: '/register',
       name: 'Register',
       component: Register,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/register/owner',
+      name: 'OwnerRegister',
+      component: OwnerRegister,
       meta: {
         requiresAuth: false
       }
@@ -131,14 +143,44 @@ const router = new Router({
       }
     },
     {
-      path: '/'
-    },
-    {
       path: '/overview/:locationId',
       name: 'LocationOverview',
       component: LocationOverview,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: '/accounts/security',
+      name: 'CreateAccounts',
+      component: CreateAccounts,
+      meta: {
+        requiresAuth: true,
+        roles: {
+          role: 'User'
+        }
+      }
+    },
+    {
+      path: '/password',
+      name: 'PasswordChange',
+      component: PasswordChange,
+      meta: {
+        requiresAuth: true,
+        roles: {
+          role: 'Security'
+        }
+      }
+    },
+    {
+      path: '/security/overview',
+      name: 'SecurityOverview',
+      component: SecurityOverview,
+      meta: {
+        requiresAuth: true,
+        roles: {
+          role: 'Security'
+        }
       }
     }
     // {
@@ -170,3 +212,4 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
+// export default new VueRouter({ router })

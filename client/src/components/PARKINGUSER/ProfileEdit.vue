@@ -7,42 +7,24 @@
         <b-container class ="wrapper">
             <b-row align-h="center" class="mt-5">
                 <b-col cols="10">
-                    <!-- <b-card class="p-3"> -->
                     <b-form @submit="onSubmit">
                         <b-form-group id="usernameInputGroup1"
-                                label-for="usernameInput1"
-                                >
-                    <b-form-input id="usernameInput1"
-                                required
-                                placeholder="Enter username">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="passwordInputGroup2"
-                                label-for="passwordInput2">
-                    <b-form-input id="passwordInput2"
-                                type="password"
-                                required
-                                placeholder="Enter password">
-                    </b-form-input>
-                </b-form-group>
-
-                <!-- <b-form-group id="rememberMeGroup4">
-                    <b-form-checkbox-group id="rememberMeChecks">
-                    <b-form-checkbox value="remember">Remember me</b-form-checkbox>
-                    </b-form-checkbox-group>
-                </b-form-group>
-                <div class="d-flex justify-content-between">
-                    <div>
-                    <b-button type="submit" variant="primary">Submit</b-button>&nbsp;
-                    <b-button type="reset" variant="danger">Reset</b-button>
-                    </div>
-                    <div>
-                    <a href="register" v-b-modal.modal1>Forgot Password</a>
-                    </div>
-                </div> -->
-                </b-form>
-                    <!-- </b-card> -->
-            </b-col>
+                                      label-for="usernameInput1">
+                            <b-form-input id="usernameInput1"
+                                          required
+                                          placeholder="Enter username">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="passwordInputGroup2"
+                                      label-for="passwordInput2">
+                            <b-form-input id="passwordInput2"
+                                          type="password"
+                                          required
+                                          placeholder="Enter password">
+                            </b-form-input>
+                        </b-form-group>
+                    </b-form>
+                </b-col>
             </b-row>
         </b-container>
     </div>
@@ -50,7 +32,7 @@
 </template>
 
 <script>
-import NavBar from '@/components/PARKINGUSER/NavigationBar'
+import NavigationBar from '@/components/PARKINGUSER/NavigationBar'
 export default {
   name: 'ProfileEdit',
   components: {

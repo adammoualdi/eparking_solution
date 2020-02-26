@@ -1,14 +1,5 @@
 <template>
   <div id = "LocationViewWrapper">
-    <!-- <div class="LocationViewInfoWrapper"> -->
-      <!-- <div class="LocationViewContents"> -->
-        <!-- <b-container class ="wrapper">
-          <div>
-            <b-card no-body>
-                TEST
-            </b-card>
-          </div>
-        </b-container> -->
     <div v-if="firstInit">
         <div class="LocationView">
             <b-card bg-variant="dark" text-variant="white" class="card">
@@ -23,13 +14,10 @@
             </b-card>
         </div>
     </div>
-      <!-- </div> -->
-    <!-- </div> -->
   </div>
 </template>
 
 <script>
-// import PostsService from '@/services/PostsService'
 export default {
   name: 'LocationView',
   data () {

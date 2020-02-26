@@ -100,6 +100,7 @@ export default {
       })
       console.log(response.data)
       const that = this
+      // NEED TO CHECK IF ERROR
       swal('Booked!', 'Your booking has been successfully made', 'success')
         .then(function () {
           console.log('GO TO')
