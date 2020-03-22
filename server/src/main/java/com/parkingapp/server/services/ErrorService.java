@@ -29,7 +29,14 @@ public class ErrorService {
             }
             
             return new ErrorResponse(HttpStatus.OK, errorType, errorList);
-    }
+	}
+	
+	public ErrorResponse createErrorResp(ErrorDTO errorDTO , String errorType) {
+		List<ErrorDTO> errorList = new ArrayList<ErrorDTO>();
+			errorList.add(errorDTO);
+			// System.out.println( "---------------------------------------------" + errors.getAllErrors().size());
+            return new ErrorResponse(HttpStatus.OK, errorType, errorList);
+	}
 
 
 

@@ -136,6 +136,7 @@ export default {
       localStorage.removeItem('jwt')
       localStorage.removeItem('role')
       localStorage.removeItem('username')
+      localStorage.removeItem('deposit')
 
       // Check if response error from API login
       if (this.response !== undefined) {
@@ -145,6 +146,7 @@ export default {
         window.localStorage.setItem('jwt', this.response.data.token)
         window.localStorage.setItem('role', this.response.data.role)
         window.localStorage.setItem('username', this.response.data.username)
+        window.localStorage.setItem('deposit', this.response.data.deposit)
         this.route()
         // var tok = window.localStorage.getItem('jwt')
         // var role = window.localStorage.getItem('role')

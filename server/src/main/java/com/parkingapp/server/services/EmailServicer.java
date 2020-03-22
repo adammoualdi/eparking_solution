@@ -32,4 +32,16 @@ public class EmailServicer {
         helper.setSubject("Registration details");		
         sender.send(message);	
     }	
+
+    public void parkingConfirmationEmail(String username, String email, String userUrl, String url) throws Exception {	
+        MimeMessage message = sender.createMimeMessage();	
+        MimeMessageHelper helper = new MimeMessageHelper(message);		
+        helper.setTo(email);	
+        // helper.setText("Welcome, \n Username: " + login + "\n Password: " + password + "\n Please login to change your password");	
+        String htmlMsg = "<body style='border:2px solid black'>"
+                    +"Your confirmation URL is "+ url+ userUrl + "</body>";
+        helper.setText(htmlMsg, true);
+        helper.setSubject("Registration details");		
+        sender.send(message);	
+    }	
 } 

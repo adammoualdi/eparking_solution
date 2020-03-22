@@ -10,7 +10,7 @@
             <h3 class="mb-4">Register</h3>
             <div>
               <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group id="example-input-group-1" label="Name" label-for="example-input-1">
+                <b-form-group id="example-input-group-1" label="Username" label-for="example-input-1">
                   <b-form-input
                     id="example-input-1"
                     name="example-input-1"

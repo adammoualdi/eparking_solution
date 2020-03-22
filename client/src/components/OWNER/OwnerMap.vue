@@ -23,7 +23,9 @@ export default {
       geocoder: null,
       locInfoGlobal: null,
       firstInit: false,
-      results: null
+      results: null,
+      markers: [],
+      that: null
     }
   },
   props: {
@@ -50,6 +52,12 @@ export default {
     // this.locations = []
     this.$emit('mapClick', 'test')
     this.init()
+  },
+  mounted () {
+    const that = this
+    EventBus.$on('removePointer', function (payLoad) {
+      that.init()
+    })
   },
   // components: {
   //   MapSearch
@@ -115,6 +123,7 @@ export default {
               var marker = new google.maps.Marker({
                 position: latLng,
                 map: map,
+                animation: google.maps.Animation.DROP,
                 locationInfo: location,
                 times: that.address
               })
@@ -139,18 +148,26 @@ export default {
 
           // Event listener to click on map
           // Allows users to plot parking location on the map for accurate GPS coords.
+          var markerss = []
           google.maps.event.addListener(map, 'click', (event) => {
             this.geocoder.geocode({
               'latLng': event.latLng
             }, function (results, status) {
-              console.log('TEST')
+              console.log(event.latLng)
               EventBus.$emit('mapClick', results, event.latLng)
               if (status === google.maps.GeocoderStatus.OK) {
+                var coords = event.latLng.lat() + ', ' + event.latLng.lng()
                 var marker = new google.maps.Marker({
                   position: event.latLng,
-                  map: map
+                  map: map,
+                  // draggable: true,
+                  animation: google.maps.Animation.DROP,
                   // locationInfo: location,
+                  coords: coords
                 })
+                console.log(coords)
+                markerss.push(marker)
+                console.log(this.markers)
                 marker.setVisible(true)
               }
             })
@@ -169,6 +186,10 @@ export default {
         }
         console.log(results[0].geometry)
       })
+    },
+    addMarker (marker) {
+      this.markers.push(marker)
+      console.log(this.markers)
     }
   }
 }

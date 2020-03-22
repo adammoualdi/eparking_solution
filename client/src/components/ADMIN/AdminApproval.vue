@@ -76,10 +76,10 @@ export default {
     }
   },
   mounted () {
-    this.getBookings()
+    this.getLocations()
   },
   methods: {
-    async getBookings () {
+    async getLocations () {
       const response = await PostsService.getAdminApprovals()
       console.log(response.data)
       this.locations = response.data.locations

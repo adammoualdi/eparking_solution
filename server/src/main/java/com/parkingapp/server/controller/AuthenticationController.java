@@ -60,7 +60,7 @@ public class AuthenticationController {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		System.out.println(authenticationRequest.toString());
 		UserInfo user = userInfoRepo.findByUsername(authenticationRequest.getUsername());
-		return ResponseEntity.ok(new JwtResponse(token, user.getUsername(), user.getRole().getRole(), user.isDefaultPassword()));
+		return ResponseEntity.ok(new JwtResponse(token, user.getUsername(), user.getRole().getRole(), user.isDefaultPassword(), user.getDeposit()));
 	}
 	
 	private void authenticate(String username, String password) throws Exception {

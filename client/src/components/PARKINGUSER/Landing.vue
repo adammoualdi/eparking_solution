@@ -5,13 +5,36 @@
       <div class="Nav">
         <NavigationBar class="nav"> </NavigationBar>
       </div>
-      <div class="searchWrapper">
+      <div v-if="isMounted">
+        <div class="searchWrapper">
         <!-- <i class="fas fa-search-location fa-3x" id="searchIcon"></i> -->
         <b-button pill type="button" name="button" v-on:click="getLocSearch">
           <font-awesome-icon icon="search-location" size="3x"> </font-awesome-icon>
         </b-button>
-      </div>
-      <div v-if="isMounted">
+        <!-- <div class="SearchBar">
+          <b-row>
+            <b-col>
+            <b-input-group class="mb-2">
+              <b-input-group-prepend is-text>
+                <b-icon icon="search"></b-icon>
+              </b-input-group-prepend>
+              <b-form-input type="search" placeholder="Search terms"></b-form-input>
+            </b-input-group>
+            </b-col>
+            <b-col>
+              <Datetime class="dateTimeInput" placeholder="Enter arriving time" type="datetime" v-model="arrivingTime" :minute-step=30></Datetime>
+            </b-col>
+            <b-col>
+              <Datetime class="dateTimeInput" placeholder="Enter leaving time" type="datetime" v-model="leavingTime" :minute-step=30></Datetime>
+            </b-col>
+            <b-col>
+              <b-button size="lrg" class="mb-2">
+                <b-icon icon="search"></b-icon> Search
+              </b-button>
+            </b-col>
+          </b-row>
+        </div> -->
+        </div>
         <div class="LandingLocationsView" v-if="$mq !== 'mobile'" >
           <ul>
             <li>
@@ -21,12 +44,10 @@
                     <b-media-aside vertical-align="center">
                       <b-img blank blank-color="#ccc" width="128" height="128" alt="placeholder"></b-img>
                     </b-media-aside>
-
                     <b-media-body class="ml-3">
                       <b-media>
                         <h5 class="mt-0">{{ location.address2 + ' ' + location.postcode }}</h5>
-                        Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in
-                        faucibus.
+                        Cost: £{{ location.deposit }}
                       </b-media>
                     </b-media-body>
                   </b-media>
@@ -69,6 +90,8 @@ import gmapsInit from '@/utils/gmaps'
 import swal from 'sweetalert'
 import {SemipolarSpinner} from 'epic-spinners'
 import { EventBus } from '@/services/EventBus.js'
+import DatePicker from '@/components/DateTimePicker'
+import { Datetime } from 'vue-datetime'
 export default {
   name: 'Landing',
   props: ['location', 'start', 'end'],
@@ -86,7 +109,9 @@ export default {
       showSearch: false,
       showLocView: false,
       locViewAddress: null,
-      locViewBooking: null
+      locViewBooking: null,
+      arrivingTime: null,
+      leavingTime: null
     }
   },
   created () {
@@ -98,6 +123,15 @@ export default {
     console.log(this.$route.query.location)
     this.google = await gmapsInit()
     this.geocoder = new this.google.maps.Geocoder()
+    navigator.geolocation.getCurrentPosition(pos => {
+      // var gettingLocation = false
+      var location = pos
+      console.log(location)
+    }, err => {
+      // var gettingLocation = false
+      var errorStr = err.message
+      console.log(errorStr)
+    })
     EventBus.$on('mapToLanding', function (payLoad) {
       console.log(payLoad)
     })
@@ -107,7 +141,9 @@ export default {
     MapSearch,
     NavigationBar,
     LocationView,
-    SemipolarSpinner
+    SemipolarSpinner,
+    DatePicker,
+    Datetime
   },
   methods: {
     onMarkerClick (address, booking) {
@@ -189,12 +225,16 @@ export default {
       console.log(locations)
       var object = {arriveTime: this.userQuery.aTime, leavingTime: this.userQuery.lTime, locations}
       console.log(object)
-      const response = await PostsService.getAvailableLocations(object)
+      if (locations.length !== 0) {
+        const response = await PostsService.getAvailableLocations(object)
+        this.mapLocations = response.data.locations
+      } else {
+        swal('Oops!', `We couldn't find any parking slots in your area!`, 'warning')
+      }
       console.log('AVAILABLE LOCATIONS -----------------------------------------')
       console.log(this.mapLocations)
       // DON'T WANT TO CHANGE THIS.LOCATIONS ARRAY CAUSES INDEX LENGTH ERROR
       // this.locations = locations
-      this.mapLocations = response.data.locations
     },
     goToBooking (location) {
       this.$router.push({ name: 'Booking', params: {location: location} })
@@ -268,12 +308,27 @@ export default {
     width: 100vw;
     background: red; */
   }
+
+  .searchWrapper {
+    margin-left: 380px;
+    /* width: calc(100vw - 400px); */
+    /* width: calc(100vw - 80px); */
+  }
 }
+
 .Nav {
     display: block;
     /* float: left; */
     z-index: 20;
     /* position: absolute; */
+}
+
+.SearchBar {
+  position: absolute;
+  z-index: 999999;
+  width: 95%;
+  /* float: left; */
+  /* width: 1000px; */
 }
 
 .MapSearch {
@@ -324,13 +379,14 @@ export default {
 
 .searchWrapper {
   position: absolute;
-  /* width: 100%; */
-  margin-left: calc(100vw - 90px);
+  /* width: calc(); */
+  /* margin-left: calc(100vw - 90px); */
+  /* width: calc(100vw- 380px); */
   /* float: right; */
   margin-top: 70px;
   z-index: 99;
   /* background-color:; */
-  border-radius: 100px;
+  /* border-radius: 100px; */
   /* width: 40px;
   height: 40px; */
   /* padding: 6px 0px; */
@@ -383,6 +439,10 @@ export default {
 .LandingLocationsView ul {
   overflow:hidden;
   overflow-y:scroll;
+}
+
+.dateTimeInput {
+  width: 5%;
 }
 
 </style>

@@ -28,7 +28,7 @@
       </b-row>
       <b-row align-v="end">
           <b-col>
-            <button class="searchBtn" type="button" name="button" v-on:click="emitToParent">Search</button>
+            <button class="searchBtn" type="button" name="button" v-on:click="emitToParent">Search<b-icon icon="search"></b-icon></button>
             <p class="error" v-show="invalidDate">Arrive date must be before leaving date</p>
           </b-col>
       </b-row>

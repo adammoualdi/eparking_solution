@@ -7,6 +7,7 @@ package com.parkingapp.server.domain.DTO;
  * */
 
 public class CarDTO {
+    private int id;
     private String regNo;
     private String model;
 
@@ -14,9 +15,10 @@ public class CarDTO {
 
     }
 
-    public CarDTO(String regNo, String model) {
+    public CarDTO(int id, String regNo, String model) {
         this.regNo = regNo;
         this.model = model;
+        this.id = id;
     }
 
     public String getRegNo() {
@@ -33,6 +35,14 @@ public class CarDTO {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

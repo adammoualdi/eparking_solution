@@ -1,6 +1,7 @@
 package com.parkingapp.server.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.parkingapp.server.domain.JwtResponse;
 import com.parkingapp.server.domain.Location;
@@ -62,13 +63,21 @@ public class AdminController {
             location.setLatitude(temp.getLatitude());
 			location.setLongitude(temp.getLongitude());
 			// location.setUserId(temp.getUserId());
-			user.setUsername(temp.getUserId().getUsername());
-			user.setFirstname(temp.getUserId().getFirstname());
-			user.setLastname(temp.getUserId().getLastname());
-			user.setEmail(temp.getUserId().getEmail());
-			user.setId(temp.getUserId().getId());
-			user.setDofb(temp.getUserId().getDofb());
-			location.setUserId(user);
+			Iterator<UserInfo> it = temp.getPermissions().iterator();
+     		while(it.hasNext()){
+				UserInfo tmpUser = it.next();
+				if (tmpUser.getRole().getRole().equals("Owner")) {
+					user.setUsername(tmpUser.getUsername());
+					user.setFirstname(tmpUser.getFirstname());
+					user.setLastname(tmpUser.getLastname());
+					user.setEmail(tmpUser.getEmail());
+					user.setId(tmpUser.getId());
+					user.setDofb(tmpUser.getDofb());
+					location.setUserId(user);
+					break;
+				}
+			 }
+			System.out.println("OUTSIDE WHILE");
 			location.setSpaces(temp.getSpaces());
 			location.setWarning(false);
 			location.setApproved(false);

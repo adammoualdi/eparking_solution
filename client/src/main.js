@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuelidate from 'vuelidate'
-import BootstrapVue from 'bootstrap-vue'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VCalendar from 'v-calendar'
@@ -27,6 +27,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 Vue.use(Vuelidate)
 Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
 Vue.use(VCalendar)
 Vue.use(Datetime)
 Vue.use(VueMq, {

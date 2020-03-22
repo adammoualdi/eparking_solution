@@ -47,8 +47,32 @@ export default {
     return Api.post('locations/add', params)
   },
 
+  addImage (params) {
+    return Api.post('locations/upload', params)
+  },
+
   changePassword (params) {
     return Api.post('authenticate/changepassword', params)
+  },
+
+  getLocationBookings (params) {
+    return Api.post('locations/bookings', params)
+  },
+
+  purchasePoints (params) {
+    return Api.post('dashboard/purchase', params)
+  },
+
+  getSecurityBookings (params) {
+    return Api.post('dashboard/security/bookings', params)
+  },
+
+  getUserInfo () {
+    return Api.post('profile/user')
+  },
+
+  confirmParking (params) {
+    return Api.post('booking/confirmation/' + params)
   }
 
 }

@@ -17,6 +17,9 @@ import CreateAccounts from '@/components/ADMIN/CreateAccounts'
 import OwnerRegister from '@/components/OWNER/OwnerRegister'
 import PasswordChange from '@/components/PasswordChange'
 import SecurityOverview from '@/components/SECURITY/SecurityOverview'
+import PurchasePoints from '@/components/PARKINGUSER/PurchasePoints'
+import AdminLocations from '@/components/ADMIN/AdminLocations'
+import ParkingConfirmation from '@/components/PARKINGUSER/ParkingConfirmation'
 
 Vue.use(Router)
 
@@ -180,6 +183,36 @@ const router = new Router({
         requiresAuth: true,
         roles: {
           role: 'Security'
+        }
+      }
+    },
+    {
+      path: '/purchase',
+      name: 'PurchasePoints',
+      component: PurchasePoints,
+      meta: {
+        requiresAuth: true,
+        roles: {
+          role: 'User'
+        }
+      }
+    },
+    {
+      path: '/admin/locations',
+      name: 'AdminLocations',
+      component: AdminLocations,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/booking/confirmation/:url',
+      name: 'ParkingConfirmation',
+      component: ParkingConfirmation,
+      meta: {
+        requiresAuth: true,
+        roles: {
+          role: 'User'
         }
       }
     }

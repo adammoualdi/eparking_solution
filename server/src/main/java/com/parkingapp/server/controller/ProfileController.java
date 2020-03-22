@@ -67,7 +67,7 @@ public class ProfileController {
         List<CarDTO> carList = new ArrayList<>();
         for (int i = 0; i < cars.size(); i++) {
             Car temp = cars.get(i);
-            CarDTO car = new CarDTO(temp.getRegNo(), temp.getModel());
+            CarDTO car = new CarDTO(temp.getCarId(), temp.getRegNo(), temp.getModel());
             carList.add(car);
         }
 
@@ -76,5 +76,27 @@ public class ProfileController {
         System.out.println(profileInfo.toString());
         // profileInfo.setCars(user.getCars());
 	    return ResponseEntity.ok(profileInfo);
-	}
+    }
+    
+    // @PreAuthorize("hasRole('USER')")
+	// @RequestMapping(value = "/profile/user", method = RequestMethod.GET)
+    // public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String token) throws Exception {
+        
+    //     String usernameTok = jwtTokenUtil.getUsernameFromToken(token.substring(7,token.length()));
+    //     UserInfo user = userInfoRepo.findByUsername(usernameTok);
+
+    //     List<Car> userCars = carRepo.findByUserId(user);
+    //     List<CarDTO> tmpCars = new ArrayList<CarDTO>();
+    //     for (int i = 0; i < userCars.size(); i++) {
+    //         CarDTO car = new CarDTO();
+    //         car.setId(userCars.get(i).getCarId());
+    //         car.setModel(userCars.get(i).getModel());
+    //         car.setRegNo(userCars.get(i).getRegNo());
+    //         tmpCars.add(car);
+    //     }
+
+    //     CarsDTO carsDTO = new CarsDTO(tmpCars);
+        
+    //     return ResponseEntity.ok(carsDTO);
+    // }
 }

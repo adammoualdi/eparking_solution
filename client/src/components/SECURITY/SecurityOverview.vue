@@ -7,9 +7,9 @@
         <!-- <b-tabs card> -->
             <!-- <b-tab title="Old" active> -->
         <div v-if="isMounted">
-            <div class="overviewCitySearch">
+            <!-- <div class="overviewCitySearch">
                 <b-form-select v-model="citySelected" :options="cityOptions" multiple :select-size="4" @change="onChange($event)"></b-form-select>
-            </div>
+            </div> -->
             <div class="overviewSearch">
                 <b-form-select v-model="locationSelected" :options="locationOptions" multiple :select-size="4" @change="onChange($event)"></b-form-select>
             </div>
@@ -25,12 +25,15 @@
                     <b-card-group decks>
                         <b-card class="overviewBox" id="box1">
                             Bookings Today
+                            <h1> {{ bookingsToday }} </h1>
                         </b-card>
                         <b-card class="overviewBox" id="box2">
                             Currently Parked
+                            <h1> {{ currentlyParked }} </h1>
                         </b-card>
                         <b-card class="overviewBox" id="box3">
                             Late
+                            <h1> {{ lateBookings }} </h1>
                         </b-card>
                     </b-card-group>
                 </div>
@@ -38,32 +41,27 @@
                     Overview: Location name
                 </b-card> -->
             </div>
-                <div class="table-wrap" v-if="locations.length > 0">
+                <div class="table-wrap" v-if="showLocations.length > 0">
                     <table>
                         <tr>
-                        <td width="90%">Details</td>
-                        <td width="80%">Automatic checks</td>
-                        <td width="50%" align="center">Action</td>
+                            <th width="15%">Name</th>
+                            <th width="15%">Email</th>
+                            <th width="30%">Car</th>
+                            <th width="32.87%">Arrival time</th>
+                            <th width="40%">Leaving time</th>
+                            <!-- <td width="50%" align="center">Action</td> -->
                         </tr>
-                        <tr v-for="(location, index) in locations" :key="index" class="border_bottom" >
-                        <!-- <td>{{ location.country + ', ' + location.city + ', ' + location.address1 + ', ' + location.address2 }} <br>
-                            {{ location.postcode }} <br>
-                            {{ 'Spaces: ' + location.spaces }} <br>
-                            {{ 'Parking owner: ' + location.userId.firstname + ' ' + location.userId.firstname }} <br>
-                            {{ 'Email: ' + location.userId.email }} -->
-                        <!-- </td> -->
-                        <td>
-                            <div v-if="location.warning">
-                                <font-awesome-icon class="WarningIcon" icon="exclamation-circle" size="2x"> </font-awesome-icon>
-                            </div>
-                            <div v-else>
-                                <font-awesome-icon class="OkIcon" icon="check-circle" size="2x"> </font-awesome-icon>
-                            </div>
-                        </td>
-                        <td align="center">
-                            <a href="javascript:void(0)" @click="approveLocation(location, true)">Approve</a>
-                            <a href="javascript:void(0)" @click="approveLocation(location, false)">Disapprove</a>
-                        </td>
+                        <tr v-for="(booking, index) in showLocations" :key="index" class="border_bottom" >
+                            <td> {{ booking.userDTO.firstname + ' ' + booking.userDTO.lastname }}</td>
+                            <td> {{ booking.userDTO.email }} </td>
+                            <td> {{ booking.car.regNo }} </td>
+                            <td>{{ dateFunc(booking.startDate) + ', ' + timeFunc(booking.startDate) }} <br>
+                                <!-- {{ booking.postcode }} <br> -->
+                                <!-- {{ 'Spaces: ' + location.spaces }} <br> -->
+                                <!-- {{ 'Parking owner: ' + bookin.userId.firstname + ' ' + booking.userId.firstname }} <br> -->
+                                <!-- {{ 'Email: ' + location.userId.email }} -->
+                            </td>
+                            <td> {{ dateFunc(booking.endDate) + ', ' + timeFunc(booking.endDate) }} </td>
                         </tr>
                     </table>
                 </div>
@@ -88,6 +86,7 @@
 import NavigationBarSecurity from '@/components/SECURITY/NavigationBarSecurity'
 import PostsService from '@/services/PostsService'
 import {SemipolarSpinner} from 'epic-spinners'
+import DateConverter from '@/services/DateConvert'
 export default {
   name: 'SecurityOverview',
   components: {
@@ -97,20 +96,29 @@ export default {
   data () {
     return {
       locations: [],
+      showLocations: [],
       isMounted: false,
       locationSelected: [],
       locationOptions: [
         { value: null, text: 'Please select an option' }
       ],
-      citySelected: [],
-      cityOptions: [
-        // { value: null, text: 'Please select an option' }
-      ]
+      bookingsToday: 0,
+      currentlyParked: 0,
+      lateBookings: 0,
+      interval: 0
     }
   },
   mounted () {
     this.getBookings()
     this.getLocations()
+    console.log('set interval')
+    window.setInterval(() => {
+      this.checkBookings()
+    }, 30000)
+  },
+  beforeDestroy () {
+    console.log('Destroyed')
+    clearInterval()
   },
   methods: {
     async getBookings () {
@@ -120,35 +128,55 @@ export default {
       console.log('locations: ' + this.locations)
     },
     async getLocations () {
-      const response = await PostsService.getLocations()
-      this.locations = response.data.locations
-      console.log(response)
-      this.locationOptions = []
-      for (var i = 0; i < response.data.locations.length; i++) {
-        var address = {value: response.data.locations[i].address1, text: response.data.locations[i].address1}
-        var city = {value: response.data.locations[i], text: response.data.locations[i].city}
-        console.log(address)
-        this.locationOptions.push(address)
-        // returns -1 if not found
-        if (this.cityOptions.indexOf(city) === -1) {
-          this.cityOptions.push(city)
-        }
-      }
-      this.isMounted = true
-    },
-    onChange: function (event) {
-    //   console.log(event.target.value)
-      console.log(this.locationSelected)
+      const response = await PostsService.getSecurityBookings()
+      this.locations = response.data.bookings
       console.log(this.locations)
       this.locationOptions = []
       for (var i = 0; i < this.locations.length; i++) {
-        // var city = {value: this.locations[i].city, text: this.locations[i].city}
-        console.log(this.citySelected)
-        if (this.citySelected.indexOf(this.locations[i]) !== -1) {
-          var location = {value: this.locations[i], text: this.locations[i].address1}
-          this.locationOptions.push(location)
+        var address = {value: this.locations[i].locationId, text: this.locations[i].locationId.address1}
+        // var city = {value: response.data.locations[i], text: response.data.locations[i].city}
+        console.log(address)
+        this.locationOptions.push(address)
+      }
+      this.checkBookings()
+      this.isMounted = true
+    },
+    checkBookings () {
+      console.log('TESTTTTTT')
+      // Get bookings
+      this.bookingsToday = this.showLocations.length
+      // Get currently parked
+      for (var i = 0; i < this.showLocations.length; i++) {
+        var startDate = Date.parse(this.showLocations[i].startDate)
+        var endDate = Date.parse(this.showLocations[i].endDate)
+        var current = new Date()
+        console.log(current)
+        if (startDate <= current && endDate >= current) {
+          this.currentlyParked += 1
         }
       }
+    },
+    onChange: function (event) {
+      console.log(this.locationSelected)
+      console.log(this.locations)
+      this.locationOptions = []
+      // Get all booking information for selected locations
+      for (var i = 0; i < this.locations.length; i++) {
+        var location = {value: this.locations[i].locationId, text: this.locations[i].locationId.address1}
+        this.locationOptions.push(location)
+        for (var ii = 0; ii < this.locationSelected.length; ii++) {
+          if (this.locations[i].locationId.locationId === this.locationSelected[i].locationId) {
+            this.showLocations.push(this.locations[i])
+          }
+        }
+      }
+      this.checkBookings()
+    },
+    dateFunc (dateTime) {
+      return DateConverter.dateConverter(dateTime)
+    },
+    timeFunc (dateTime) {
+      return DateConverter.timeConverter(dateTime)
     }
   }
 }

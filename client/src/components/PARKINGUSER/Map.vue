@@ -295,6 +295,6 @@ body {
 .swal-modal {
     /* margin-left: 50px; */
     /* width: calc(100% - 60px); */
-    width: 100%;
+    /* width: 100%; */
 }
 </style>

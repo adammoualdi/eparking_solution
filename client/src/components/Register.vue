@@ -10,7 +10,7 @@
             <h3 class="mb-4">Register</h3>
             <div>
               <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group id="example-input-group-1" label="Name" label-for="example-input-1">
+                <b-form-group id="example-input-group-1" label="Username" label-for="example-input-1">
                   <b-form-input
                     id="example-input-1"
                     name="example-input-1"
@@ -38,35 +38,42 @@
 
                 <b-form-group
                   id="example-input-group-3"
-                  label="First Name"
+                  label="First and Last Name"
                   label-for="example-input-3"
                 >
-                  <b-form-input
-                    id="example-input-3"
-                    name="example-input-3"
-                    v-model="$v.form.firstname.$model"
-                    :state="$v.form.firstname.$dirty ? !$v.form.firstname.$error : null"
-                    aria-describedby="input-3-live-feedback"
-                  ></b-form-input>
 
+                  <b-input-group class="mb-2">
+                    <b-form-input
+                      placeholder="Firstname"
+                      aria-label="Firstname"
+                      id="example-input-3"
+                      name="example-input-3"
+                      v-model="$v.form.firstname.$model"
+                      :state="$v.form.firstname.$dirty ? !$v.form.firstname.$error : null"
+                      aria-describedby="input-3-live-feedback">
+                    </b-form-input>
+                    <b-form-input
+                      placeholder="Lastname"
+                      aria-label="Lastname"
+                      id="example-input-4"
+                      name="example-input-4"
+                      v-model="$v.form.lastname.$model"
+                      :state="$v.form.lastname.$dirty ? !$v.form.lastname.$error : null"
+                      aria-describedby="input-4-live-feedback">
+                    </b-form-input>
+                  </b-input-group>
                   <b-form-invalid-feedback id="input-3-live-feedback">This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group
+                <!-- <b-form-group
                   id="example-input-group-4"
                   label="Last Name"
                   label-for="example-input-4"
                 >
                   <b-form-input
-                    id="example-input-4"
-                    name="example-input-4"
-                    v-model="$v.form.lastname.$model"
-                    :state="$v.form.lastname.$dirty ? !$v.form.lastname.$error : null"
-                    aria-describedby="input-4-live-feedback"
                   ></b-form-input>
-
                   <b-form-invalid-feedback id="input-4-live-feedback">This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
+                </b-form-group> -->
 
                 <b-form-group id="example-input-group-5" label="Password" label-for="example-input-5">
                   <b-form-input
@@ -114,7 +121,17 @@
 
                   <b-form-invalid-feedback id="input-7-live-feedback">This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
-
+                <b-form-group
+                  id="example-input-group-7"
+                  label="Car Registration"
+                  label-for="example-input-7">
+                  <b-form-input
+                    placeholder="Number plate"
+                    aria-label="Number plate"
+                    v-model="$v.form.carreg.$model"
+                    :state="$v.form.carreg.$dirty ? !$v.form.carreg.$error : null">
+                  </b-form-input>
+                </b-form-group>
                 <b-button type="submit" variant="primary" :disabled="$v.form.$invalid">Submit</b-button>
               </b-form>
             </div>
@@ -144,7 +161,8 @@ export default {
         password: null,
         password2: null,
         email: null,
-        dofb: null
+        dofb: null,
+        carreg: null
       }
     }
   },
@@ -185,6 +203,9 @@ export default {
       },
       dofb: {
         required
+      },
+      carreg: {
+        required
       }
     }
   },
@@ -214,7 +235,8 @@ export default {
         password: this.form.password,
         password2: this.form.password2,
         dofb: this.form.dofb,
-        roleName: 'USER'
+        roleName: 'USER',
+        carreg: this.form.carreg
       })
       console.log(response.data.errorContent)
       // console.log('Error ' + this.error)

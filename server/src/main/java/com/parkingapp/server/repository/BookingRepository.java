@@ -19,12 +19,13 @@ public interface BookingRepository extends CrudRepository<Booking, Integer> {
 		Booking findById(int id);
 		ArrayList<Booking> findByUserId(UserInfo user);
 		ArrayList<Booking> findByLocationId(Location location);
+		Booking findByBookingUrl(String bookingUrl);
 		// @Query(
 		// 	value = "SELECT * FROM Bookings u WHERE u.status = 1", 
 		// 	nativeQuery = true)
 		// ArrayList<Booking> findAvailableLocation();
 		@Query("SELECT b FROM Booking b WHERE b.locationId = :locationId AND (b.startDate >= :arriveTime AND b.endDate <= :leavingTime) OR (b.startDate <= :arriveTime AND (b.endDate >= :arriveTime AND b.endDate <= :leavingTime)) OR ((b.startDate >= :arriveTime AND b.startDate <= :leavingTime) AND b.endDate >= :leavingTime) OR (b.startDate <= :arriveTime AND b.endDate >= :leavingTime)") 
-		ArrayList<Booking> findAvailableLocation(@Param("locationId") Location locationId,
+		ArrayList<Booking> findBookings(@Param("locationId") Location locationId,
 												 @Param("arriveTime") LocalDateTime arriveTime,
 												 @Param("leavingTime") LocalDateTime leavingTime);
 

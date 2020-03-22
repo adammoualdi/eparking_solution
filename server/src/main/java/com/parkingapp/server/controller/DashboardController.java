@@ -1,7 +1,14 @@
 package com.parkingapp.server.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Locale;
 
 import com.parkingapp.server.domain.Booking;
 import com.parkingapp.server.domain.Location;
@@ -91,7 +98,7 @@ public class DashboardController {
                 
         String usernameTok = jwtTokenUtil.getUsernameFromToken(token.substring(7,token.length()));
         UserInfo user = userRepo.findByUsername(usernameTok);
-        ArrayList<Location> loc = locationRepo.findByUserId(user);
+        ArrayList<Location> loc = locationRepo.findByPermissions(user);
         // ArrayList<Location> test = locationRepo.findByCountry("United Kingdom");
         
         // Be able to store loc values into new list with DTO object.
@@ -141,15 +148,24 @@ public class DashboardController {
         System.out.println(clientDistances.getArriveTime());
         System.out.println(clientDistances.getLeavingTime());
         System.out.println("GET BOOKINGS FOR THAT LOCATION");
-        
+
         System.out.println("Amount of locations: " + clientDistances.getLocations().size());
         ArrayList<LocationDTO> locationsArray = new ArrayList<>();
-        System.out.println(clientDistances.getLocations().get(0).getLocationId());
+
         for (int i = 0; i < clientDistances.getLocations().size(); i++) {
             Location loc = locationRepo.findByLocationId(clientDistances.getLocations().get(i).getLocationId());
-            ArrayList<Booking> bookings = bookingRepo.findAvailableLocation(loc, clientDistances.getArriveTime(), clientDistances.getLeavingTime());
+            ArrayList<Booking> bookings = bookingRepo.findBookings(loc, clientDistances.getArriveTime(), clientDistances.getLeavingTime());
+            Collections.sort(bookings);
             System.out.println("SIZE OF BOOKING ARRAY " + bookings.size());
-            if (bookings.size() < loc.getSpaces()) {
+            boolean available = false;
+            if (bookings.size() != 0) {
+                if (bookings.get(bookings.size()-1).getParkingSlotId() < loc.getSpaces()) {
+                    available = true;
+                }
+            } else {
+                available = true;
+            }
+            if (available == true) {
                 LocationDTO location = new LocationDTO();
                 location.setLocationId(clientDistances.getLocations().get(i).getLocationId());
                 location.setAddress1(clientDistances.getLocations().get(i).getAddress1());
@@ -162,6 +178,20 @@ public class DashboardController {
                 location.setDistance(clientDistances.getLocations().get(i).getDistance());
                 location.setArriveTime(clientDistances.getLocations().get(i).getArriveTime());
                 location.setLeavingTime(clientDistances.getLocations().get(i).getLeavingTime());
+
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                LocalDateTime startTime = LocalDateTime.parse(clientDistances.getLocations().get(i).getArriveTime(), inputFormatter);
+                LocalDateTime endTime = LocalDateTime.parse(clientDistances.getLocations().get(i).getLeavingTime(), inputFormatter);
+                // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                // LocalDateTime dateTime = LocalDateTime.parse("2016-09-21 13:43:27.000", formatter);
+                // Calc overall cost for booking
+                // Period p = new Period(startTime, endTime);
+                double minutes = ChronoUnit.MINUTES.between(startTime, endTime);
+                double hours = minutes / 60;
+                // long minutes = p.getMinutes();
+                double costForBooking = hours * loc.getCostPerHour();
+                location.setDeposit(costForBooking);
+
                 System.out.println("SPACE AVAILABLE FOR PARTICULAR BOOKING");
                 System.out.println("ADD TO OUTPUT");
                 locationsArray.add(location);

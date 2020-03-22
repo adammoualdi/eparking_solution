@@ -7,26 +7,29 @@ import org.springframework.validation.Validator;
 import java.util.regex.Pattern;
 
 import com.parkingapp.server.domain.UserInfo;
+import com.parkingapp.server.domain.DTO.RegisterDTO;
 	
 	public class RegisterValidator implements Validator {
 		
 		public boolean supports(Class<?> clazz) {
-	        return UserInfo.class.equals(clazz);
+	        return RegisterDTO.class.equals(clazz);
 	    }
 		
 		@Override
 		public void validate(Object target, Errors errors) {
-			UserInfo dto = (UserInfo) target;
+			RegisterDTO dto = (RegisterDTO) target;
 
 			// Checks for blank spaces and if inputs are within specification
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "", "Username field cannot be empty.");
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "", "Password field cannot be empty.");
 //			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password2", "", "Password field cannot be empty.");
-			if(dto.getUsername().length() <= 4) {
-				errors.rejectValue("username", "", "Username must be longer than 4 characters");
-			}
-			if(dto.getUsername().length() >= 20) {
-				errors.rejectValue("username", "", "Username must be shorter than 12 characters");
+			if(!(dto.getRoleName().equals("SECURITY"))) {
+				if(dto.getUsername().length() <= 4) {
+					errors.rejectValue("username", "", "Username must be longer than 4 characters");
+				}
+				if(dto.getUsername().length() >= 20) {
+					errors.rejectValue("username", "", "Username must be shorter than 12 characters");
+				}
 			}
 			if (dto.getPassword().length() <= 6) {
 				errors.rejectValue("password", "", "Password must be larger than 5 characters");

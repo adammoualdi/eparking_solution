@@ -85,7 +85,6 @@ export default {
     return {
       submitted: false,
       form: {
-        password: null,
         newPassword: null,
         confirmPassword: null
       },

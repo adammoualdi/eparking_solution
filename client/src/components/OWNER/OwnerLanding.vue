@@ -61,6 +61,9 @@ export default {
     EventBus.$on('mapToLanding', function (payLoad) {
       console.log(payLoad)
     })
+    EventBus.$on('addLocation', function (payLoad) {
+      this.location.push(payLoad)
+    })
     // Event listener for user clicking on map
     EventBus.$on('mapClick', function (payLoad, coords) {
       console.log('TESTTTTTTTTTTTTTTTTTTTTTT')
@@ -224,7 +227,7 @@ export default {
   z-index: 999999;
   height: 100vh;
   width: 100vw;
-  background-color:rgba(128,128,128,0.5);
+  background-color:rgba(128,128,128,0.9);
   /* float:left; */
   /* padding-left: 50px; */
   /* width: 30px;

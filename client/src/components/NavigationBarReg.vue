@@ -1,7 +1,7 @@
 <template>
     <div id = "NavBarWrapper">
       <div class="headerNav">
-        <b-navbar toggleable="lg" type="dark" variant="info">
+        <b-navbar toggleable="lg" type="dark" variant="dark">
             <b-navbar-brand href="#">Parking</b-navbar-brand>
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

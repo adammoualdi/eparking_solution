@@ -25,7 +25,7 @@
                                     {{ booking.locationId.country }} <br>
                                     {{ booking.locationId.city }} <br>
                                     {{ booking.locationId.postcode }} <br>
-
+                                    <a :href="getMapsLink(booking.locationId.latitude, booking.locationId.longitude)">Get maps</a>
                                 </td>
                             </tr>
                         </table>
@@ -78,12 +78,22 @@ export default {
       bookings: [],
       activeBookings: [],
       previousBookings: [],
-      isMounted: false
+      isMounted: false,
+      currentLoc: null
     }
   },
   mounted () {
     console.log('Get bookings')
     this.getBookings()
+    navigator.geolocation.getCurrentPosition(pos => {
+      // var gettingLocation = false
+      this.currentLoc = pos
+      console.log(this.currentLoc)
+    }, err => {
+      // var gettingLocation = false
+      var errorStr = err.message
+      console.log(errorStr)
+    })
   },
   methods: {
     async getBookings () {
@@ -120,6 +130,11 @@ export default {
       console.log(date + ' ' + time)
       var ret = date + ' ' + time
       return ret
+    },
+    getMapsLink (lat, lng) {
+      // https://www.google.com/maps/dir/?api=1&origin=Space+Needle+Seattle+WA&destination=Pike+Place+Market+Seattle+WA&travelmode=bicycling
+      const googleLink = 'https://www.google.com/maps/dir/?api=1&origin='
+      return googleLink + this.currentLoc.coords.latitude + ',' + this.currentLoc.coords.longitude + '&destination=' + lat + ',' + lng + '&travelmode=driving'
     }
   }
 }

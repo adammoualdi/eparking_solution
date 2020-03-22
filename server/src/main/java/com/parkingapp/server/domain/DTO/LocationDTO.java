@@ -10,6 +10,7 @@ public class LocationDTO {
     private double latitude;
     private double longitude;
     private double distance;
+    private double deposit;
     private String arriveTime;
     private String leavingTime;
  
@@ -17,17 +18,8 @@ public class LocationDTO {
 
     }
 
-    public LocationDTO(int locationId, String country, String city, String address1, String address2, String postcode) {
-        this.locationId = locationId;
-        this.country = country;
-        this.city = city;
-        this.address1 = address1;
-        this.address2 = address2;
-        this.postcode = postcode;
-    }
-
     public LocationDTO(int locationId, String country, String city, String address1, String address2, String postcode,
-                        double distance, double longitude, double latitude, String arriveTime, String leavingTime) 
+                        double distance, double longitude, double latitude, double deposit, String arriveTime, String leavingTime) 
     {
         this.locationId = locationId;
         this.country = country;
@@ -38,6 +30,7 @@ public class LocationDTO {
         this.latitude = latitude;
         this.longitude = longitude;
         this.distance = distance;
+        this.deposit = deposit;
         this.arriveTime = arriveTime;
         this.leavingTime = leavingTime;
     }
@@ -130,6 +123,14 @@ public class LocationDTO {
         this.leavingTime = leavingTime;
     }
 
+    public double getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(double deposit) {
+        this.deposit = deposit;
+    }
+
     @Override
     public String toString() {
         return "LocationDTO [address1=" + address1 + ", address2=" + address2 + ", arriveTime=" + arriveTime + ", city="
@@ -137,5 +138,4 @@ public class LocationDTO {
                 + leavingTime + ", locationId=" + locationId + ", longitude=" + longitude + ", postcode=" + postcode
                 + "]";
     }
-
 }

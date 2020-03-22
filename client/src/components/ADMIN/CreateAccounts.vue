@@ -1,105 +1,109 @@
 <template>
   <div class="registerWrapper">
     <div class="headerNav">
-      <NavigationBarReg></NavigationBarReg>
+      <NavigationBarAdmin></NavigationBarAdmin>
     </div>
-    <b-container class="wrapper">
-      <b-row align-h="center">
-        <b-col cols="10">
-          <b-card class="p-3">
-            <h3 class="mb-4">Request Security Accounts</h3>
-            <div>
-              <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group id="example-input-group-1" label="Username" label-for="example-input-1">
-                  <b-form-input
-                    id="example-input-1"
-                    name="example-input-1"
-                    v-model="$v.form.username.$model"
-                    :state="$v.form.username.$dirty ? !$v.form.username.$error : null"
-                    aria-describedby="input-1-live-feedback"
-                  ></b-form-input>
+    <div v-if="isMounted">
+      <b-container class="wrapper">
+        <b-row align-h="center">
+          <b-col cols="10">
+            <b-card class="p-3">
+              <h3 class="mb-4">Request Security Accounts</h3>
+              <div>
+                <b-form @submit.stop.prevent="onSubmit">
+                  <b-form-group id="example-input-group-2" label="Email" label-for="example-input-2">
+                    <b-form-input
+                      id="example-input-2"
+                      name="example-input-2"
+                      v-model="$v.form.email.$model"
+                      :state="$v.form.email.$dirty ? !$v.form.email.$error : null"
+                      aria-describedby="input-2-live-feedback"
+                    ></b-form-input>
 
-                  <b-form-invalid-feedback
-                    id="input-1-live-feedback"
-                  >This is a required field and must be at least 3 characters.</b-form-invalid-feedback>
-                </b-form-group>
+                    <b-form-invalid-feedback id="input-2-live-feedback">This is a required field.</b-form-invalid-feedback>
+                  </b-form-group>
 
-                <b-form-group id="example-input-group-2" label="Email" label-for="example-input-2">
-                  <b-form-input
-                    id="example-input-2"
-                    name="example-input-2"
-                    v-model="$v.form.email.$model"
-                    :state="$v.form.email.$dirty ? !$v.form.email.$error : null"
-                    aria-describedby="input-2-live-feedback"
-                  ></b-form-input>
+                  <b-form-group
+                    id="example-input-group-3"
+                    label="First Name"
+                    label-for="example-input-3"
+                  >
+                    <b-form-input
+                      id="example-input-3"
+                      name="example-input-3"
+                      v-model="$v.form.firstname.$model"
+                      :state="$v.form.firstname.$dirty ? !$v.form.firstname.$error : null"
+                      aria-describedby="input-3-live-feedback"
+                    ></b-form-input>
 
-                  <b-form-invalid-feedback id="input-2-live-feedback">This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
+                    <b-form-invalid-feedback id="input-3-live-feedback">This is a required field.</b-form-invalid-feedback>
+                  </b-form-group>
 
-                <b-form-group
-                  id="example-input-group-3"
-                  label="First Name"
-                  label-for="example-input-3"
-                >
-                  <b-form-input
-                    id="example-input-3"
-                    name="example-input-3"
-                    v-model="$v.form.firstname.$model"
-                    :state="$v.form.firstname.$dirty ? !$v.form.firstname.$error : null"
-                    aria-describedby="input-3-live-feedback"
-                  ></b-form-input>
+                  <b-form-group
+                    id="example-input-group-4"
+                    label="Last Name"
+                    label-for="example-input-4"
+                  >
+                    <b-form-input
+                      id="example-input-4"
+                      name="example-input-4"
+                      v-model="$v.form.lastname.$model"
+                      :state="$v.form.lastname.$dirty ? !$v.form.lastname.$error : null"
+                      aria-describedby="input-4-live-feedback"
+                    ></b-form-input>
 
-                  <b-form-invalid-feedback id="input-3-live-feedback">This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
+                    <b-form-invalid-feedback id="input-4-live-feedback">This is a required field.</b-form-invalid-feedback>
+                  </b-form-group>
 
-                <b-form-group
-                  id="example-input-group-4"
-                  label="Last Name"
-                  label-for="example-input-4"
-                >
-                  <b-form-input
-                    id="example-input-4"
-                    name="example-input-4"
-                    v-model="$v.form.lastname.$model"
-                    :state="$v.form.lastname.$dirty ? !$v.form.lastname.$error : null"
-                    aria-describedby="input-4-live-feedback"
-                  ></b-form-input>
+                  <b-form-group
+                    id="example-input-group-5"
+                    label="Date of birth"
+                    label-for="example-input-5"
+                  >
+                    <b-form-input
+                      type="date"
+                      id="example-input-5"
+                      name="example-input-5"
+                      v-model="$v.form.dofb.$model"
+                      :state="$v.form.dofb.$dirty ? !$v.form.dofb.$error : null"
+                      aria-describedby="input-5-live-feedback"
+                      placeholder="Enter the users date of birth">
+                    </b-form-input>
 
-                  <b-form-invalid-feedback id="input-4-live-feedback">This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
+                    <b-form-invalid-feedback id="input-5-live-feedback">This is a required field.</b-form-invalid-feedback>
+                  </b-form-group>
 
-                <b-form-group
-                  id="example-input-group-5"
-                  label="Date of birth"
-                  label-for="example-input-5"
-                >
-                  <b-form-input
-                    type="date"
-                    id="example-input-5"
-                    name="example-input-5"
-                    v-model="$v.form.dofb.$model"
-                    :state="$v.form.dofb.$dirty ? !$v.form.dofb.$error : null"
-                    aria-describedby="input-5-live-feedback"
-                    placeholder="Enter the users date of birth">
-                  </b-form-input>
+                  <b-form-group
+                    id="input-group-6"
+                    label="Location"
+                    label-for="input-6"
+                  >
 
-                  <b-form-invalid-feedback id="input-5-live-feedback">This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
+                    <b-form-select
+                      v-model="$v.form.location.$model"
+                      :options="cityOptions"
+                      :select-size="1"
+                      :state="$v.form.location.$dirty ? !$v.form.location.$error : null"
+                    >
+                    </b-form-select>
+                    <b-form-invalid-feedback id="input-6-live-feedback">This is a required field.</b-form-invalid-feedback>
+                  </b-form-group>
 
-                <b-button type="submit" variant="primary" :disabled="$v.form.$invalid">Submit</b-button>
-              </b-form>
-            </div>
-          </b-card>
-        </b-col>
-      </b-row>
-    </b-container>
+                  <b-button type="submit" variant="primary" :disabled="$v.form.$invalid">Submit</b-button>
+                </b-form>
+              </div>
+            </b-card>
+          </b-col>
+        </b-row>
+      </b-container>
+    </div>
   </div>
 </template>
 
 <script>
 import PostsService from '@/services/PostsService'
 import { validationMixin } from 'vuelidate'
-import NavigationBarReg from '@/components/NavigationBarReg'
+import NavigationBarAdmin from '@/components/ADMIN/NavigationBarAdmin'
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
 // var currentTime = new Date()
 // console.log(currentTime)
@@ -122,24 +126,21 @@ export default {
     return {
       submitted: false,
       form: {
-        username: null,
         firstname: null,
         lastname: null,
         dofb: null,
-        email: null
-      }
+        email: null,
+        location: null
+      },
+      cityOptions: [],
+      isMounted: false
     }
   },
   components: {
-    NavigationBarReg
+    NavigationBarAdmin
   },
   validations: {
     form: {
-      username: {
-        required,
-        minLength: minLength(4),
-        maxLength: maxLength(20)
-      },
       email: {
         required,
         email
@@ -157,8 +158,14 @@ export default {
       dofb: {
         required
         // minDate
+      },
+      location: {
+        required
       }
     }
+  },
+  mounted () {
+    this.getLocations()
   },
   methods: {
     onSubmit (evt) {
@@ -177,21 +184,42 @@ export default {
       // Form submit logic
     },
     async register () {
-      console.log(this.form.dofb)
+      console.log(this.form.location)
       const response = await PostsService.register({
-        username: this.form.username,
+        username: 'username',
         email: this.form.email,
         firstname: this.form.firstname,
         lastname: this.form.lastname,
         password: 'fakepassword',
         password2: 'fakepassword',
         dofb: this.form.dofb,
-        roleName: 'SECURITY'
+        roleName: 'SECURITY',
+        locationId: this.form.location
       })
       console.log(response.data.errorContent)
       // console.log('Error ' + this.error)
       // console.log('RESPONSE ' + response.data.statusCode)
-      this.$router.push({ name: 'Login' })
+      this.$router.push({ name: 'AdminApproval' })
+    },
+    async getLocations () {
+      const response = await PostsService.getLocations()
+      this.locations = response.data.locations
+      // console.log(response)
+      // this.locationOptions = []
+      for (var i = 0; i < response.data.locations.length; i++) {
+        console.log(response.data.locations[i])
+        // var address = {value: response.data.locations[i].address1, text: response.data.locations[i].address1}
+        var name = response.data.locations[i].city + ', ' + response.data.locations[i].address1 + ', ' + response.data.locations[i].address2 + ', ' + response.data.locations[i].postcode
+        var loc = {value: response.data.locations[i].id, text: name}
+        // console.log(address)
+        // this.locationOptions.push(address)
+        // returns -1 if not found
+        // if (this.cityOptions.indexOf(city) === -1) {
+        //   this.cityOptions.push(city)
+        // }
+        this.cityOptions.push(loc)
+      }
+      this.isMounted = true
     }
   }
 }

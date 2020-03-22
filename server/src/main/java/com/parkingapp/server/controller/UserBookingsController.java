@@ -78,6 +78,8 @@ public class UserBookingsController {
             location.setAddress1(temp.getLocationId().getAddress1());
             location.setAddress2(temp.getLocationId().getAddress2());
             location.setPostcode(temp.getLocationId().getPostcode());
+            location.setLatitude(temp.getLocationId().getLatitude());
+            location.setLongitude(temp.getLocationId().getLongitude());
             booking.setLocationId(location);
             booking.setStartDate(temp.getStartDate());
             booking.setEndDate(temp.getEndDate());

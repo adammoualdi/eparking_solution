@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.parkingapp.server.domain.Booking;
 import com.parkingapp.server.domain.Car;
@@ -54,6 +56,7 @@ public class EParkingApplication implements CommandLineRunner {
 
 		BCryptPasswordEncoder pe = new  BCryptPasswordEncoder();
 
+		Set<Location> locations = new HashSet<Location>(); 
 		UserInfo user2 = new UserInfo();
 		user2.setId(1);
 		user2.setUsername("username1");
@@ -64,6 +67,7 @@ public class EParkingApplication implements CommandLineRunner {
 		LocalDate myDate3 = LocalDate.of(1998, 6, 10);
 		user2.setDofb(myDate3);
 		user2.setRole(new Role(USER, "User"));
+		user2.setDeposit(1.00);
 		userRepo.save(user2);
 
 		UserInfo user4 = new UserInfo();
@@ -82,7 +86,9 @@ public class EParkingApplication implements CommandLineRunner {
 
 		UserInfo security = new UserInfo();
 		// user.setId();
-		security.setUsername("security");
+		security.setUsername("adam.moualdi");
+		security.setFirstname("Adam");
+		security.setLastname("Moualdi");
 		security.setPassword(pe.encode("password"));
 		security.setRole(new Role(SECURITY, "Security"));
 		security.setDefaultPassword(true);
@@ -99,22 +105,20 @@ public class EParkingApplication implements CommandLineRunner {
 		// userRepo.save(user3);
 
 		// List<Booking> bookings = new ArrayList<>();
-		Location loc = new Location("United Kingdom", "Leicester", "address1", "address2", "LE1 7RH", 52.619497522, -1.121332848, 2);
-		loc.setUserId(user3);	
+		// Location loc = new Location("United Kingdom", "Leicester", "address1", "address2", "LE1 7RH", 52.619497522, -1.121332848, 2);
+		// loc.setUserId(user3);	
 		// loc.setUserId();
-		loc.setApproved(false);
-		locRepo.save(loc);
+		// loc.setApproved(false);
+		// locRepo.save(loc);
 
 		// loc.setUserId(user3);
 		// locRepo.save(loc);
 
-		Location loc1 = new Location("United Kingdom", "Sheffield", "Sheffield Train Station", "Sheaf Street", "S1 2BP", 53.37701, -1.46814, 5);
-		// loc1.setUserId(user);
-		loc1.setApproved(true);
-		locRepo.save(loc1);
-
-		
-		// locRepo.save(loc1);
+		Location loc1 = new Location("United Kingdom", "Sheffield", "Sheffield Train Station", "Sheaf Street", "S1 2BP", 53.37701, -1.46814, 3);
+		// loc1.setUserId(user3);
+		locations.add(loc1);
+		user3.setLocationsPermission(locations);
+		userRepo.save(user3);
 
 		Car car = new Car(20, user2,"reg", "model");
 		carRepo.save(car);
@@ -122,16 +126,26 @@ public class EParkingApplication implements CommandLineRunner {
 		Car car1 = new Car(2, user2,"SE24QWR", "Audi TT");
 		carRepo.save(car1);
 
+		Set<UserInfo> users = new HashSet<UserInfo>(); 
+		users.add(user3);
+		loc1.setPermissions(users);
+		loc1.setApproved(true);
+		loc1.setCostPerHour(2);
+		locRepo.save(loc1);
+
 		Booking booking1 = new Booking();
 		booking1.setId(22);
 		booking1.setLocationId(loc1);
 		booking1.setUserId(user2);
 		booking1.setStartDate(LocalDateTime.now());
-		String str = "2020-01-10 12:30";
+		String str = "2020-05-10 12:30";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
 		booking1.setEndDate(dateTime);
 		booking1.setActive(true);
+		booking1.setParkingSlotId(1);
+		booking1.setBookingUrl("test");
+		booking1.setCar(car1);
 		bookingRepo.save(booking1);
 
 		// bookings.add(booking1);

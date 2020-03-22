@@ -3,47 +3,57 @@
     <div class="Nav">
       <NavigationBar class="nav"> </NavigationBar>
     </div>
-    <div class="BookingInfoWrapper">
-      <div class="BookingContents">
-        <b-container class ="wrapper">
-          <div>
-            <b-card no-body>
-              <div class="Image">
-                IMAGE
-              </div>
-              <div class="BookingInfo">
-                <b-card-text>
-                  <h2> {{ location.address1 + ', ' + location.address2 }} </h2>
-                </b-card-text>
-                <b-card-text>
-                  <h4>{{ location.country + ', ' + location.city + ', ' + location.postcode}} </h4>
+    <div v-if="isMounted">
+      <div class="BookingInfoWrapper">
+        <div class="BookingContents">
+          <b-container class ="wrapper">
+            <div>
+              <b-card no-body>
+                <div class="Image">
+                  IMAGE
+                </div>
+                <div class="BookingInfo">
+                  <b-card-text>
+                    <h2> {{ location.address1 + ', ' + location.address2 }} </h2>
                   </b-card-text>
-                <!-- <b-card-text>{{ location.postcode }} </b-card-text> -->
-                <!-- <b-card-text>{{ userQuery.aTime + ' -> ' + userQuery.lTime }} </b-card-text> -->
-                <b-card-text>
-                  <div class="DateTimeInfo">
-                    <!-- <font-awesome-icon icon="calendar-alt" size="3x"> </font-awesome-icon> -->
-                    <!-- <div class="TimeInfo">
-                       -->
-                    <div class="DateTime">
-                      {{ dateFunc(location.arriveTime) + ' ' + timeFunc(location.arriveTime) + ' &rArr; '}}
+                  <b-card-text>
+                    <h4>{{ location.country + ', ' + location.city + ', ' + location.postcode}} </h4>
+                    </b-card-text>
+                  <!-- <b-card-text>{{ location.postcode }} </b-card-text> -->
+                  <!-- <b-card-text>{{ userQuery.aTime + ' -> ' + userQuery.lTime }} </b-card-text> -->
+                  <b-card-text>
+                    <div class="DateTimeInfo">
+                      <!-- <font-awesome-icon icon="calendar-alt" size="3x"> </font-awesome-icon> -->
+                      <!-- <div class="TimeInfo">
+                          -->
+                      <div class="DateTime">
+                        {{ dateFunc(location.arriveTime) + ' ' + timeFunc(location.arriveTime) + ' &rArr; '}}
+                      </div>
+                      <div class="DateTime">
+                        {{ dateFunc(location.leavingTime) + ' ' + timeFunc(location.leavingTime) }}
+                      </div>
                     </div>
-                    <div class="DateTime">
-                      {{ dateFunc(location.leavingTime) + ' ' + timeFunc(location.leavingTime) }}
-                    </div>
-                  </div>
-                </b-card-text>
-                <b-card-text>
-                  <!-- <font-awesome-icon icon="money-bill-alt" size="2x"> </font-awesome-icon> -->
-                  <!-- <h4> Cost: </h4> -->
-                </b-card-text>
-              </div>
-              <button type="button" name="button" v-on:click="saveBooking">BOOK</button>
-            </b-card>
-          </div>
-        </b-container>
+                  </b-card-text>
+                  <b-card-text>
+                     <b-form-select v-model="carSelected" :options="carOptions" :select-size="1"></b-form-select>
+                    <!-- <font-awesome-icon icon="money-bill-alt" size="2x"> </font-awesome-icon> -->
+                    <!-- <h4> Cost: </h4> -->
+                  </b-card-text>
+                </div>
+                <button type="button" name="button" v-on:click="saveBooking">BOOK</button>
+              </b-card>
+            </div>
+          </b-container>
+        </div>
       </div>
     </div>
+  <div v-else class="Loading">
+    <SemipolarSpinner
+      :animation-duration="2000"
+      :size="200"
+      color="#000000"
+    />
+  </div>
   </div>
 </template>
 
@@ -52,16 +62,24 @@ import DateConverter from '@/services/DateConvert'
 import PostsService from '@/services/PostsService'
 import NavigationBar from '@/components/PARKINGUSER/NavigationBar'
 import swal from 'sweetalert'
+import {SemipolarSpinner} from 'epic-spinners'
 export default {
   name: 'Booking',
   components: {
-    NavigationBar
+    NavigationBar,
+    SemipolarSpinner
   },
   data () {
     return {
       userQuery: {},
       location: null,
-      selected: null
+      selected: null,
+      userInfo: null,
+      isMounted: false,
+      carOptions: [
+        { value: null, text: 'Please select an option' }
+      ],
+      carSelected: []
     }
   },
   created () {
@@ -74,13 +92,16 @@ export default {
     // this.userQuery = this.$route.params.times
   },
   mounted () {
+    this.getCars()
   },
   methods: {
+    async getInfo () {
+    },
     async saveBooking () {
       console.log(this.location)
       // console.log(this.userQuery)
       var uname = window.localStorage.getItem('username')
-      console.log(this.location)
+      console.log(this.carSelected)
       const response = await PostsService.bookParkingSlot({
         id: 1,
         locationId: {
@@ -96,17 +117,39 @@ export default {
         // endDate: this.userQuery.lTime,
         startDate: this.location.arriveTime,
         endDate: this.location.leavingTime,
-        active: true
+        active: true,
+        car: this.carSelected
       })
-      console.log(response.data)
+      console.log(response.data.deposit)
       const that = this
-      // NEED TO CHECK IF ERROR
-      swal('Booked!', 'Your booking has been successfully made', 'success')
-        .then(function () {
-          console.log('GO TO')
-          that.$router.push({ name: 'Landing' })
-        })
+      if (response.data.deposit !== undefined) {
+        window.localStorage.setItem('deposit', response.data.deposit)
+        // NEED TO CHECK IF ERROR
+        swal('Booked!', 'Your booking has been successfully made', 'success')
+          .then(function () {
+            console.log('GO TO')
+            that.$router.push({ name: 'Landing' })
+          })
+      } else {
+        swal('Unsuccessful!', `You don't have enough credit for this transaction`, 'error')
+          .then(function () {
+            console.log('GO TO')
+            that.$router.push({ name: 'Landing' })
+          })
       // this.$router.push({ name: 'Landing' })
+      }
+    },
+    async getCars () {
+      var cars = []
+      const response = await PostsService.getUserDetails(window.localStorage.getItem('username'))
+      this.userInfo = response.data
+      for (var i = 0; i < this.userInfo.cars.cars.length; i++) {
+        var car = {value: this.userInfo.cars.cars[i], text: this.userInfo.cars.cars[i].model}
+        console.log(car)
+        cars.push(car)
+      }
+      this.carOptions = cars
+      this.isMounted = true
     },
     dateFunc (dateTime) {
       return DateConverter.dateConverter(dateTime)
@@ -114,6 +157,14 @@ export default {
     timeFunc (dateTime) {
       return DateConverter.timeConverter(dateTime)
     }
+    // onChange: function (event) {
+    //   this.carOptions = []
+    //   for (var i = 0; i < this.userInfo.cars.cars.length; i++) {
+    //     // var city = {value: this.locations[i].city, text: this.locations[i].city}
+    //     var car = {value: this.userInfo[i].cars.cars[i], text: this.userInfo[i].cars.cars[i].model}
+    //     this.carOptions.push(car)
+    //   }
+    // }
   }
 }
 </script>
@@ -159,7 +210,7 @@ export default {
     /* margin-left: 50px; */
     /* width: calc(100% - 60px); */
     /* margin:10px; */
-    width: 100%;
+    /* width: 100%; */
 }
 
 .DateTimeInfo {

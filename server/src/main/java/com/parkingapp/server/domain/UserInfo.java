@@ -3,6 +3,7 @@ package com.parkingapp.server.domain;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -43,6 +46,8 @@ public class UserInfo {
 	private String roleName;
 	@Column
 	private boolean defaultPassword;
+	@Column
+	private double deposit;
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="role", referencedColumnName="id")
 	private Role role;
@@ -51,8 +56,16 @@ public class UserInfo {
 	private List<Car> cars;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
 	private List<Booking> bookings;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
-	private List<Location> loc;
+	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+	// private List<Location> loc;
+	// @ManyToMany
+	// private Set<Location> locations;
+	@ManyToMany(cascade = {CascadeType.ALL})
+	@JoinTable(
+		name = "loc_permission", 
+		joinColumns = @JoinColumn(name = "userId"), 
+		inverseJoinColumns = @JoinColumn(name = "locationId"))
+	Set<Location> locationsPermission;
 	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "locationId") // FOR LOCATIONS
     // private List<Booking> bookings;
 	
@@ -116,7 +129,7 @@ public class UserInfo {
 		this.role = role;
 		this.cars = cars;
 		this.bookings = bookings;
-		this.loc = loc;
+		// this.loc = loc;
 		this.roleName = roleName;
 	}
 
@@ -220,13 +233,13 @@ public class UserInfo {
 		return username + " " + password + " " + firstname + " " + lastname + " " + email + " " + role;
 	}
 
-	public List<Location> getLoc() {
-		return loc;
-	}
+	// public List<Location> getLoc() {
+	// 	return loc;
+	// }
 
-	public void setLoc(List<Location> loc) {
-		this.loc = loc;
-	}
+	// public void setLoc(List<Location> loc) {
+	// 	this.loc = loc;
+	// }
 
 	public boolean isDefaultPassword() {
 		return defaultPassword;
@@ -234,6 +247,22 @@ public class UserInfo {
 
 	public void setDefaultPassword(boolean defaultPassword) {
 		this.defaultPassword = defaultPassword;
+	}
+
+	public double getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(double deposit) {
+		this.deposit = deposit;
+	}
+
+	public Set<Location> getLocationsPermission() {
+		return locationsPermission;
+	}
+
+	public void setLocationsPermission(Set<Location> locationsPermission) {
+		this.locationsPermission = locationsPermission;
 	}
 	
 }

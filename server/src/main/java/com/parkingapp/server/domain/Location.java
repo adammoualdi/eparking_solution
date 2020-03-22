@@ -1,6 +1,8 @@
 package com.parkingapp.server.domain;
 
+import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 
@@ -13,17 +15,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 // import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * Saves instances of Roles in the Role entity
  * */
 @Entity
 @Table(name="locations")
+@JsonDeserialize
 public class Location {
     @Id
     @GeneratedValue(strategy=GenerationType.TABLE)
@@ -53,14 +62,21 @@ public class Location {
     private boolean sensors;
     @Column
     private boolean approved;
-    @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name="userId")
-    private UserInfo userId;
+    @Column
+    private String removeMessage;
+    // @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    // @JoinColumn(name="userId")
+    // private UserInfo userId;
+
     // @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL) // FOR BOOKINGS
     // @JoinColumn(name="userId")
     // private UserInfo userId;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "locationId")
     private List<Booking> bookings;
+    @ManyToMany(mappedBy = "locationsPermission")
+    Set<UserInfo> permissions;
+    
+
     
     public Location() {
 
@@ -136,7 +152,7 @@ public class Location {
         this.costPerHour = costPerHour;
         this.sensors = sensors;
         this.approved = approved;
-        this.userId = userId;
+        // this.userId = userId;
         this.bookings = bookings;
         }
 
@@ -221,13 +237,13 @@ public class Location {
         this.bookings = bookings;
     }
 
-    public UserInfo getUserId() {
-        return userId;
-    }
+    // public UserInfo getUserId() {
+    //     return userId;
+    // }
 
-    public void setUserId(UserInfo userId) {
-        this.userId = userId;
-    }
+    // public void setUserId(UserInfo userId) {
+    //     this.userId = userId;
+    // }
 
     public boolean getApproved() {
         return approved;
@@ -262,7 +278,7 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
         this.spaces = spaces;
-        this.userId = userId;
+        // this.userId = userId;
     }
 
     public int getCostPerHour() {
@@ -279,5 +295,13 @@ public class Location {
 
     public void setSensors(boolean sensors) {
         this.sensors = sensors;
+    }
+
+    public Set<UserInfo> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<UserInfo> permissions) {
+        this.permissions = permissions;
     }
 }
