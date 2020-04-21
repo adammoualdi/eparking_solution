@@ -1,5 +1,7 @@
 package com.parkingapp.server;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -67,7 +69,7 @@ public class EParkingApplication implements CommandLineRunner {
 		LocalDate myDate3 = LocalDate.of(1998, 6, 10);
 		user2.setDofb(myDate3);
 		user2.setRole(new Role(USER, "User"));
-		user2.setDeposit(1.00);
+		user2.setDeposit(20.00);
 		userRepo.save(user2);
 
 		UserInfo user4 = new UserInfo();
@@ -124,7 +126,7 @@ public class EParkingApplication implements CommandLineRunner {
 		carRepo.save(car);
 
 		Car car1 = new Car(2, user2,"SE24QWR", "Audi TT");
-		carRepo.save(car1);
+		// carRepo.save(car1);
 
 		Set<UserInfo> users = new HashSet<UserInfo>(); 
 		users.add(user3);
@@ -137,16 +139,26 @@ public class EParkingApplication implements CommandLineRunner {
 		booking1.setId(22);
 		booking1.setLocationId(loc1);
 		booking1.setUserId(user2);
-		booking1.setStartDate(LocalDateTime.now());
-		String str = "2020-05-10 12:30";
+		String str = "2020-03-02 12:30";
+		String str1 = "2020-03-03 12:30";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-		booking1.setEndDate(dateTime);
+		LocalDateTime dateTime1 = LocalDateTime.parse(str1, formatter);
+		booking1.setStartDate(dateTime);
+		booking1.setEndDate(dateTime1);
 		booking1.setActive(true);
 		booking1.setParkingSlotId(1);
 		booking1.setBookingUrl("test");
 		booking1.setCar(car1);
+		booking1.setFee(10);
+		// double depositFee = 10 * 0.8;
+		BigDecimal bd = new BigDecimal(10 * 0.8).setScale(2, RoundingMode.HALF_UP);
+		booking1.setDepositFee(bd.doubleValue());
 		bookingRepo.save(booking1);
+
+		// security.setLocationsPermission(locations);
+		// userRepo.save(security);
+
 
 		// bookings.add(booking1);
 		

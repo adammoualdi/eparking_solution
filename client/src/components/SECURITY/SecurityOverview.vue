@@ -25,21 +25,29 @@
                     <b-card-group decks>
                         <b-card class="overviewBox" id="box1">
                             Bookings Today
-                            <h1> {{ bookingsToday }} </h1>
+                            <h1> {{ showLocations.length }} </h1>
                         </b-card>
                         <b-card class="overviewBox" id="box2">
                             Currently Parked
-                            <h1> {{ currentlyParked }} </h1>
+                            <h1> {{ currentlyParked.length }} </h1>
                         </b-card>
                         <b-card class="overviewBox" id="box3">
                             Late
-                            <h1> {{ lateBookings }} </h1>
+                            <h1> {{ lateBookings.length }} </h1>
                         </b-card>
                     </b-card-group>
                 </div>
                 <!-- <b-card class="overviewBox" id="box4">
                     Overview: Location name
                 </b-card> -->
+                <b-form-group>
+                  <b-form-radio-group id="radio-group-2" v-model="selectedRadio" name="radio-sub-component" v-on:input="filterLocs">
+                    <b-form-radio name="AllRadio" value="All">All</b-form-radio>
+                    <b-form-radio name="BookingsTodayRadio" value="Bookings">Bookings Today</b-form-radio>
+                    <b-form-radio name="ParkedRadio" value="Parked">Currently Parked</b-form-radio>
+                    <b-form-radio name="LateRadio" value="Late">Issue</b-form-radio>
+                  </b-form-radio-group>
+                </b-form-group>
             </div>
                 <div class="table-wrap" v-if="showLocations.length > 0">
                     <table>
@@ -47,11 +55,12 @@
                             <th width="15%">Name</th>
                             <th width="15%">Email</th>
                             <th width="30%">Car</th>
-                            <th width="32.87%">Arrival time</th>
-                            <th width="40%">Leaving time</th>
+                            <th width="20%">Arrival time</th>
+                            <th width="25%">Leaving time</th>
+                            <th width="15%">Report</th>
                             <!-- <td width="50%" align="center">Action</td> -->
                         </tr>
-                        <tr v-for="(booking, index) in showLocations" :key="index" class="border_bottom" >
+                        <tr v-for="(booking, index) in showLocations" :key="index" class="border_bottom" v-bind:style="[booking.issue ? { background: 'red'} : {}]">
                             <td> {{ booking.userDTO.firstname + ' ' + booking.userDTO.lastname }}</td>
                             <td> {{ booking.userDTO.email }} </td>
                             <td> {{ booking.car.regNo }} </td>
@@ -62,6 +71,7 @@
                                 <!-- {{ 'Email: ' + location.userId.email }} -->
                             </td>
                             <td> {{ dateFunc(booking.endDate) + ', ' + timeFunc(booking.endDate) }} </td>
+                            <td><a href="javascript:void(0)" @click="confirmIssue(booking)">Confirm issue</a> </td>
                         </tr>
                     </table>
                 </div>
@@ -87,6 +97,7 @@ import NavigationBarSecurity from '@/components/SECURITY/NavigationBarSecurity'
 import PostsService from '@/services/PostsService'
 import {SemipolarSpinner} from 'epic-spinners'
 import DateConverter from '@/services/DateConvert'
+import swal from 'sweetalert'
 export default {
   name: 'SecurityOverview',
   components: {
@@ -102,10 +113,11 @@ export default {
       locationOptions: [
         { value: null, text: 'Please select an option' }
       ],
-      bookingsToday: 0,
-      currentlyParked: 0,
-      lateBookings: 0,
-      interval: 0
+      bookingsToday: [],
+      currentlyParked: [],
+      lateBookings: [],
+      interval: 0,
+      selectedRadio: null
     }
   },
   mounted () {
@@ -114,7 +126,7 @@ export default {
     console.log('set interval')
     window.setInterval(() => {
       this.checkBookings()
-    }, 30000)
+    }, 60000)
   },
   beforeDestroy () {
     console.log('Destroyed')
@@ -122,9 +134,6 @@ export default {
   },
   methods: {
     async getBookings () {
-    //   const response = await PostsService.getAdminApprovals()
-    //   console.log(response.data)
-    //   this.locations = response.data.locations
       console.log('locations: ' + this.locations)
     },
     async getLocations () {
@@ -138,38 +147,73 @@ export default {
         console.log(address)
         this.locationOptions.push(address)
       }
+
+      //   this.locationOptions = this.locationOptions.filter((v,i,a)=>a.findIndex(t=>(t.locationId === v.locationId))===i)
+      console.log(this.locationOptions)
+      //   var temp = this.locationOptions.filter((a, b) => this.locationOptions.indexOf(a.value) === b.value)
+      //   this.locationOptions = temp
+      // var uniq = {}
+      // var arrFiltered = this.locationOptions.filter(obj => uniq[obj.id] && (uniq[obj.id] = true))
+      // console.log(arrFiltered)
+      // this.locationOptions = arrFiltered
+      console.log(this.locationOptions)
       this.checkBookings()
       this.isMounted = true
     },
     checkBookings () {
       console.log('TESTTTTTT')
-      // Get bookings
-      this.bookingsToday = this.showLocations.length
-      // Get currently parked
-      for (var i = 0; i < this.showLocations.length; i++) {
-        var startDate = Date.parse(this.showLocations[i].startDate)
-        var endDate = Date.parse(this.showLocations[i].endDate)
-        var current = new Date()
-        console.log(current)
-        if (startDate <= current && endDate >= current) {
-          this.currentlyParked += 1
+      this.checkActive()
+    },
+    async checkActive () {
+    //   this.showLocations = []
+      var showLocationsTmp = []
+      var currentlyParkedTmp = []
+      var lateBookingsTmp = []
+      //   this.currentlyParked = []
+      this.lateBookings = []
+      const response = await PostsService.getSecurityBookings()
+      console.log(response.data)
+      console.log('SELECTA')
+      console.log(this.locationSelected)
+      for (var i = 0; i < response.data.bookings.length; i++) {
+        for (var ii = 0; ii < this.locationSelected.length; ii++) {
+          // Only update bookings for specific selected locations
+          if (response.data.bookings[i].locationId.locationId === this.locationSelected[ii].locationId) {
+            showLocationsTmp.push(response.data.bookings[i])
+            if (response.data.bookings[i].parkingConfirmation === true) {
+              currentlyParkedTmp.push(response.data.bookings[i])
+            }
+            if (response.data.bookings[i].issue === true) {
+              lateBookingsTmp.push(response.data.bookings[i])
+            }
+          }
         }
       }
+      this.currentlyParked = currentlyParkedTmp
+      this.lateBookings = lateBookingsTmp
+      this.showLocations = showLocationsTmp
+      console.log(response)
     },
     onChange: function (event) {
       console.log(this.locationSelected)
       console.log(this.locations)
       this.locationOptions = []
       // Get all booking information for selected locations
+      console.log(this.locations.length)
       for (var i = 0; i < this.locations.length; i++) {
         var location = {value: this.locations[i].locationId, text: this.locations[i].locationId.address1}
         this.locationOptions.push(location)
+        // console.log("selected locs")
         for (var ii = 0; ii < this.locationSelected.length; ii++) {
-          if (this.locations[i].locationId.locationId === this.locationSelected[i].locationId) {
+          if (this.locations[i].locationId.locationId === this.locationSelected[ii].locationId) {
             this.showLocations.push(this.locations[i])
           }
         }
       }
+      var uniq = {}
+      var arrFiltered = this.locationOptions.filter(obj => !uniq[obj.id] && (uniq[obj.id] = true))
+      console.log(arrFiltered)
+      this.locationOptions = arrFiltered
       this.checkBookings()
     },
     dateFunc (dateTime) {
@@ -177,6 +221,25 @@ export default {
     },
     timeFunc (dateTime) {
       return DateConverter.timeConverter(dateTime)
+    },
+    async confirmIssue (booking) {
+      console.log(booking)
+      const resp = await PostsService.confirmIssue(booking)
+      console.log(resp)
+      swal('Success!', 'Issue resolved', 'success')
+    },
+    filterLocs () {
+      console.log(this.selectedRadio)
+      console.log(this.lateBookings)
+      if (this.selectedRadio === 'Bookings') {
+        this.showLocations = this.bookingsToday
+      } else if (this.selectedRadio === 'Parked') {
+        this.showLocations = this.currentlyParked
+      } else if (this.selectedRadio === 'Late') {
+        this.showLocations = this.lateBookings
+      } else if (this.selectedRadio === 'All') {
+        this.showLocations = this.locations
+      }
     }
   }
 }
@@ -236,7 +299,7 @@ table {
 .table-wrap {
     width: 100%;
     /* width: 100%; */
-    padding: 5px;
+    padding: 10px;
     margin: 0 auto;
     text-align: center;
     display: inline-block;
@@ -281,6 +344,10 @@ table tr:nth-child(1) {
 
 .OkIcon {
     color: green;
+}
+
+.Highlight {
+     background-color: red;
 }
 
 .Loading {

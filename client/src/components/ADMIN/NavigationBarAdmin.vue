@@ -12,6 +12,7 @@
                     <!-- <router-link to="/search">Parking Locations</router-link> -->
                 </b-nav-item>
                 <b-nav-item href="/accounts/security">Security accounts </b-nav-item>
+                <b-nav-item href="/admin/security"> Edit </b-nav-item>
                 <!-- <b-nav-item v-bind:href="profile">Profile</b-nav-item> -->
                 <!-- <b-nav-item v-bind:href="bookings">Bookings</b-nav-item> -->
                 <!-- <b-nav-item href="#" disabled>Disabled</b-nav-item> -->

@@ -9,9 +9,6 @@
           <b-container class ="wrapper">
             <div>
               <b-card no-body>
-                <div class="Image">
-                  IMAGE
-                </div>
                 <div class="BookingInfo">
                   <b-card-text>
                     <h2> {{ location.address1 + ', ' + location.address2 }} </h2>
@@ -23,24 +20,45 @@
                   <!-- <b-card-text>{{ userQuery.aTime + ' -> ' + userQuery.lTime }} </b-card-text> -->
                   <b-card-text>
                     <div class="DateTimeInfo">
-                      <!-- <font-awesome-icon icon="calendar-alt" size="3x"> </font-awesome-icon> -->
-                      <!-- <div class="TimeInfo">
-                          -->
-                      <div class="DateTime">
-                        {{ dateFunc(location.arriveTime) + ' ' + timeFunc(location.arriveTime) + ' &rArr; '}}
+                      <div class="ArriveDateTime">
+                        <h3>
+                          {{ dateFunc(location.arriveTime) }} <br>
+                          {{ timeFunc(location.arriveTime) }}
+                        </h3>
                       </div>
-                      <div class="DateTime">
-                        {{ dateFunc(location.leavingTime) + ' ' + timeFunc(location.leavingTime) }}
+                      <div class="Arrow">
+                        <h1>&rArr;</h1>
+                      </div>
+                      <div class="LeaveDateTime">
+                        <h3>
+                          {{ dateFunc(location.leavingTime) }} <br>
+                          {{ timeFunc(location.leavingTime) }}
+                        </h3>
                       </div>
                     </div>
                   </b-card-text>
                   <b-card-text>
-                     <b-form-select v-model="carSelected" :options="carOptions" :select-size="1"></b-form-select>
+                    <h4> TOTAL: </h4>
+                    <h5> £{{ location.deposit }} + £{{ location.depositFee }}</h5>
+                    £{{ location.depositFee }} will not be taken out of your account unless there's an issue.
+                  </b-card-text>
+                  <b-card-text>
+                    Please select what car you'll be using?
+                  </b-card-text>
+                  <b-card-text>
+                      <div class="SelectCarIcon">
+                        <font-awesome-icon icon="car" size="2x"> </font-awesome-icon>
+                      </div>
+                      <div class="SelectCar">
+                        <b-form-select v-model="carSelected" :options="carOptions" :select-size="1" class="Select"></b-form-select>
+                      </div>
+                  </b-card-text>
                     <!-- <font-awesome-icon icon="money-bill-alt" size="2x"> </font-awesome-icon> -->
                     <!-- <h4> Cost: </h4> -->
+                  <b-card-text>
+                    <button class="SubmitButton" type="button" name="button" v-on:click="saveBooking">BOOK</button>
                   </b-card-text>
                 </div>
-                <button type="button" name="button" v-on:click="saveBooking">BOOK</button>
               </b-card>
             </div>
           </b-container>
@@ -130,6 +148,8 @@ export default {
             console.log('GO TO')
             that.$router.push({ name: 'Landing' })
           })
+      } else if (response.data.errorContent === 'Exists') {
+        swal('Unsuccessful!', `There's a booking clash with the car you picked`, 'error')
       } else {
         swal('Unsuccessful!', `You don't have enough credit for this transaction`, 'error')
           .then(function () {
@@ -199,6 +219,7 @@ export default {
   .BookingInfo {
     margin-left: 30px;
     margin-top: 20px;
+    margin-right: 30px;
   }
 
   .container {
@@ -216,7 +237,7 @@ export default {
 .DateTimeInfo {
   width: 100%;
   /* float: left; */
-  display: flex;
+  /* display: flex; */
 }
 
 .TimeInfo {
@@ -225,8 +246,43 @@ export default {
   /* positio */
 }
 
-.DateTime {
-  /* float: left; */
+.ArriveDateTime {
+  float: left;
+  width: 45%;
+  display: flex;
+}
+
+.LeaveDateTime {
+  /* width: 45%; */
+}
+
+.Arrow {
+  width: 40px;
+  float: left;
+}
+
+.SelectCarIcon {
+  float: left;
+  width: 10%;
+}
+
+.SelectCar {
+  float: left;
+  width: 88%;
+  margin-left: 2%;
+}
+
+.SubmitButton {
+  margin-top: 10px;
+  width: 100%;
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 
 </style>

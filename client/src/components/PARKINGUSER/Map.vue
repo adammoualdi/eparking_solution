@@ -9,7 +9,7 @@
 // import MapSearch from '@/components/MapSearch'
 import gmapsInit from '@/utils/gmaps'
 import swal from 'sweetalert'
-// import { EventBus } from '@/services/EventBus.js'
+import { EventBus } from '@/services/EventBus.js'
 
 export default {
   name: 'Map',
@@ -151,6 +151,15 @@ export default {
         } else {
           setAddress = this.address.loc
         }
+
+        google.maps.event.addListener(map, 'click', (event) => {
+          this.geocoder.geocode({
+            'latLng': event.latLng
+          }, function (results, status) {
+            console.log(event.latLng)
+            EventBus.$emit('mapClick', results, event.latLng)
+          })
+        })
         const that = this
         // on start, go to below address.
         this.geocoder.geocode({ address: setAddress }, (results, status) => {

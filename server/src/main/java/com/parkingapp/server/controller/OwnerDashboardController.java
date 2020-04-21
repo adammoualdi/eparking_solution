@@ -170,6 +170,10 @@ public class OwnerDashboardController {
             userDTO.setLastname(bookingUser.getLastname());
             userDTO.setEmail(bookingUser.getEmail());
             userDTO.setUsername(bookingUser.getUsername());
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setCostPerHour(locSearch.getCostPerHour());
+            locationDTO.setSpaces(locSearch.getSpaces());
+            booking.setLocation(locationDTO);
             booking.setBooking(bookingDTO);
             booking.setUser(userDTO);
             outputList.add(booking);

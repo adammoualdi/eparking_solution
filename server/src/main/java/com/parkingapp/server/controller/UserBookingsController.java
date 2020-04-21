@@ -8,6 +8,7 @@ import com.parkingapp.server.domain.ErrorDTO;
 import com.parkingapp.server.domain.ErrorResponse;
 import com.parkingapp.server.domain.JwtResponse;
 import com.parkingapp.server.domain.UserInfo;
+import com.parkingapp.server.domain.DTO.CarDTO;
 import com.parkingapp.server.domain.DTO.LocationDTO;
 import com.parkingapp.server.domain.DTO.ProfileDTO;
 import com.parkingapp.server.domain.DTO.UserBookingDTO;
@@ -81,9 +82,14 @@ public class UserBookingsController {
             location.setLatitude(temp.getLocationId().getLatitude());
             location.setLongitude(temp.getLocationId().getLongitude());
             booking.setLocationId(location);
+            booking.setParkingSlot(temp.getParkingSlotId());
             booking.setStartDate(temp.getStartDate());
             booking.setEndDate(temp.getEndDate());
             booking.setActive(temp.isActive());
+            CarDTO car = new CarDTO();
+            car.setId(temp.getCar().getCarId());
+            car.setRegNo(temp.getCar().getRegNo());
+            booking.setCar(car);
             System.out.println(booking.toString());
             tmpBookings.add(booking);
         }

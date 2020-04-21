@@ -17,9 +17,11 @@ public class BookingDTO {
     private LocalDateTime endDate;
     private boolean active;
     private double deposit;
+    private double depositFee;
     private int parkingSlotId;
     private boolean parkingConfirmation;
     private CarDTO car;
+    private boolean issue;
     
     public BookingDTO() {
 
@@ -160,6 +162,22 @@ public class BookingDTO {
 
     public void setCar(CarDTO car) {
         this.car = car;
+    }
+
+    public boolean isIssue() {
+        return issue;
+    }
+
+    public void setIssue(boolean issue) {
+        this.issue = issue;
+    }
+
+    public double getDepositFee() {
+        return depositFee;
+    }
+
+    public void setDepositFee(double depositFee) {
+        this.depositFee = depositFee;
     }
 
 }

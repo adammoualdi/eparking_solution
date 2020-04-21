@@ -47,7 +47,9 @@
                     <b-media-body class="ml-3">
                       <b-media>
                         <h5 class="mt-0">{{ location.address2 + ' ' + location.postcode }}</h5>
-                        Cost: £{{ location.deposit }}
+                        Cost: £{{ location.deposit }} + {{ location.depositFee}}
+                        <br>
+                        £{{ location.depositFee }} will not be taken out of your account unless there's an issue.
                       </b-media>
                     </b-media-body>
                   </b-media>
@@ -123,6 +125,7 @@ export default {
     console.log(this.$route.query.location)
     this.google = await gmapsInit()
     this.geocoder = new this.google.maps.Geocoder()
+    const that = this
     navigator.geolocation.getCurrentPosition(pos => {
       // var gettingLocation = false
       var location = pos
@@ -134,6 +137,11 @@ export default {
     })
     EventBus.$on('mapToLanding', function (payLoad) {
       console.log(payLoad)
+    })
+    EventBus.$on('mapClick', function (payload) {
+      console.log(payload)
+      that.toSearch(payload)
+      that.showSearch = true
     })
   },
   components: {
@@ -238,6 +246,9 @@ export default {
     },
     goToBooking (location) {
       this.$router.push({ name: 'Booking', params: {location: location} })
+    },
+    toSearch (payload) {
+      EventBus.$emit('LandingToSearch', payload)
     }
   }
 }

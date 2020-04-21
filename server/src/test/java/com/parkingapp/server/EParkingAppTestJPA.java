@@ -1,5 +1,7 @@
 package com.parkingapp.server;
 
+import static org.junit.Assert.*;
+
 import com.parkingapp.server.domain.Role;
 import com.parkingapp.server.domain.UserInfo;
 import com.parkingapp.server.repository.BookingRepository;
@@ -8,17 +10,12 @@ import com.parkingapp.server.repository.LocationRepo;
 import com.parkingapp.server.repository.RoleRepo;
 import com.parkingapp.server.repository.UserInfoRepo;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

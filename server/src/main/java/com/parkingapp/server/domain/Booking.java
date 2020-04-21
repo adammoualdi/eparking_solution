@@ -2,6 +2,7 @@ package com.parkingapp.server.domain;
 
 import java.time.LocalDateTime;
 // import java.util.Date;
+import java.util.Comparator;
 
 import javax.persistence.CascadeType;
 
@@ -53,6 +54,11 @@ public class Booking implements Comparable {
     private boolean cancelled;
     @Column
     private double fee;
+    @Column
+    private double depositFee;
+    @Column
+    private boolean issue;
+    private long length;
 
     public Booking() {
 
@@ -157,16 +163,24 @@ public class Booking implements Comparable {
     }
 
 	@Override
-	public String toString() {
-		return "Booking [active=" + active + ", endDate=" + endDate + ", id=" + id + ", locationId=" + locationId
-				+ ", startDate=" + startDate + ", userId=" + userId + "]";
-	}
+    public String toString() {
+        return "Booking [active=" + active + ", bookingUrl=" + bookingUrl + ", cancelled=" + cancelled + ", car=" + car
+                + ", depositFee=" + depositFee + ", endDate=" + endDate + ", fee=" + fee + ", id=" + id + ", issue="
+                + issue + ", locationId=" + locationId + ", parkingConfirmation=" + parkingConfirmation
+                + ", parkingSlotId=" + parkingSlotId + ", startDate=" + startDate + ", userId=" + userId + "]";
+    }
 
     @Override
     public int compareTo(Object booking) {
         int compareParkingId=((Booking)booking).getParkingSlotId();
         return this.parkingSlotId-compareParkingId;
     }
+
+    // @Override
+    // public int compareTo(Object booking, boolean length) {
+    //     int compareParkingId=((Booking)booking).getParkingSlotId();
+    //     return this.parkingSlotId-compareParkingId;
+    // }
 
     public boolean isCancelled() {
         return cancelled;
@@ -183,4 +197,43 @@ public class Booking implements Comparable {
     public void setFee(double fee) {
         this.fee = fee;
     }
+
+    public boolean isIssue() {
+        return issue;
+    }
+
+    public void setIssue(boolean issue) {
+        this.issue = issue;
+    }
+
+    public double getDepositFee() {
+        return depositFee;
+    }
+
+    public void setDepositFee(double depositFee) {
+        this.depositFee = depositFee;
+    }
+
+    public long getLength() {
+        return length;
+    }
+    
+    public void setLength(long length) {
+        this.length = length;
+    }
 }
+
+class SortbyId implements Comparator<Booking> { 
+    // Used for sorting in ascending order of 
+    // ID number 
+    public int compare(Booking a, Booking b) { 
+        return a.getParkingSlotId() - b.getParkingSlotId(); 
+    } 
+} 
+
+class SortbyParkingLength implements Comparator<Booking> {
+    public int compare(Booking a, Booking b) {
+        return (int)a.getLength() - (int)b.getLength();
+    }
+}
+

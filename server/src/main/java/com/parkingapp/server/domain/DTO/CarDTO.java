@@ -10,6 +10,8 @@ public class CarDTO {
     private int id;
     private String regNo;
     private String model;
+    private boolean remove;
+    private boolean add;
 
     public CarDTO() {
 
@@ -43,6 +45,22 @@ public class CarDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isRemove() {
+        return remove;
+    }
+
+    public void setRemove(boolean remove) {
+        this.remove = remove;
+    }
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
     }
 
 }

@@ -14,28 +14,21 @@ import com.parkingapp.server.domain.UserInfo;
 
 @Repository
 public interface BookingRepository extends CrudRepository<Booking, Integer> {
-//		User findById(int id);
-//		User findUserByEmail(String email);
 		Booking findById(int id);
 		ArrayList<Booking> findByUserId(UserInfo user);
 		ArrayList<Booking> findByLocationId(Location location);
 		Booking findByBookingUrl(String bookingUrl);
-		// @Query(
-		// 	value = "SELECT * FROM Bookings u WHERE u.status = 1", 
-		// 	nativeQuery = true)
-		// ArrayList<Booking> findAvailableLocation();
-		@Query("SELECT b FROM Booking b WHERE b.locationId = :locationId AND (b.startDate >= :arriveTime AND b.endDate <= :leavingTime) OR (b.startDate <= :arriveTime AND (b.endDate >= :arriveTime AND b.endDate <= :leavingTime)) OR ((b.startDate >= :arriveTime AND b.startDate <= :leavingTime) AND b.endDate >= :leavingTime) OR (b.startDate <= :arriveTime AND b.endDate >= :leavingTime)") 
+		@Query("SELECT b FROM Booking b WHERE b.locationId = :locationId AND (b.startDate >= :arriveTime AND b.endDate <= :leavingTime)" + 
+				"OR (b.startDate <= :arriveTime AND (b.endDate >= :arriveTime AND b.endDate <= :leavingTime))" + 
+				"OR ((b.startDate >= :arriveTime AND b.startDate <= :leavingTime) AND b.endDate >= :leavingTime)" + 
+				"OR (b.startDate <= :arriveTime AND b.endDate >= :leavingTime)") 
 		ArrayList<Booking> findBookings(@Param("locationId") Location locationId,
-												 @Param("arriveTime") LocalDateTime arriveTime,
-												 @Param("leavingTime") LocalDateTime leavingTime);
-
-													// private int id;
-													// private LocationDTO locationId;
-													// private String username;
-													// private LocalDateTime startDate;
-													// private LocalDateTime endDate;
-													// private boolean active;
-
+								     	@Param("arriveTime") LocalDateTime arriveTime,
+									    @Param("leavingTime") LocalDateTime leavingTime);
+		@Query("SELECT b FROM Booking b WHERE b.userId = :userId AND (b.startDate >= :arriveTime AND b.endDate <= :leavingTime) OR (b.startDate <= :arriveTime AND (b.endDate >= :arriveTime AND b.endDate <= :leavingTime)) OR ((b.startDate >= :arriveTime AND b.startDate <= :leavingTime) AND b.endDate >= :leavingTime) OR (b.startDate <= :arriveTime AND b.endDate >= :leavingTime)")
+		ArrayList<Booking> findUserBookings(@Param("userId") UserInfo userId,
+											@Param("arriveTime") LocalDateTime arriveTime,
+											@Param("leavingTime") LocalDateTime leavingTime);
 		//   Collection<User> findAllActiveUsersNative();)
 		// @Query("SELECT t.title FROM Todo t where t.id = :id") 
 		// ArrayList<Booking> findByUserId(@Param("id") int id);

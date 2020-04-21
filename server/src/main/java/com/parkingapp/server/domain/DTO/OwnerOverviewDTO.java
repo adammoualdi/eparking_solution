@@ -4,14 +4,16 @@ public class OwnerOverviewDTO {
     
     private UserDTO user;
     private BookingDTO booking;
+    private LocationDTO location;
 
     public OwnerOverviewDTO() {
 
     }
 
-    public OwnerOverviewDTO(UserDTO user, BookingDTO booking) {
+    public OwnerOverviewDTO(UserDTO user, BookingDTO booking, LocationDTO location) {
         this.user = user;
         this.booking = booking;
+        this.location = location;
     }
 
     public UserDTO getUser() {
@@ -28,6 +30,14 @@ public class OwnerOverviewDTO {
 
     public void setBooking(BookingDTO booking) {
         this.booking = booking;
+    }
+
+    public LocationDTO getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationDTO location) {
+        this.location = location;
     }
 
 }

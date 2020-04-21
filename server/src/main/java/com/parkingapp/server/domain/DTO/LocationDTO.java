@@ -11,9 +11,12 @@ public class LocationDTO {
     private double longitude;
     private double distance;
     private double deposit;
+    private int spaces;
     private String arriveTime;
     private String leavingTime;
- 
+    private double costPerHour;
+    private double depositFee;
+
     public LocationDTO() {
 
     }
@@ -137,5 +140,29 @@ public class LocationDTO {
                 + city + ", country=" + country + ", distance=" + distance + ", latitude=" + latitude + ", leavingTime="
                 + leavingTime + ", locationId=" + locationId + ", longitude=" + longitude + ", postcode=" + postcode
                 + "]";
+    }
+
+    public int getSpaces() {
+        return spaces;
+    }
+
+    public void setSpaces(int spaces) {
+        this.spaces = spaces;
+    }
+
+    public double getCostPerHour() {
+        return costPerHour;
+    }
+
+    public void setCostPerHour(double costPerHour) {
+        this.costPerHour = costPerHour;
+    }
+
+    public double getDepositFee() {
+        return depositFee;
+    }
+
+    public void setDepositFee(double depositFee) {
+        this.depositFee = depositFee;
     }
 }

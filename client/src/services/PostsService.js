@@ -73,6 +73,29 @@ export default {
 
   confirmParking (params) {
     return Api.post('booking/confirmation/' + params)
+  },
+
+  securityUpdate () {
+    return Api.get('/dashboard/security/bookings/update')
+  },
+
+  reportIssue (params) {
+    return Api.post('/booking/issue', params)
+  },
+
+  confirmIssue (params) {
+    return Api.post('/dashboard/security/bookings/issue', params)
+  },
+
+  getSecurityInfo (params) {
+    return Api.post('/locations/security', params)
+  },
+
+  removeSecurityLocation (param1, param2) {
+    return Api.post('/locations/security/remove/' + param1, param2)
+  },
+  addSecurityLocation (param1, param2) {
+    return Api.post('/locations/security/add/' + param1, param2)
   }
 
 }

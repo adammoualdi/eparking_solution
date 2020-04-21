@@ -20,6 +20,7 @@ import SecurityOverview from '@/components/SECURITY/SecurityOverview'
 import PurchasePoints from '@/components/PARKINGUSER/PurchasePoints'
 import AdminLocations from '@/components/ADMIN/AdminLocations'
 import ParkingConfirmation from '@/components/PARKINGUSER/ParkingConfirmation'
+import AdminSecurityEdit from '@/components/ADMIN/AdminSecurityEdit'
 
 Vue.use(Router)
 
@@ -213,6 +214,17 @@ const router = new Router({
         requiresAuth: true,
         roles: {
           role: 'User'
+        }
+      }
+    },
+    {
+      path: '/admin/security',
+      name: 'AdminSecurityEdit',
+      component: AdminSecurityEdit,
+      meta: {
+        requiresAuth: true,
+        roles: {
+          role: 'Admin'
         }
       }
     }

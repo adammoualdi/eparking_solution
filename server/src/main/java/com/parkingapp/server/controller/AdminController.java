@@ -2,17 +2,26 @@ package com.parkingapp.server.controller;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
+import javax.persistence.EntityNotFoundException;
+
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.parkingapp.server.domain.ErrorDTO;
+import com.parkingapp.server.domain.ErrorResponse;
 import com.parkingapp.server.domain.JwtResponse;
 import com.parkingapp.server.domain.Location;
 import com.parkingapp.server.domain.UserInfo;
 import com.parkingapp.server.domain.DTO.AdminLocationDTO;
 import com.parkingapp.server.domain.DTO.AdminLocationsDTO;
+import com.parkingapp.server.domain.DTO.BookingDTO;
 import com.parkingapp.server.domain.DTO.LocationDTO;
+import com.parkingapp.server.domain.DTO.SecurityOverviewDTO;
 import com.parkingapp.server.domain.DTO.UserDTO;
 import com.parkingapp.server.repository.LocationRepo;
 import com.parkingapp.server.repository.UserInfoRepo;
 import com.parkingapp.server.security.JwtTokenUtil;
+import com.parkingapp.server.services.ErrorService;
 import com.parkingapp.server.services.JwtUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +33,12 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +50,8 @@ public class AdminController {
 
 	@Autowired UserInfoRepo userInfoRepo;
 	@Autowired LocationRepo locationRepo;
+	
+	@Autowired ErrorService errorService;
 
 	// Receives all requests that need to be approved.
     @PreAuthorize("hasRole('ADMIN')")
@@ -119,5 +132,102 @@ public class AdminController {
 		}
 		locationRepo.save(loc);
 	    return ResponseEntity.ok(loc.getApproved());
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/locations/security", method = RequestMethod.POST)
+	public ResponseEntity<?> getSecurityUserInfo(@RequestHeader("Authorization") String token,
+												 @RequestBody UserDTO username) throws Exception {
+	
+		UserInfo securityUser;
+		securityUser = userInfoRepo.findByUsername(username.getUsername());
+		System.out.println("username " + username.getUsername());
+		System.out.println(securityUser.getRole().getRole());
+		if (securityUser == null || !securityUser.getRole().getRole().equals("Security")) {
+			ErrorDTO error = new ErrorDTO("Input", "Security user doesn't exist");
+			ErrorResponse er = errorService.createErrorResp(error, "Security user doesn't exist");
+			return ResponseEntity.ok(er);
+		}
+		
+		ArrayList<BookingDTO> locations = new ArrayList<BookingDTO>();
+
+		Set<Location> userLocs = securityUser.getLocationsPermission();
+		ArrayList<BookingDTO> listDTO = new ArrayList<BookingDTO>();
+		Iterator<Location> it = userLocs.iterator();
+        // For each of the security user's locations
+        while(it.hasNext()) {
+            Location loc = it.next();
+			// Put information into DTOs	
+			BookingDTO bookingDTO = new BookingDTO();
+			// UserDTO userDTO = new UserDTO();
+			bookingDTO.setFirstname(securityUser.getFirstname());
+			bookingDTO.setLastname(securityUser.getLastname());
+			bookingDTO.setEmail(securityUser.getEmail());
+			bookingDTO.setUsername(securityUser.getUsername());
+			bookingDTO.setId(securityUser.getId());
+			LocationDTO locDTO = new LocationDTO();
+			locDTO.setAddress1(loc.getAddress1());
+			locDTO.setAddress2(loc.getAddress2());
+			locDTO.setCity(loc.getCity());
+			locDTO.setCountry(loc.getCountry());
+			locDTO.setPostcode(loc.getPostcode());
+			locDTO.setLongitude(loc.getLongitude());
+			locDTO.setLatitude(loc.getLatitude());
+			locDTO.setLocationId(loc.getLocationId());
+			bookingDTO.setLocationId(locDTO);
+			listDTO.add(bookingDTO);       
+		}
+		locations.addAll(listDTO);
+		
+		SecurityOverviewDTO output = new SecurityOverviewDTO(locations);
+	    return ResponseEntity.ok(output);
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/locations/security/remove/{locationId}", method = RequestMethod.POST)
+	public ResponseEntity<?> removeLocationFromSecurity(@RequestHeader("Authorization") String token,
+														@PathVariable("locationId") int locationId,
+												        @RequestBody UserDTO username) throws Exception {
+	
+		UserInfo securityUser;
+		securityUser = userInfoRepo.findByUsername(username.getUsername());
+		System.out.println("username " + username.getUsername());
+		System.out.println(securityUser.getRole().getRole());
+		if (securityUser == null || !securityUser.getRole().getRole().equals("Security")) {
+			ErrorDTO error = new ErrorDTO("Input", "Security user doesn't exist");
+			ErrorResponse er = errorService.createErrorResp(error, "Security user doesn't exist");
+			return ResponseEntity.ok(er);
+		}
+		
+		Location loc = locationRepo.findByLocationId(locationId);
+		securityUser.getLocationsPermission().remove(loc);
+		userInfoRepo.save(securityUser);
+		
+		// SecurityOverviewDTO output = new SecurityOverviewDTO(locations);
+	    return ResponseEntity.ok("success");
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/locations/security/add/{locationId}", method = RequestMethod.POST)
+	public ResponseEntity<?> addLocationFromSecurity(@RequestHeader("Authorization") String token,
+														@PathVariable("locationId") int locationId,
+												        @RequestBody UserDTO username) throws Exception {
+	
+		UserInfo securityUser;
+		securityUser = userInfoRepo.findByUsername(username.getUsername());
+		System.out.println("username " + username.getUsername());
+		System.out.println(securityUser.getRole().getRole());
+		if (securityUser == null || !securityUser.getRole().getRole().equals("Security")) {
+			ErrorDTO error = new ErrorDTO("Input", "Security user doesn't exist");
+			ErrorResponse er = errorService.createErrorResp(error, "Security user doesn't exist");
+			return ResponseEntity.ok(er);
+		}
+		
+		Location loc = locationRepo.findByLocationId(locationId);
+		securityUser.getLocationsPermission().add(loc);
+		userInfoRepo.save(securityUser);
+		
+		// SecurityOverviewDTO output = new SecurityOverviewDTO(locations);
+	    return ResponseEntity.ok("success");
 	}
 }

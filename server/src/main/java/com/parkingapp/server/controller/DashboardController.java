@@ -1,5 +1,7 @@
 package com.parkingapp.server.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -79,10 +81,6 @@ public class DashboardController {
             
             // System.out.println(tmpLocations);
             
-        }
-
-        for (int ii = 0; ii < tmpLocations.size(); ii++) {
-            System.out.println(tmpLocations.get(ii).toString());
         }
 
         // The DTO that's passed to front-end via JSON.
@@ -191,6 +189,8 @@ public class DashboardController {
                 // long minutes = p.getMinutes();
                 double costForBooking = hours * loc.getCostPerHour();
                 location.setDeposit(costForBooking);
+                BigDecimal bd = new BigDecimal(costForBooking * 0.8).setScale(2, RoundingMode.HALF_UP);
+                location.setDepositFee(bd.doubleValue());
 
                 System.out.println("SPACE AVAILABLE FOR PARTICULAR BOOKING");
                 System.out.println("ADD TO OUTPUT");

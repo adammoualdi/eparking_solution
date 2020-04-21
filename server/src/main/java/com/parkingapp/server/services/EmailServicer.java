@@ -41,7 +41,7 @@ public class EmailServicer {
         String htmlMsg = "<body style='border:2px solid black'>"
                     +"Your confirmation URL is "+ url+ userUrl + "</body>";
         helper.setText(htmlMsg, true);
-        helper.setSubject("Registration details");		
+        helper.setSubject("Booking confirmation");		
         sender.send(message);	
     }	
 } 

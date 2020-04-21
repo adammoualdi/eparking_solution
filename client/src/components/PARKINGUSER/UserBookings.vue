@@ -17,14 +17,28 @@
                                     <div id="booking_header">
                                         <h2>{{ booking.locationId.address1 + ' ' + booking.locationId.address2 }}</h2>
                                     </div>
-                                    <h4>Arrival: </h4> <br>
-                                    {{ arriveTimeFunc(booking) }} <br>
-                                    <!-- <i class="fas fa-arrow-right"></i> -->
-                                    <h4> Leaving: </h4> <br>
-                                    {{ leaveTimeFunc(booking) }} <br>
+                                    <div class="DateTimeInfo">
+                                      <div class="ArriveDateTime">
+                                        <h3>
+                                          {{ dateFunc(booking.startDate) }} <br>
+                                          {{ timeFunc(booking.startDate) }}
+                                        </h3>
+                                      </div>
+                                      <div class="Arrow">
+                                        <h1>&rArr;</h1>
+                                      </div>
+                                      <div class="LeaveDateTime">
+                                        <h3>
+                                          {{ dateFunc(booking.endDate) }} <br>
+                                          {{ timeFunc(booking.endDate) }}
+                                        </h3>
+                                      </div>
+                                    </div>
                                     {{ booking.locationId.country }} <br>
                                     {{ booking.locationId.city }} <br>
                                     {{ booking.locationId.postcode }} <br>
+                                    Parking slot: {{ booking.parkingSlot }} <br>
+                                    <button type="button" name="button" v-b-modal.issue v-on:click="sendInfo(booking)">Report parking issue</button>
                                     <a :href="getMapsLink(booking.locationId.latitude, booking.locationId.longitude)">Get maps</a>
                                 </td>
                             </tr>
@@ -34,16 +48,30 @@
                         <table>
                             <tr v-for="(booking, index) in previousBookings" :key="index" >
                                 <td class="BookingCardWrapper" width="650">
-                                    <div id="booking_header">
-                                        <h2>{{ booking.locationId.address1 + ' ' + booking.locationId.address2 }}</h2>
+                                  <div id="booking_header">
+                                      <h2>{{ booking.locationId.address1 + ' ' + booking.locationId.address2 }}</h2>
+                                  </div>
+                                  <div class="DateTimeInfo">
+                                    <div class="ArriveDateTime">
+                                      <h3>
+                                        {{ dateFunc(booking.startDate) }} <br>
+                                        {{ timeFunc(booking.startDate) }}
+                                      </h3>
                                     </div>
-                                    {{ arriveTimeFunc(booking) }}
-                                    <i class="fas fa-arrow-right"></i>
-                                    {{ leaveTimeFunc(booking) }} <br>
-                                    {{ booking.locationId.country }} <br>
-                                    {{ booking.locationId.city }} <br>
-                                    {{ booking.locationId.postcode }} <br>
-                                </td>
+                                    <div class="Arrow">
+                                      <h1>&rArr;</h1>
+                                    </div>
+                                    <div class="LeaveDateTime">
+                                      <h3>
+                                        {{ dateFunc(booking.endDate) }} <br>
+                                        {{ timeFunc(booking.endDate) }}
+                                      </h3>
+                                    </div>
+                                  </div>
+                                  {{ booking.locationId.country }} <br>
+                                  {{ booking.locationId.city }} <br>
+                                  {{ booking.locationId.postcode }} <br>
+                              </td>
                             </tr>
                         </table>
                     </b-tab>
@@ -57,8 +85,23 @@
             color="#000000"
             />
         </div>
-            <!-- </b-tab> -->
-        <!-- </b-tabs> -->
+        <b-modal
+          id="issue"
+          ref="issue"
+          @ok="handleOk"
+          title="Report issue">
+          <p>Please enter the registration number that's currently parked in your booked spot.</p>
+          <form ref="form" @submit.stop.prevent="handleSubmit">
+            <b-input-group>
+              <b-form-input
+                class="locationFormInput"
+                placeholder="Registration number"
+                v-model="regnumber">
+              </b-form-input>
+            <!-- <b-button variant="primary" v-on:click="purchase">Purchase</b-button> -->
+            </b-input-group>
+          </form>
+        </b-modal>
     </div>
 </div>
 </template>
@@ -67,6 +110,8 @@
 import NavigationBar from '@/components/PARKINGUSER/NavigationBar'
 import PostsService from '@/services/PostsService'
 import {SemipolarSpinner} from 'epic-spinners'
+import swal from 'sweetalert'
+import DateConverter from '@/services/DateConvert'
 export default {
   name: 'UserBookings',
   components: {
@@ -79,7 +124,9 @@ export default {
       activeBookings: [],
       previousBookings: [],
       isMounted: false,
-      currentLoc: null
+      currentLoc: null,
+      regnumber: null,
+      bookingDTO: null
     }
   },
   mounted () {
@@ -116,25 +163,51 @@ export default {
         }
       }
     },
-    arriveTimeFunc (booking) {
-      console.log(booking)
-      var date = booking.startDate.substring(0, 10)
-      var time = booking.startDate.substring(11, 16)
-      console.log(date + ' ' + time)
-      var ret = date + ' ' + time
-      return ret
-    },
-    leaveTimeFunc (booking) {
-      var date = booking.endDate.substring(0, 10)
-      var time = booking.endDate.substring(11, 16)
-      console.log(date + ' ' + time)
-      var ret = date + ' ' + time
-      return ret
-    },
+    // arriveTimeFunc (booking) {
+    //   console.log(booking)
+    //   var date = booking.startDate.substring(0, 10)
+    //   var time = booking.startDate.substring(11, 16)
+    //   console.log(date + ' ' + time)
+    //   var ret = date + ' ' + time
+    //   return ret
+    // },
+    // leaveTimeFunc (booking) {
+    //   var date = booking.endDate.substring(0, 10)
+    //   var time = booking.endDate.substring(11, 16)
+    //   console.log(date + ' ' + time)
+    //   var ret = date + ' ' + time
+    //   return ret
+    // },
     getMapsLink (lat, lng) {
       // https://www.google.com/maps/dir/?api=1&origin=Space+Needle+Seattle+WA&destination=Pike+Place+Market+Seattle+WA&travelmode=bicycling
-      const googleLink = 'https://www.google.com/maps/dir/?api=1&origin='
-      return googleLink + this.currentLoc.coords.latitude + ',' + this.currentLoc.coords.longitude + '&destination=' + lat + ',' + lng + '&travelmode=driving'
+      if (this.currentLoc !== null) {
+        const googleLink = 'https://www.google.com/maps/dir/?api=1&origin='
+        return googleLink + this.currentLoc.coords.latitude + ',' + this.currentLoc.coords.longitude + '&destination=' + lat + ',' + lng + '&travelmode=driving'
+      }
+    },
+    async handleOk () {
+      console.log(this.bookingDTO.locationId.locationId)
+      var bookingDTO = { id: this.bookingDTO.id, locationId: this.bookingDTO.locationId.locationId, regno: this.regnumber }
+      const response = await PostsService.reportIssue(bookingDTO)
+      console.log(response)
+      if (response.data.errorContent !== undefined) {
+        swal('Oops!', response.data.errorContent, 'warning')
+      } else {
+        swal('Success!', 'Your parking id has been changed to!', 'success')
+        // vm.$forceUpdate()
+      }
+    },
+    sendInfo (info) {
+      // var bookingDTO = { BookingDTO = info, regno = info.car.regNo }
+      this.bookingDTO = info
+      console.log(info)
+    },
+    dateFunc (dateTime) {
+      console.log(dateTime)
+      return DateConverter.dateConverter(dateTime)
+    },
+    timeFunc (dateTime) {
+      return DateConverter.timeConverter(dateTime)
     }
   }
 }
@@ -223,7 +296,7 @@ table tr:nth-child(odd) {
     background: #f2f2f2;
 }
 table tr:nth-child(1) {
-    background: #4d7ef7;
+    background: grey;
     color: #fff;
 }
 
@@ -238,5 +311,24 @@ table tr:nth-child(1) {
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+#issue {
+  margin-top: 100px;
+}
+
+.ArriveDateTime {
+  float: left;
+  width: 45%;
+  display: flex;
+}
+
+.LeaveDateTime {
+  /* width: 45%; */
+}
+
+.Arrow {
+  width: 40px;
+  float: left;
 }
 </style>

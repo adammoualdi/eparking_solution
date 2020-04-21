@@ -17,7 +17,11 @@
                 </b-card-text>
                 <b-card-text>
                   <h4>{{ location.country + ', ' + location.city + ', ' + location.postcode}} </h4>
-                  </b-card-text>
+                </b-card-text>
+                <b-card-text>
+                  Cost Per Hour: {{ locationInfo.costPerHour}}
+                  Spaces: {{ locationInfo.spaces }}
+                </b-card-text>
                 <!-- <b-card-text>{{ location.postcode }} </b-card-text> -->
                 <!-- <b-card-text>{{ userQuery.aTime + ' -> ' + userQuery.lTime }} </b-card-text> -->
                 <b-card-text>
@@ -87,6 +91,7 @@ export default {
       location: null,
       selected: null,
       bookings: null,
+      locationInfo: null,
       isMounted: false
     }
   },
@@ -108,6 +113,7 @@ export default {
         locationId: this.location.id
       })
       console.log(response)
+      this.locationInfo = response.data.ownerOverviewInfo[0].location
       this.bookings = response.data.ownerOverviewInfo
       this.isMounted = true
     },

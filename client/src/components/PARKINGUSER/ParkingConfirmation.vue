@@ -1,7 +1,7 @@
 <template>
   <div id = "BookingWrapper">
     <div class="Nav">
-      <!-- <NavigationBar class="nav"> </NavigationBar> -->
+      <NavigationBar class="nav"> </NavigationBar>
     </div>
         <b-container class ="wrapper">
         </b-container>

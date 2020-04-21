@@ -54,6 +54,7 @@ public class SecurityOverviewController {
         ArrayList<BookingDTO> bookings = new ArrayList<BookingDTO>();
 
         Iterator<Location> it = userLocs.iterator();
+        // For each of the security user's locations
         while(it.hasNext()) {
             Location loc = it.next();
             ArrayList<Booking> tmpbookings = bookingRepo.findByLocationId(loc);
@@ -81,6 +82,7 @@ public class SecurityOverviewController {
                 bookingDTO.setParkingSlotId(tmpbookings.get(i).getParkingSlotId());
                 bookingDTO.setParkingConfirmation(tmpbookings.get(i).isParkingConfirmation());
                 bookingDTO.setUsername(tmpbookings.get(i).getUserId().getUsername());
+                bookingDTO.setIssue(tmpbookings.get(i).isIssue());
                 LocationDTO locDTO = new LocationDTO();
                 locDTO.setAddress1(loc.getAddress1());
                 locDTO.setAddress2(loc.getAddress2());
@@ -91,9 +93,23 @@ public class SecurityOverviewController {
                 locDTO.setLatitude(loc.getLatitude());
                 locDTO.setLocationId(loc.getLocationId());
                 bookingDTO.setLocationId(locDTO);
-                listDTO.add(bookingDTO);
-                
+                listDTO.add(bookingDTO);       
             }
+            // If no bookings for specific location
+            // if (tmpbookings.size() == 0) {
+            //     BookingDTO bookingDTO = new BookingDTO();
+            //     LocationDTO locDTO = new LocationDTO();
+            //     locDTO.setAddress1(loc.getAddress1());
+            //     locDTO.setAddress2(loc.getAddress2());
+            //     locDTO.setCity(loc.getCity());
+            //     locDTO.setCountry(loc.getCountry());
+            //     locDTO.setPostcode(loc.getPostcode());
+            //     locDTO.setLongitude(loc.getLongitude());
+            //     locDTO.setLatitude(loc.getLatitude());
+            //     locDTO.setLocationId(loc.getLocationId());
+            //     bookingDTO.setLocationId(locDTO);
+            //     listDTO.add(bookingDTO); 
+            // }
             bookings.addAll(listDTO);
         }
 
@@ -103,6 +119,23 @@ public class SecurityOverviewController {
         // output.setLocations(locationsArray);
 
         return ResponseEntity.ok(output);
-        }
+    }
+
+    @PreAuthorize("hasRole('SECURITY')")
+	@RequestMapping(value = "/dashboard/security/bookings/update", method = RequestMethod.GET)
+    public ResponseEntity<?> checkParked(@RequestHeader("Authorization") String token) throws Exception {
+        return ResponseEntity.ok("success");
+    }
     
+    @PreAuthorize("hasRole('SECURITY')")
+	@RequestMapping(value = "/dashboard/security/bookings/issue", method = RequestMethod.POST)
+    public ResponseEntity<?> confirmIssue(@RequestHeader("Authorization")
+                                          @RequestBody BookingDTO bookingDTO, 
+                                          String token) throws Exception {
+        Booking booking = bookingRepo.findById(bookingDTO.getId());
+        UserInfo user = userRepo.findById(booking.getUserId().getId());
+        user.setDeposit(user.getDeposit() - booking.getDepositFee());
+        userRepo.save(user);
+        return ResponseEntity.ok("success");
+    }
 }

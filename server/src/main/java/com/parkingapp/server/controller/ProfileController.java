@@ -61,6 +61,7 @@ public class ProfileController {
         profileInfo.setFirstname(user.getFirstname());
         profileInfo.setLastname(user.getLastname());
         profileInfo.setEmail(user.getEmail());
+        profileInfo.setDofb(user.getDofb());
 
 
         List<Car> cars = carRepo.findByUserId(user);
@@ -73,6 +74,46 @@ public class ProfileController {
 
         CarsDTO carsOutput = new CarsDTO(carList);
         profileInfo.setCars(carsOutput);
+        System.out.println(profileInfo.toString());
+        // profileInfo.setCars(user.getCars());
+	    return ResponseEntity.ok(profileInfo);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = "/profile/edit/{username}", method = RequestMethod.POST)
+    public ResponseEntity<?> profileEditInfo(@PathVariable("username") String username, 
+                                             @RequestHeader("Authorization") String token,
+                                             @RequestBody ProfileDTO profileInfo) throws Exception {
+        
+        String usernameTok = jwtTokenUtil.getUsernameFromToken(token.substring(7,token.length()));
+        UserInfo user = userInfoRepo.findByUsername(usernameTok);
+
+        if ( !username.equals(user.getUsername()) ) {
+            return ResponseEntity.ok(new ErrorResponse(HttpStatus.UNAUTHORIZED, "Unauthorised access", new ErrorDTO()));
+        }
+        
+        user.setFirstname(profileInfo.getFirstname());
+        user.setLastname(profileInfo.getLastname());
+        user.setEmail(profileInfo.getEmail());
+        user.setDofb(profileInfo.getDofb());
+        
+        List<Car> cars = carRepo.findByUserId(user);
+        List<Car> carList = new ArrayList<>();
+        // To add cars
+        for (int i = 0; i < profileInfo.getCars().getCars().size(); i++) {
+            Car car = new Car();
+            if (profileInfo.getCars().getCars().get(i).isAdd()) {
+                car.setModel(profileInfo.getCars().getCars().get(i).getModel());
+                car.setRegNo(profileInfo.getCars().getCars().get(i).getRegNo());
+                car.setUserId(user);
+                carList.add(car);
+            }       
+        }
+        carRepo.saveAll(carList);
+        userInfoRepo.save(user);
+
+        // CarsDTO carsOutput = new CarsDTO(carList);
+        // profileInfo.setCars(carsOutput);
         System.out.println(profileInfo.toString());
         // profileInfo.setCars(user.getCars());
 	    return ResponseEntity.ok(profileInfo);

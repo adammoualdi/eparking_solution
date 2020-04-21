@@ -41,6 +41,7 @@ import DatePicker from '@/components/DateTimePicker'
 import { Datetime } from 'vue-datetime'
 // import { required } from 'vuelidate/lib/validators'
 // const check_times = (arrive, leave) => (arrive < leave)
+import { EventBus } from '@/services/EventBus.js'
 import gmapsInit from '@/utils/gmaps'
 export default {
   name: 'MapSearch',
@@ -72,8 +73,23 @@ export default {
   async mounted () {
     // const google = await gmapsInit()
     // const geocoder = new google.maps.Geocoder()
+    const that = this
     this.google = await gmapsInit()
     this.geocoder = new this.google.maps.Geocoder()
+    EventBus.$on('LandingToSearch', function (payload) {
+      console.log(payload)
+      var location = ''
+      console.log(payload[0].address_components.length)
+      for (var i = 0; i < payload[0].address_components.length; i++) {
+        if (i === 0) {
+          location = payload[0].address_components[i].long_name
+        } else {
+          location = location + ', ' + payload[0].address_components[i].long_name
+        }
+      }
+      that.location = location
+      // that.showSearch = true
+    })
   },
   methods: {
     emitToParent (event) {

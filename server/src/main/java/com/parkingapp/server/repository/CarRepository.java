@@ -14,6 +14,7 @@ public interface CarRepository extends CrudRepository<Car, Integer> {
 //		User findUserByEmail(String email);
 		Car findById(int id);
 		ArrayList<Car> findByUserId(UserInfo user);
+		Car findByRegNo(String regNo);
 	    // Car findByUsernameAndPassword(String username, String password);
 //	    ArrayList<UserInfo> findByRoleId(int roleId);
 }

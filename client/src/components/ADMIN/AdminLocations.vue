@@ -48,7 +48,7 @@
                 color="#000000"
             />
         </div>
-        <b-modal
+      <b-modal
       id="modal"
       ref="modal"
       title="Why do you want to remove this location?"

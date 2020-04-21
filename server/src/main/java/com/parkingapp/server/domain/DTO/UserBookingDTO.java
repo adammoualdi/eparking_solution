@@ -1,16 +1,6 @@
 package com.parkingapp.server.domain.DTO;
 
 import java.time.LocalDateTime;
-// import java.util.Date;
-
-// import javax.persistence.Transient;
-
-import com.parkingapp.server.domain.Location;
-import com.parkingapp.server.domain.UserInfo;
-
-/**
- * Saves instances of Roles in the Role entity
- * */
 
 public class UserBookingDTO {
     
@@ -20,6 +10,8 @@ public class UserBookingDTO {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private boolean active;
+    private int parkingSlot;
+    private CarDTO car;
 
     public UserBookingDTO() {
 
@@ -95,6 +87,22 @@ public class UserBookingDTO {
     public String toString() {
         return "UserBookingDTO [active=" + active + ", endDate=" + endDate + ", id=" + id + ", startDate=" + startDate
                 + "]";
+    }
+
+    public int getParkingSlot() {
+        return parkingSlot;
+    }
+
+    public void setParkingSlot(int parkingSlot) {
+        this.parkingSlot = parkingSlot;
+    }
+
+    public CarDTO getCar() {
+        return car;
+    }
+
+    public void setCar(CarDTO car) {
+        this.car = car;
     }
 
 }

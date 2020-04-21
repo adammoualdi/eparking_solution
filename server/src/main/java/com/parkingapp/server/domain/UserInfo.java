@@ -48,6 +48,8 @@ public class UserInfo {
 	private boolean defaultPassword;
 	@Column
 	private double deposit;
+	@Column
+	private double requiredDeposit;
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="role", referencedColumnName="id")
 	private Role role;
@@ -263,6 +265,14 @@ public class UserInfo {
 
 	public void setLocationsPermission(Set<Location> locationsPermission) {
 		this.locationsPermission = locationsPermission;
+	}
+
+	public double getRequiredDeposit() {
+		return requiredDeposit;
+	}
+
+	public void setRequiredDeposit(double requiredDeposit) {
+		this.requiredDeposit = requiredDeposit;
 	}
 	
 }

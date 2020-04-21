@@ -15,10 +15,10 @@ import 'vue-datetime/dist/vue-datetime.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 // import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faUser, faSearchLocation, faPlus, faExclamationCircle, faCheckCircle, faCalendarAlt, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faSearchLocation, faPlus, faCar, faExclamationCircle, faCheckCircle, faCalendarAlt, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons'
 import VueMq from 'vue-mq'
 
-library.add(faUser, faSearchLocation, faPlus, faExclamationCircle, faCheckCircle, faCalendarAlt, faMoneyBillAlt)
+library.add(faUser, faSearchLocation, faPlus, faCar, faExclamationCircle, faCheckCircle, faCalendarAlt, faMoneyBillAlt)
 
 // import './assets/css/style.css'
 // library.add(faUserSecret)

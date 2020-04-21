@@ -1,5 +1,6 @@
 package com.parkingapp.server.domain.DTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.parkingapp.server.domain.Car;
@@ -10,7 +11,8 @@ public class ProfileDTO {
 	private String email;
 	private String firstname;
 	private String lastname;
-	private CarsDTO cars;
+    private CarsDTO cars;
+    private LocalDate dofb;
 	// private List<Booking> bookings;
 
 	public ProfileDTO() {
@@ -63,6 +65,14 @@ public class ProfileDTO {
 
     public void setCars(CarsDTO cars) {
         this.cars = cars;
+    }
+
+    public LocalDate getDofb() {
+        return dofb;
+    }
+
+    public void setDofb(LocalDate dofb) {
+        this.dofb = dofb;
     }
     
 }
