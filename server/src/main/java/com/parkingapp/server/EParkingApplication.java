@@ -30,12 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
+@EnableScheduling
 public class EParkingApplication implements CommandLineRunner {
 
 	@Autowired UserInfoRepo userRepo;
@@ -70,6 +72,7 @@ public class EParkingApplication implements CommandLineRunner {
 		user2.setDofb(myDate3);
 		user2.setRole(new Role(USER, "User"));
 		user2.setDeposit(20.00);
+		user2.setRequiredDeposit(8);
 		userRepo.save(user2);
 
 		UserInfo user4 = new UserInfo();
@@ -102,7 +105,7 @@ public class EParkingApplication implements CommandLineRunner {
 		user3.setPassword(pe.encode("password"));
 		user3.setFirstname("Ben");
 		user3.setLastname("Neale");
-		user3.setEmail("BenNeale@hotmail.co.uk");
+		user3.setEmail("adammoualdi@hotmail.co.uk");
 		user3.setRole(new Role(OWNER, "Owner"));
 		// userRepo.save(user3);
 
@@ -139,8 +142,10 @@ public class EParkingApplication implements CommandLineRunner {
 		booking1.setId(22);
 		booking1.setLocationId(loc1);
 		booking1.setUserId(user2);
-		String str = "2020-03-02 12:30";
-		String str1 = "2020-03-03 12:30";
+		booking1.setIssue(false);
+		booking1.setCompleted(false);
+		String str = "2020-04-23 12:30";
+		String str1 = "2020-04-23 14:30";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
 		LocalDateTime dateTime1 = LocalDateTime.parse(str1, formatter);

@@ -1,7 +1,7 @@
 <template>
 <div id = "MapSearchWrapper">
   <div class="exitButton">
-    <b-button type="submit" variant="primary" v-on:click="emitCloseSearch">EXIT</b-button>
+    <b-button type="submit" variant="primary" v-on:click="emitCloseSearch">&#10006;</b-button>
   </div>
   <b-container class="bv-example-row bv-example-row-flex-cols">
       <b-row align-v="start">
@@ -18,11 +18,26 @@
       </b-row>
       <b-row align-v="center">
           <b-col>
-              <Datetime class="dateTimeInput" placeholder="Enter arriving time" type="datetime" v-model="$v.arrivingTime.$model" :minute-step=30></Datetime>
+            <Datetime class="dateTimeInput"
+                      placeholder="Enter arriving time"
+                      type="datetime"
+                      value-zone="Europe/London"
+                      :format="{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'}"
+                      v-model="$v.arrivingTime.$model"
+                      :minute-step=30>
+            </Datetime>
               <!-- <p class="error" v-if="!$v.arrivingTime.required">this field is required</p> -->
           </b-col>
           <b-col>
-              <Datetime class="dateTimeInput" placeholder="Enter leaving time" type="datetime" v-model="$v.leavingTime.$model" @change="$v.leavingTime.$touch" :minute-step=30></Datetime>
+            <Datetime class="dateTimeInput"
+              placeholder="Enter leaving time"
+              type="datetime"
+              value-zone="Europe/London"
+              :format="{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'}"
+              v-model="$v.leavingTime.$model"
+              @change="$v.leavingTime.$touch"
+              :minute-step=30>
+            </Datetime>
               <!-- <p class="error" v-if="!$v.arrivingTime.isValid">leaving time cannot be before arriving time</p> -->
           </b-col>
       </b-row>
@@ -39,6 +54,7 @@
 <script>
 import DatePicker from '@/components/DateTimePicker'
 import { Datetime } from 'vue-datetime'
+// import moment from 'moment-timezone'
 // import { required } from 'vuelidate/lib/validators'
 // const check_times = (arrive, leave) => (arrive < leave)
 import { EventBus } from '@/services/EventBus.js'
@@ -117,10 +133,19 @@ export default {
           if (this.location === null) {
             this.invalidLoc = true
           } else if (this.arrivingTime >= this.leavingTime) {
+            console.log(this.arrivingTime)
+            console.log(this.leavingTime)
             this.invalidDate = true
           } else {
             var info = this.location
             console.log('SEARCH')
+            console.log(info)
+            console.log(this.arrivingTime)
+            this.arrivingTime = this.arrivingTime.substring(0, this.arrivingTime.length - 6)
+            this.arrivingTime = this.arrivingTime + 'Z'
+            this.leavingTime = this.leavingTime.substring(0, this.leavingTime.length - 6)
+            this.leavingTime = this.leavingTime + 'Z'
+            console.log(this.leavingTime)
             this.$emit('childToParent', info, this.arrivingTime, this.leavingTime)
             // console.log(this.$emit('childToParent', info, this.arrivingTime, this.leavingTime))
           }

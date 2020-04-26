@@ -58,7 +58,10 @@ public class Booking implements Comparable {
     private double depositFee;
     @Column
     private boolean issue;
-    private long length;
+    @Column 
+    private boolean completed;
+    private int length;
+    private int bookingsPerParkingSlot;
 
     public Booking() {
 
@@ -214,26 +217,28 @@ public class Booking implements Comparable {
         this.depositFee = depositFee;
     }
 
-    public long getLength() {
+    public int getLength() {
         return length;
     }
     
-    public void setLength(long length) {
+    public void setLength(int length) {
         this.length = length;
     }
-}
 
-class SortbyId implements Comparator<Booking> { 
-    // Used for sorting in ascending order of 
-    // ID number 
-    public int compare(Booking a, Booking b) { 
-        return a.getParkingSlotId() - b.getParkingSlotId(); 
-    } 
-} 
+    public boolean isCompleted() {
+        return completed;
+    }
 
-class SortbyParkingLength implements Comparator<Booking> {
-    public int compare(Booking a, Booking b) {
-        return (int)a.getLength() - (int)b.getLength();
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public int getBookingsPerParkingSlot() {
+        return bookingsPerParkingSlot;
+    }
+
+    public void setBookingsPerParkingSlot(int bookingsPerParkingSlot) {
+        this.bookingsPerParkingSlot = bookingsPerParkingSlot;
     }
 }
 

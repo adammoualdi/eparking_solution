@@ -98,18 +98,18 @@ public class ProfileController {
         user.setDofb(profileInfo.getDofb());
         
         List<Car> cars = carRepo.findByUserId(user);
-        List<Car> carList = new ArrayList<>();
+        // List<Car> carList = new ArrayList<>();
         // To add cars
-        for (int i = 0; i < profileInfo.getCars().getCars().size(); i++) {
-            Car car = new Car();
-            if (profileInfo.getCars().getCars().get(i).isAdd()) {
-                car.setModel(profileInfo.getCars().getCars().get(i).getModel());
-                car.setRegNo(profileInfo.getCars().getCars().get(i).getRegNo());
-                car.setUserId(user);
-                carList.add(car);
-            }       
-        }
-        carRepo.saveAll(carList);
+        // for (int i = 0; i < profileInfo.getCars().getCars().size(); i++) {
+        //     Car car = new Car();
+        //     if (profileInfo.getCars().getCars().get(i).isAdd()) {
+        //         car.setModel(profileInfo.getCars().getCars().get(i).getModel());
+        //         car.setRegNo(profileInfo.getCars().getCars().get(i).getRegNo());
+        //         car.setUserId(user);
+        //         carList.add(car);
+        //     }       
+        // }
+        carRepo.saveAll(cars);
         userInfoRepo.save(user);
 
         // CarsDTO carsOutput = new CarsDTO(carList);

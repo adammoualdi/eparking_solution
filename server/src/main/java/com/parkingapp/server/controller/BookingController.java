@@ -116,7 +116,10 @@ public class BookingController {
         Booking booking = bookingService.getParkingSlot(loc, bookingDetails.getStartDate(), bookingDetails.getEndDate());
 
         if ( booking.getParkingSlotId() == 0 ) {
-            return ResponseEntity.ok("Error");
+            // booking = bookingService.optimiseParkingSlots(loc, bookingDetails.getStartDate(), bookingDetails.getEndDate());
+            // if ( booking.getParkingSlotId() == 0 ) {
+                return ResponseEntity.ok("Error");
+            // }
         }
 
         // long hours = ChronoUnit.HOURS.between(bookingDetails.getStartDate(), bookingDetails.getEndDate());
@@ -139,7 +142,8 @@ public class BookingController {
         } else {
             // Add money to requiredDeposit and remove from deposit
             user.setRequiredDeposit(user.getRequiredDeposit() + depositFee);
-            user.setDeposit(user.getDeposit() - fee);
+            user.setDeposit(user.getDeposit() - fee + depositFee);
+            System.out.println("Fee:" + fee);
             System.out.println(user.getDeposit());
             userRepo.save(user); 
             bookingDetails.setDepositFee(depositFee);

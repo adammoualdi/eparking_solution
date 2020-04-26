@@ -34,7 +34,7 @@
                             <td align="center">
                                 <!-- <router-link v-bind:to="{ name: 'EditPost', params: { id: post._id } }">Edit</router-link> | -->
                                 <a href="javascript:void(0)" @click="approveLocation(location, true)">Approve</a>
-                                <a href="javascript:void(0)" @click="approveLocation(location, false)">Disapprove</a>
+                                <a href="javascript:void(0)" v-b-modal.rejectMsg @click="rejectLocation(location)">Disapprove</a>
                             </td>
                             </tr>
                         </table>
@@ -53,6 +53,26 @@
                 color="#000000"
             />
         </div>
+        <b-modal
+            id="rejectMsg"
+            ref="rejectMsg"
+            title="Reject a location"
+            @ok="handleOk"
+            modal-footer=hide>
+            <p>Please state a reason why this location is being rejected.</p>
+            <form ref="form" @submit.stop.prevent="handleSubmit">
+                <b-input-group>
+                    <b-form-textarea
+                            class="locationFormInput"
+                            rows="4"
+                            max-rows="6"
+                            placeholder="Message"
+                            v-model="message">
+                    </b-form-textarea>
+                    <!-- <b-button variant="primary" v-on:click="purchase">Purchase</b-button> -->
+                </b-input-group>
+            </form>
+        </b-modal>
             <!-- </b-tab> -->
         <!-- </b-tabs> -->
     </div>
@@ -72,7 +92,9 @@ export default {
   data () {
     return {
       locations: [],
-      isMounted: false
+      isMounted: false,
+      message: '',
+      location: null
     }
   },
   mounted () {
@@ -96,6 +118,15 @@ export default {
         return returnableObjects.id !== location.id
       })
       console.log(this.locations)
+    },
+    handleOk () {
+      console.log(this.message)
+      console.log(this.location)
+      this.location.message = this.message
+      this.approveLocation(this.location, false)
+    },
+    rejectLocation (location) {
+      this.location = location
     }
   }
 }
@@ -203,5 +234,8 @@ table tr:nth-child(1) {
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+#rejectMsg {
+  margin-top: 100px;
 }
 </style>

@@ -155,29 +155,40 @@ public class OwnerDashboardController {
         ArrayList<Booking> bookings = bookingRepo.findByLocationId(locSearch);
                                                     
         ArrayList<OwnerOverviewDTO> outputList = new ArrayList<OwnerOverviewDTO>();
-        for (int i = 0; i < bookings.size(); i++){
+        if (bookings.size() == 0) {
             OwnerOverviewDTO booking = new OwnerOverviewDTO();
-            BookingDTO bookingDTO = new BookingDTO();
-            UserDTO userDTO = new UserDTO();
-            System.out.println(bookings.get(i).getId());
-            UserInfo bookingUser = userRepo.findById(bookings.get(i).getUserId().getId());
-            bookingDTO.setId(bookings.get(i).getId());
-            System.out.println(bookingUser.getFirstname());
-            bookingDTO.setStartDate(bookings.get(i).getStartDate());
-            bookingDTO.setEndDate(bookings.get(i).getEndDate());
-            bookingDTO.setActive(bookings.get(i).isActive());
-            userDTO.setFirstname(bookingUser.getFirstname());
-            userDTO.setLastname(bookingUser.getLastname());
-            userDTO.setEmail(bookingUser.getEmail());
-            userDTO.setUsername(bookingUser.getUsername());
             LocationDTO locationDTO = new LocationDTO();
             locationDTO.setCostPerHour(locSearch.getCostPerHour());
             locationDTO.setSpaces(locSearch.getSpaces());
             booking.setLocation(locationDTO);
-            booking.setBooking(bookingDTO);
-            booking.setUser(userDTO);
             outputList.add(booking);
+        } 
+        else {
+            for (int i = 0; i < bookings.size(); i++){
+                OwnerOverviewDTO booking = new OwnerOverviewDTO();
+                BookingDTO bookingDTO = new BookingDTO();
+                UserDTO userDTO = new UserDTO();
+                System.out.println("ID " + bookings.get(i).getId());
+                UserInfo bookingUser = userRepo.findById(bookings.get(i).getUserId().getId());
+                bookingDTO.setId(bookings.get(i).getId());
+                System.out.println(bookingUser.getFirstname());
+                bookingDTO.setStartDate(bookings.get(i).getStartDate());
+                bookingDTO.setEndDate(bookings.get(i).getEndDate());
+                bookingDTO.setActive(bookings.get(i).isActive());
+                userDTO.setFirstname(bookingUser.getFirstname());
+                userDTO.setLastname(bookingUser.getLastname());
+                userDTO.setEmail(bookingUser.getEmail());
+                userDTO.setUsername(bookingUser.getUsername());
+                LocationDTO locationDTO = new LocationDTO();
+                locationDTO.setCostPerHour(locSearch.getCostPerHour());
+                locationDTO.setSpaces(locSearch.getSpaces());
+                booking.setLocation(locationDTO);
+                booking.setBooking(bookingDTO);
+                booking.setUser(userDTO);
+                outputList.add(booking);
+            }
         }
+
 
         OwnerOverviewsDTO output = new OwnerOverviewsDTO(outputList);
         // location.setUserId(user);

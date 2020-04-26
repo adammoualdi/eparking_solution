@@ -17,6 +17,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUser, faSearchLocation, faPlus, faCar, faExclamationCircle, faCheckCircle, faCalendarAlt, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons'
 import VueMq from 'vue-mq'
+import { Settings } from 'luxon'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
+
+moment.tz.guess()
+Vue.use(VueMoment, { moment })
 
 library.add(faUser, faSearchLocation, faPlus, faCar, faExclamationCircle, faCheckCircle, faCalendarAlt, faMoneyBillAlt)
 
@@ -38,6 +44,7 @@ Vue.use(VueMq, {
     desktop: Infinity
   }
 })
+Settings.defaultLocale = 'en'
 // Vue.use(VueSidebarMenu)
 // Vue.component('datepicker', Datepicker)
 

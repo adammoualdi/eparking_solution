@@ -29,6 +29,8 @@ public interface BookingRepository extends CrudRepository<Booking, Integer> {
 		ArrayList<Booking> findUserBookings(@Param("userId") UserInfo userId,
 											@Param("arriveTime") LocalDateTime arriveTime,
 											@Param("leavingTime") LocalDateTime leavingTime);
+		@Query("SELECT b from Booking b WHERE :currentTime <= b.endDate AND b.completed = 0")
+		ArrayList<Booking> findNotCompletedBookings(@Param("currentTime") LocalDateTime currentTime);
 		//   Collection<User> findAllActiveUsersNative();)
 		// @Query("SELECT t.title FROM Todo t where t.id = :id") 
 		// ArrayList<Booking> findByUserId(@Param("id") int id);

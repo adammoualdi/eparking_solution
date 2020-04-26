@@ -44,7 +44,7 @@
               </div>
             </b-card>
           </div>
-          <div class="table-wrap" v-if="bookings.length > 0">
+          <div class="table-wrap" v-if="bookings.booking != null">
             <table>
                 <tr>
                   <th width="20%">Name</th>
@@ -67,7 +67,7 @@
             </table>
           </div>
         <div v-else>
-            There are no requests
+          There are no bookings
         </div>
         </div>
       </div>
@@ -115,6 +115,7 @@ export default {
       console.log(response)
       this.locationInfo = response.data.ownerOverviewInfo[0].location
       this.bookings = response.data.ownerOverviewInfo
+      console.log(this.bookings)
       this.isMounted = true
     },
     dateFunc (dateTime) {

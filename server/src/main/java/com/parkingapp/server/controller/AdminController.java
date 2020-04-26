@@ -2,11 +2,13 @@ package com.parkingapp.server.controller;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.parkingapp.server.EParkingApplication;
 import com.parkingapp.server.domain.ErrorDTO;
 import com.parkingapp.server.domain.ErrorResponse;
 import com.parkingapp.server.domain.JwtResponse;
@@ -21,10 +23,12 @@ import com.parkingapp.server.domain.DTO.UserDTO;
 import com.parkingapp.server.repository.LocationRepo;
 import com.parkingapp.server.repository.UserInfoRepo;
 import com.parkingapp.server.security.JwtTokenUtil;
+import com.parkingapp.server.services.EmailServicer;
 import com.parkingapp.server.services.ErrorService;
 import com.parkingapp.server.services.JwtUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,8 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-public class AdminController {
-
+public class AdminController extends EmailServicer {
     @Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -122,15 +125,33 @@ public class AdminController {
                                              @RequestBody AdminLocationDTO location) throws Exception {
 		
 		Location loc = locationRepo.findByLocationId(location.getId());
-		
+		UserInfo user = null;
+		List<UserInfo> users = userInfoRepo.findByLocationsPermission(loc);
+		System.out.println(users.size());
+		for(int i = 0; i < users.size(); i++) {
+			System.out.println(users.get(i).getUsername());
+			if (users.get(i).getRole().getId() == EParkingApplication.OWNER) {
+				user = users.get(i);
+			}
+
+		}
 		// Approved location - can now be used by system.
 		if (location.isApproved()) {
 			loc.setApproved(true);
+			locationRepo.save(loc);
 		}
 		else {
-			loc.setApproved(false);
-		}
-		locationRepo.save(loc);
+			// loc.setApproved(false);
+			// SEND EMAIL
+			System.out.println("REMOVE LOCATION");
+			user.getLocationsPermission().remove(loc);
+			// user.setLocationsPermission(user.getLocationsPermission().remove(loc));
+			userInfoRepo.save(user);
+			System.out.println("SEND EMAIL");
+			locationRejection(user.getEmail(), location.getMessage());
+			System.out.println("DELETE LOCATION");
+			locationRepo.delete(loc);
+		}	
 	    return ResponseEntity.ok(loc.getApproved());
 	}
 

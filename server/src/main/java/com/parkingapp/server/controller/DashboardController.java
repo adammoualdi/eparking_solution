@@ -136,6 +136,8 @@ public class DashboardController {
 	    return ResponseEntity.ok(locations);
     }
 
+
+    // PUT FAKE BOOKINGS INSIDE
     @PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/dashboard/available", method = RequestMethod.POST)
     public ResponseEntity<?> availableParkingLocations(@RequestHeader("Authorization") String token, 

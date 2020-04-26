@@ -39,14 +39,11 @@
           <ul>
             <li>
               <div v-for="(location, index) in mapLocations" :key="index">
-                <b-card :title="location.address1">
+                <b-card :title="location.address1 + ', ' + location.address2">
                   <b-media no-body>
-                    <b-media-aside vertical-align="center">
-                      <b-img blank blank-color="#ccc" width="128" height="128" alt="placeholder"></b-img>
-                    </b-media-aside>
                     <b-media-body class="ml-3">
                       <b-media>
-                        <h5 class="mt-0">{{ location.address2 + ' ' + location.postcode }}</h5>
+                        <h5 class="mt-0">{{ location.city + ', ' + location.country + ', ' + location.postcode }}</h5>
                         Cost: £{{ location.deposit }} + {{ location.depositFee}}
                         <br>
                         £{{ location.depositFee }} will not be taken out of your account unless there's an issue.
@@ -188,6 +185,7 @@ export default {
         var aTime = this.$route.query.start
         var lTime = this.$route.query.end
         this.userQuery = {loc, aTime, lTime}
+        console.log(this.userQuery)
         this.getLocationInfo()
       }
     },

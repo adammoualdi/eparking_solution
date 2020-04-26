@@ -44,4 +44,17 @@ public class EmailServicer {
         helper.setSubject("Booking confirmation");		
         sender.send(message);	
     }	
+
+    public void locationRejection(String email, String adminMessage) throws Exception {	
+        MimeMessage message = sender.createMimeMessage();	
+        MimeMessageHelper helper = new MimeMessageHelper(message);		
+        helper.setTo(email);	
+        // helper.setText("Welcome, \n Username: " + login + "\n Password: " + password + "\n Please login to change your password");	
+        String htmlMsg = "<body style='border:2px solid black'>"
+                    +"Your location has been rejected by one of the Admin team." + "<br>" + "Admin response: " + adminMessage +  "</body>";
+        helper.setText(htmlMsg, true);
+        helper.setSubject("Location Rejection");	
+        System.out.println("SEND");	
+        sender.send(message);	
+    }	
 } 
