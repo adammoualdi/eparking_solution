@@ -155,6 +155,8 @@ export default {
         // console.log('token after login: ' + tok)
         // console.log(uname)
         // console.log('LOGIN STATUS' + response.data.status)
+      } else {
+        this.invalidLogin = true
       }
     },
     route () {

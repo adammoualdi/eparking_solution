@@ -163,7 +163,7 @@ public class AdminController extends EmailServicer {
 		UserInfo securityUser;
 		securityUser = userInfoRepo.findByUsername(username.getUsername());
 		System.out.println("username " + username.getUsername());
-		System.out.println(securityUser.getRole().getRole());
+		// System.out.println(securityUser.getRole().getRole());
 		if (securityUser == null || !securityUser.getRole().getRole().equals("Security")) {
 			ErrorDTO error = new ErrorDTO("Input", "Security user doesn't exist");
 			ErrorResponse er = errorService.createErrorResp(error, "Security user doesn't exist");
@@ -173,6 +173,7 @@ public class AdminController extends EmailServicer {
 		ArrayList<BookingDTO> locations = new ArrayList<BookingDTO>();
 
 		Set<Location> userLocs = securityUser.getLocationsPermission();
+		System.out.println("SIZE " + userLocs.size());
 		ArrayList<BookingDTO> listDTO = new ArrayList<BookingDTO>();
 		Iterator<Location> it = userLocs.iterator();
         // For each of the security user's locations

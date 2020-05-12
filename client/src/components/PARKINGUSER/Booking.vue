@@ -38,7 +38,7 @@
                     </div>
                   </b-card-text>
                   <b-card-text>
-                    <h4> TOTAL: </h4>
+                    <h4> TOTAL: £{{ addition(location.deposit, location.depositFee) }}</h4>
                     <h5> £{{ location.deposit }} + £{{ location.depositFee }}</h5>
                     £{{ location.depositFee }} will not be taken out of your account unless there's an issue.
                   </b-card-text>
@@ -176,6 +176,9 @@ export default {
     },
     timeFunc (dateTime) {
       return DateConverter.timeConverter(dateTime)
+    },
+    addition (fee, depositFee) {
+      return fee + depositFee
     }
     // onChange: function (event) {
     //   this.carOptions = []

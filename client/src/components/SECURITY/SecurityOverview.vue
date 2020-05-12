@@ -16,7 +16,7 @@
             <div class ="overviewTitleDiv">
                 <b-card class="overviewTitle">
                     <span v-for="(location, index) in locationSelected" :key="index">
-                        {{ location.address1 }}
+                        {{ location.address1 }},
                     </span>
                 </b-card>
             </div>
@@ -210,10 +210,9 @@ export default {
           }
         }
       }
-      var uniq = {}
-      var arrFiltered = this.locationOptions.filter(obj => !uniq[obj.id] && (uniq[obj.id] = true))
-      console.log(arrFiltered)
-      this.locationOptions = arrFiltered
+      // var arrFiltered = this.locationOptions.filter(obj => uniq[obj.id] && (uniq[obj.id] = true))
+      // console.log(arrFiltered)
+      // this.locationOptions = arrFiltered
       this.checkBookings()
     },
     dateFunc (dateTime) {

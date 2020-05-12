@@ -23,6 +23,7 @@ import com.parkingapp.server.repository.BookingRepository;
 import com.parkingapp.server.repository.LocationRepo;
 import com.parkingapp.server.repository.UserInfoRepo;
 import com.parkingapp.server.security.JwtTokenUtil;
+import com.parkingapp.server.services.BookingCheckerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,8 @@ public class DashboardController {
     @Autowired LocationRepo locationRepo;
     @Autowired UserInfoRepo userRepo;
     @Autowired BookingRepository bookingRepo;
+
+    @Autowired BookingCheckerService bookingService;
 
     // Get all locations
     // @CrossOrigin(origins="https://localhost:8080")
@@ -154,50 +157,59 @@ public class DashboardController {
 
         for (int i = 0; i < clientDistances.getLocations().size(); i++) {
             Location loc = locationRepo.findByLocationId(clientDistances.getLocations().get(i).getLocationId());
-            ArrayList<Booking> bookings = bookingRepo.findBookings(loc, clientDistances.getArriveTime(), clientDistances.getLeavingTime());
-            Collections.sort(bookings);
-            System.out.println("SIZE OF BOOKING ARRAY " + bookings.size());
-            boolean available = false;
-            if (bookings.size() != 0) {
-                if (bookings.get(bookings.size()-1).getParkingSlotId() < loc.getSpaces()) {
-                    available = true;
+            // ArrayList<Booking> bookings = bookingRepo.findBookings(loc, clientDistances.getArriveTime(), clientDistances.getLeavingTime());
+            // Collections.sort(bookings);
+            // System.out.println("SIZE OF BOOKING ARRAY " + bookings.size());
+            Booking booking = bookingService.getParkingSlot(loc, clientDistances.getArriveTime(), clientDistances.getLeavingTime(), 0);
+            if ( booking.getParkingSlotId() == 0) {
+                System.out.println("OPTIMISING PARKING SLOTS");
+                booking = bookingService.optimiseParkingSlots(loc, clientDistances.getArriveTime(), clientDistances.getLeavingTime(), 0);
+                if (booking.getParkingSlotId() == 0) {
+                    break;
                 }
-            } else {
-                available = true;
             }
-            if (available == true) {
-                LocationDTO location = new LocationDTO();
-                location.setLocationId(clientDistances.getLocations().get(i).getLocationId());
-                location.setAddress1(clientDistances.getLocations().get(i).getAddress1());
-                location.setAddress2(clientDistances.getLocations().get(i).getAddress2());
-                location.setCountry(clientDistances.getLocations().get(i).getCountry());
-                location.setCity(clientDistances.getLocations().get(i).getCity());
-                location.setLatitude(clientDistances.getLocations().get(i).getLatitude());
-                location.setLongitude(clientDistances.getLocations().get(i).getLongitude());
-                location.setPostcode(clientDistances.getLocations().get(i).getPostcode());
-                location.setDistance(clientDistances.getLocations().get(i).getDistance());
-                location.setArriveTime(clientDistances.getLocations().get(i).getArriveTime());
-                location.setLeavingTime(clientDistances.getLocations().get(i).getLeavingTime());
+            System.out.println("PARKING SLOT ID " + booking.getParkingSlotId());
+            // boolean available = false;
+            // if (bookings.size() != 0) {
+            //     if (bookings.get(bookings.size()-1).getParkingSlotId() < loc.getSpaces()) {
+            //         available = true;
+            //     }
+            // } else {
+            //     available = true;
+            // }
+            // if (available == true) {
+            LocationDTO location = new LocationDTO();
+            location.setLocationId(clientDistances.getLocations().get(i).getLocationId());
+            location.setAddress1(clientDistances.getLocations().get(i).getAddress1());
+            location.setAddress2(clientDistances.getLocations().get(i).getAddress2());
+            location.setCountry(clientDistances.getLocations().get(i).getCountry());
+            location.setCity(clientDistances.getLocations().get(i).getCity());
+            location.setLatitude(clientDistances.getLocations().get(i).getLatitude());
+            location.setLongitude(clientDistances.getLocations().get(i).getLongitude());
+            location.setPostcode(clientDistances.getLocations().get(i).getPostcode());
+            location.setDistance(clientDistances.getLocations().get(i).getDistance());
+            location.setArriveTime(clientDistances.getLocations().get(i).getArriveTime());
+            location.setLeavingTime(clientDistances.getLocations().get(i).getLeavingTime());
 
-                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-                LocalDateTime startTime = LocalDateTime.parse(clientDistances.getLocations().get(i).getArriveTime(), inputFormatter);
-                LocalDateTime endTime = LocalDateTime.parse(clientDistances.getLocations().get(i).getLeavingTime(), inputFormatter);
-                // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                // LocalDateTime dateTime = LocalDateTime.parse("2016-09-21 13:43:27.000", formatter);
-                // Calc overall cost for booking
-                // Period p = new Period(startTime, endTime);
-                double minutes = ChronoUnit.MINUTES.between(startTime, endTime);
-                double hours = minutes / 60;
-                // long minutes = p.getMinutes();
-                double costForBooking = hours * loc.getCostPerHour();
-                location.setDeposit(costForBooking);
-                BigDecimal bd = new BigDecimal(costForBooking * 0.8).setScale(2, RoundingMode.HALF_UP);
-                location.setDepositFee(bd.doubleValue());
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+            LocalDateTime startTime = LocalDateTime.parse(clientDistances.getLocations().get(i).getArriveTime(), inputFormatter);
+            LocalDateTime endTime = LocalDateTime.parse(clientDistances.getLocations().get(i).getLeavingTime(), inputFormatter);
+            // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            // LocalDateTime dateTime = LocalDateTime.parse("2016-09-21 13:43:27.000", formatter);
+            // Calc overall cost for booking
+            // Period p = new Period(startTime, endTime);
+            double minutes = ChronoUnit.MINUTES.between(startTime, endTime);
+            double hours = minutes / 60;
+            // long minutes = p.getMinutes();
+            double costForBooking = hours * loc.getCostPerHour();
+            location.setDeposit(costForBooking);
+            BigDecimal bd = new BigDecimal(costForBooking * 0.8).setScale(2, RoundingMode.HALF_UP);
+            location.setDepositFee(bd.doubleValue());
 
-                System.out.println("SPACE AVAILABLE FOR PARTICULAR BOOKING");
-                System.out.println("ADD TO OUTPUT");
-                locationsArray.add(location);
-            }
+            System.out.println("SPACE AVAILABLE FOR PARTICULAR BOOKING");
+            System.out.println("ADD TO OUTPUT");
+            locationsArray.add(location);
+            // }
         }
 
         LocationsDistanceDTO output = new LocationsDistanceDTO();

@@ -8,9 +8,10 @@ public class SortbyParkingLength implements Comparator<Booking> {
     // ID number 
     public int compare(Booking a, Booking b) { 
         int n;
-        n = a.getLength() - b.getLength();
+        n =  a.getBookingsPerParkingSlot() - b.getBookingsPerParkingSlot(); 
         if (n == 0) {
-            n = a.getBookingsPerParkingSlot() - a.getBookingsPerParkingSlot();        }
+            n = a.getLength() - b.getLength();     
+        }
         return n;
         // return (int)a.getLength() - (int)b.getLength(); 
     } 

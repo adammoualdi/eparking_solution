@@ -88,6 +88,7 @@
 import NavigationBarAdmin from '@/components/ADMIN/NavigationBarAdmin'
 import PostsService from '@/services/PostsService'
 import {SemipolarSpinner} from 'epic-spinners'
+import swal from 'sweetalert'
 export default {
   name: 'AdminSecurityEdit',
   components: {
@@ -143,12 +144,16 @@ export default {
       const response = await PostsService.getSecurityInfo(obj)
       console.log(response)
       var tmp = []
-      for (var i = 0; i < response.data.bookings.length; i++) {
-        tmp.push(response.data.bookings[i].locationId)
-      }
-      this.locations = tmp
-      if (response.data.bookings !== undefined) {
-        this.user = response.data.bookings[0]
+      if (response.data.errorContent === undefined) {
+        for (var i = 0; i < response.data.bookings.length; i++) {
+          tmp.push(response.data.bookings[i].locationId)
+        }
+        this.locations = tmp
+        if (response.data.bookings !== undefined) {
+          this.user = response.data.bookings[0]
+        }
+      } else {
+        swal('Oops!', response.data.errorContent, 'warning')
       }
     },
     async handleOk () {

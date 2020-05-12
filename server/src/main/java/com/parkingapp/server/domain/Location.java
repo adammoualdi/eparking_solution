@@ -57,7 +57,7 @@ public class Location {
     @Column
     private int spaces;
     @Column 
-    private int costPerHour;
+    private double costPerHour;
     @Column
     private boolean sensors;
     @Column
@@ -281,11 +281,11 @@ public class Location {
         // this.userId = userId;
     }
 
-    public int getCostPerHour() {
+    public double getCostPerHour() {
         return costPerHour;
     }
 
-    public void setCostPerHour(int costPerHour) {
+    public void setCostPerHour(double costPerHour) {
         this.costPerHour = costPerHour;
     }
 

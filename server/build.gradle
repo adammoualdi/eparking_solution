@@ -4,7 +4,7 @@ plugins {
 	id 'java'
 }
 
-apply plugin: 'groovy'
+// apply plugin: 'groovy'
 
 group = 'com.parkingapp'
 version = '0.0.1-SNAPSHOT'
@@ -17,9 +17,9 @@ repositories {
 ext {
 	jasperVersion = '9.0.0.M26'
 	lombokVersion = '1.16.18'
-	groovyVersion = '2.4.4'
+	// groovyVersion = '2.4.4'
 	gebVersion = '0.10.0'
-	spockVersion = '1.1-groovy-2.4'
+	// spockVersion = '1.1-groovy-2.4'
 }
 
 dependencies {
@@ -57,8 +57,8 @@ dependencies {
 	// }
 	
 	testCompile("junit:junit:4.12")
-	testCompile("org.spockframework:spock-core:$spockVersion")
-	testCompile "org.spockframework:spock-spring:$spockVersion"
+	// testCompile("org.spockframework:spock-core:$spockVersion")
+	// testCompile "org.spockframework:spock-spring:$spockVersion"
 	// testCompile("org.spockframework:spock-core:$spockVersion")
 	// testCompile "org.spockframework:spock-spring:$spockVersion"
 	testCompile("org.hamcrest:hamcrest-core:1.3")

@@ -8,7 +8,7 @@
 
             <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav>
-                <b-nav-item href="/locations">Requests
+                <b-nav-item href="/approval">Requests
                     <!-- <router-link to="/search">Parking Locations</router-link> -->
                 </b-nav-item>
                 <b-nav-item href="/accounts/security">Security accounts </b-nav-item>

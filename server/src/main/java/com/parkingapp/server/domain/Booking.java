@@ -64,7 +64,7 @@ public class Booking implements Comparable {
     private int bookingsPerParkingSlot;
 
     public Booking() {
-
+        id = 0;
     }
 
     public Booking(Location locationId, UserInfo userId, LocalDateTime startDate, LocalDateTime endDate, boolean active) {

@@ -155,7 +155,7 @@ export default {
     },
     sortBookings () {
       for (var i = 0; i < this.bookings.length; i++) {
-        if (this.bookings[i].active === true) {
+        if (this.bookings[i].completed === false) {
           this.activeBookings.push(this.bookings[i])
           console.log(this.activeBookings)
         } else {
@@ -223,9 +223,10 @@ export default {
     /* position: absolute; */
     /* width: calc(100% - 50px) */
     width: 100%;
+    float: left;
     /* margin-left: 50px; */
     padding-top: 60px;
-    text-align: center;
+    /* text-align: center; */
     display: inline-block;
 }
 

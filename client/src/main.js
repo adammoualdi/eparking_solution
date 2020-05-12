@@ -20,6 +20,7 @@ import VueMq from 'vue-mq'
 import { Settings } from 'luxon'
 import VueMoment from 'vue-moment'
 import moment from 'moment-timezone'
+import PieChart from 'vue-pie-chart/src/PieChart.vue'
 
 moment.tz.guess()
 Vue.use(VueMoment, { moment })
@@ -29,6 +30,7 @@ library.add(faUser, faSearchLocation, faPlus, faCar, faExclamationCircle, faChec
 // import './assets/css/style.css'
 // library.add(faUserSecret)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('pie-chart', PieChart)
 
 Vue.config.productionTip = false
 Vue.use(Vuelidate)

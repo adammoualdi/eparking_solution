@@ -82,6 +82,7 @@ public class UserBookingsController {
             location.setLatitude(temp.getLocationId().getLatitude());
             location.setLongitude(temp.getLocationId().getLongitude());
             booking.setLocationId(location);
+            booking.setCompleted(temp.isCompleted());
             booking.setParkingSlot(temp.getParkingSlotId());
             booking.setStartDate(temp.getStartDate());
             booking.setEndDate(temp.getEndDate());

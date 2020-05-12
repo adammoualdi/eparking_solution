@@ -8,9 +8,6 @@
         <div v-if="isMounted">
           <div class="locationInfo">
             <b-card no-body>
-              <div class="Image">
-                <img src="/tmp/tomcat-docbase.9188529932403793077.8090/owneruser52.62972973892097--1.1084526206885137">
-              </div>
               <div class="BookingInfo">
                 <b-card-text>
                   <h2> {{ location.address1 + ', ' + location.address2 }} </h2>
@@ -22,8 +19,28 @@
                   Cost Per Hour: {{ locationInfo.costPerHour}}
                   Spaces: {{ locationInfo.spaces }}
                 </b-card-text>
-                <!-- <b-card-text>{{ location.postcode }} </b-card-text> -->
-                <!-- <b-card-text>{{ userQuery.aTime + ' -> ' + userQuery.lTime }} </b-card-text> -->
+                <div class="ChartBox">
+                  <div class="Chart">
+                    <PieChart
+                      :percent=percent
+                      :stroke-width=1
+                      :label=percentText
+                      label-small="Bookings today"
+                      color=#40a070
+                      :opacity=1
+                    />
+                  </div>
+                  <div class="Chart">
+                    <PieChart
+                      :percent=percentWeek
+                      :stroke-width=1
+                      :label=percentWeekText
+                      label-small="Weekly bookings"
+                      color=#40a070
+                      :opacity=1
+                    />
+                  </div>
+                </div>
                 <b-card-text>
                   <div class="DateTimeInfo">
                     <!-- <font-awesome-icon icon="calendar-alt" size="3x"> </font-awesome-icon> -->
@@ -44,7 +61,7 @@
               </div>
             </b-card>
           </div>
-          <div class="table-wrap" v-if="bookings.booking != null">
+          <div class="table-wrap" v-if="bookings[0].booking != null">
             <table>
                 <tr>
                   <th width="20%">Name</th>
@@ -62,7 +79,7 @@
                       <!-- {{ 'Parking owner: ' + bookin.userId.firstname + ' ' + booking.userId.firstname }} <br> -->
                       <!-- {{ 'Email: ' + location.userId.email }} -->
                   </td>
-                  <td> {{ dateFunc(booking.booking.endDate) + ', ' + timeFunc(booking.booking.endDate) }} </td>
+                  <td>{{ dateFunc(booking.booking.endDate) + ', ' + timeFunc(booking.booking.endDate) }} </td>
                 </tr>
             </table>
           </div>
@@ -79,11 +96,14 @@
 import PostsService from '@/services/PostsService'
 import NavigationBar from '@/components/OWNER/NavigationBarOwner'
 import DateConverter from '@/services/DateConvert'
+import PieChart from 'vue-pie-chart/src/PieChart.vue'
 // import swal from 'sweetalert'
 export default {
   name: 'LocationOverview',
   components: {
-    NavigationBar
+    NavigationBar,
+    PieChart
+    // 'pie-chart': PieChart
   },
   data () {
     return {
@@ -92,6 +112,10 @@ export default {
       selected: null,
       bookings: null,
       locationInfo: null,
+      percent: 0,
+      percentText: '',
+      percentWeek: 0,
+      percentWeekText: '',
       isMounted: false
     }
   },
@@ -116,6 +140,14 @@ export default {
       this.locationInfo = response.data.ownerOverviewInfo[0].location
       this.bookings = response.data.ownerOverviewInfo
       console.log(this.bookings)
+      this.percent = response.data.percentageBooked * 100
+      this.percentWeek = response.data.percentageBookedWeek * 100
+      console.log('PERCENTAGE = ' + this.percent)
+      this.percentText = Math.round(this.percent) + '%'
+      this.percentWeekText = Math.round(this.percentWeek) + '%'
+      // this.percentWeek = Math.round(this.percentageBookedWeek * 100)
+      console.log('PERCENTAGE WEEK TEXT = ' + this.percentWeekText)
+      console.log('PERCENTAGE WEEK = ' + this.percentWeek)
       this.isMounted = true
     },
     dateFunc (dateTime) {
@@ -204,6 +236,17 @@ table tr:nth-child(1) {
     width: calc(100vw - 20px);
     /* display: inline-block; */
     background-color: white;
+}
+
+.Chart {
+  width: 400px;
+  float: left;
+  display: block;
+  /* margin: 10px; */
+}
+
+.ChartBox {
+  align-content: center;
 }
 
 </style>

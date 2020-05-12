@@ -19,17 +19,18 @@ public interface BookingRepository extends CrudRepository<Booking, Integer> {
 		ArrayList<Booking> findByLocationId(Location location);
 		Booking findByBookingUrl(String bookingUrl);
 		@Query("SELECT b FROM Booking b WHERE b.locationId = :locationId AND (b.startDate >= :arriveTime AND b.endDate <= :leavingTime)" + 
-				"OR (b.startDate <= :arriveTime AND (b.endDate >= :arriveTime AND b.endDate <= :leavingTime))" + 
-				"OR ((b.startDate >= :arriveTime AND b.startDate <= :leavingTime) AND b.endDate >= :leavingTime)" + 
-				"OR (b.startDate <= :arriveTime AND b.endDate >= :leavingTime)") 
+				"OR (b.startDate < :arriveTime AND (b.endDate > :arriveTime AND b.endDate <= :leavingTime))" + 
+				"OR ((b.startDate > :arriveTime AND b.startDate < :leavingTime) AND b.endDate >= :leavingTime)" + 
+				"OR (b.startDate < :arriveTime AND b.endDate > :leavingTime) AND b.id != :bookingId") 
 		ArrayList<Booking> findBookings(@Param("locationId") Location locationId,
 								     	@Param("arriveTime") LocalDateTime arriveTime,
-									    @Param("leavingTime") LocalDateTime leavingTime);
-		@Query("SELECT b FROM Booking b WHERE b.userId = :userId AND (b.startDate >= :arriveTime AND b.endDate <= :leavingTime) OR (b.startDate <= :arriveTime AND (b.endDate >= :arriveTime AND b.endDate <= :leavingTime)) OR ((b.startDate >= :arriveTime AND b.startDate <= :leavingTime) AND b.endDate >= :leavingTime) OR (b.startDate <= :arriveTime AND b.endDate >= :leavingTime)")
+										@Param("leavingTime") LocalDateTime leavingTime,
+										@Param("bookingId") int bookingId);
+		@Query("SELECT b FROM Booking b WHERE b.userId = :userId AND (b.startDate > :arriveTime AND b.endDate < :leavingTime) OR (b.startDate < :arriveTime AND (b.endDate > :arriveTime AND b.endDate < :leavingTime)) OR ((b.startDate > :arriveTime AND b.startDate < :leavingTime) AND b.endDate > :leavingTime) OR (b.startDate < :arriveTime AND b.endDate > :leavingTime)")
 		ArrayList<Booking> findUserBookings(@Param("userId") UserInfo userId,
 											@Param("arriveTime") LocalDateTime arriveTime,
 											@Param("leavingTime") LocalDateTime leavingTime);
-		@Query("SELECT b from Booking b WHERE :currentTime <= b.endDate AND b.completed = 0")
+		@Query("SELECT b from Booking b WHERE :currentTime >= b.endDate AND b.completed = 0")
 		ArrayList<Booking> findNotCompletedBookings(@Param("currentTime") LocalDateTime currentTime);
 		//   Collection<User> findAllActiveUsersNative();)
 		// @Query("SELECT t.title FROM Todo t where t.id = :id") 

@@ -57,4 +57,17 @@ public class EmailServicer {
         System.out.println("SEND");	
         sender.send(message);	
     }	
+
+    public void reportIssue(String email, double depositFee, String reg) throws Exception {	
+        MimeMessage message = sender.createMimeMessage();	
+        MimeMessageHelper helper = new MimeMessageHelper(message);		
+        helper.setTo(email);	
+        // helper.setText("Welcome, \n Username: " + login + "\n Password: " + password + "\n Please login to change your password");	
+        String htmlMsg = "<body style='border:2px solid black'>"
+                    +"There has been a reported issue with your car " + reg + ".<br>" + "£" + depositFee + " has been taken out of the account." +  "</body>";
+        helper.setText(htmlMsg, true);
+        helper.setSubject("REPORTED ISSUE");	
+        System.out.println("SEND");	
+        sender.send(message);	
+    }	
 } 

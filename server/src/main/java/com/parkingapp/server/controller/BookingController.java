@@ -112,14 +112,17 @@ public class BookingController {
         //         booking.setParkingSlotId(bookings.get(bookings.size()-1).getParkingSlotId() + 1);
         //     }
         // }
-
-        Booking booking = bookingService.getParkingSlot(loc, bookingDetails.getStartDate(), bookingDetails.getEndDate());
+        // Booking booking = new Booking();
+        // booking.setStartDate(bookingDetails.getStartDate());
+        // booking.setEndDate(bookingDetails.getEndDate());
+        Booking booking = bookingService.getParkingSlot(loc, bookingDetails.getStartDate(), bookingDetails.getEndDate(), 0);
+        // booking = bookingService.getParkingSlot(loc, booking);
 
         if ( booking.getParkingSlotId() == 0 ) {
-            // booking = bookingService.optimiseParkingSlots(loc, bookingDetails.getStartDate(), bookingDetails.getEndDate());
-            // if ( booking.getParkingSlotId() == 0 ) {
-                return ResponseEntity.ok("Error");
-            // }
+            booking = bookingService.optimiseParkingSlots(loc, bookingDetails.getStartDate(), bookingDetails.getEndDate(), 0);
+            if ( booking.getParkingSlotId() == 0 ) {
+                return ResponseEntity.ok("No parking space available");
+            }
         }
 
         // long hours = ChronoUnit.HOURS.between(bookingDetails.getStartDate(), bookingDetails.getEndDate());
@@ -137,20 +140,26 @@ public class BookingController {
         // UserInfo checkUser = user;
         double fee = bookingService.calculateCost(bookingDetails.getStartDate(), bookingDetails.getEndDate(), loc);
         double depositFee = fee * 0.8;
-        if (fee + depositFee + user.getRequiredDeposit() > user.getDeposit()) {
+        System.out.println("DEPOSIT FEE: " + depositFee);
+        System.out.println("FEE: " + fee);
+        if (fee + depositFee > user.getDeposit()) {
                 return ResponseEntity.ok("Doesn't have enough points");
         } else {
             // Add money to requiredDeposit and remove from deposit
+            double totalFee = fee + depositFee;
+            System.out.println("FEE: " + totalFee);
             user.setRequiredDeposit(user.getRequiredDeposit() + depositFee);
-            user.setDeposit(user.getDeposit() - fee + depositFee);
-            System.out.println("Fee:" + fee);
-            System.out.println(user.getDeposit());
-            userRepo.save(user); 
+            user.setDeposit(user.getDeposit() - totalFee);
+            // System.out.println("Fee:" + fee);
+            userRepo.save(user);
+            System.out.println("DEPOSIT: "  + user.getDeposit()); 
             bookingDetails.setDepositFee(depositFee);
-            bookingDetails.setDeposit(user.getDeposit());
+            BigDecimal bd = new BigDecimal(user.getDeposit()).setScale(3, RoundingMode.HALF_UP);
+            System.out.println("NEW DEPOSIT: "  + bd.doubleValue()); 
+            bookingDetails.setDeposit(bd.doubleValue());
         }
-
-        bookingDetails.setDeposit(user.getDeposit());
+        BigDecimal bdd = new BigDecimal(user.getDeposit()).setScale(3, RoundingMode.HALF_UP);
+        bookingDetails.setDeposit(bdd.doubleValue());
 
         // Generate url for booking confirmation
         String url;
@@ -177,6 +186,7 @@ public class BookingController {
         booking.setActive(true);
         booking.setFee(fee);
         BigDecimal bd = new BigDecimal(depositFee).setScale(2, RoundingMode.HALF_UP);
+        System.out.println("ROUND UP: " + bd.doubleValue());
         booking.setDepositFee(bd.doubleValue());
         System.out.println(bookingDetails.getCar().getId());
         Car car = carRepo.findById(bookingDetails.getCar().getId());
@@ -289,7 +299,8 @@ public class BookingController {
 
         // find user new parking slot.
         // Check for current parking location.
-        Booking newBooking = bookingService.getParkingSlot(loc, booking.getStartDate(), booking.getEndDate()); 
+        Booking newBooking = bookingService.getParkingSlot(loc, booking.getStartDate(), booking.getEndDate(), booking.getId());
+        // Booking newBooking = bookingService.getParkingSlot(loc, booking); 
         
         // Give user choice to get money back or be given a new location.
         if ( newBooking.getParkingSlotId() == 0 ) {

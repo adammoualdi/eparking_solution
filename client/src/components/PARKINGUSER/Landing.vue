@@ -58,7 +58,6 @@
 
                   <!-- <a href="#" class="card-link">Card link</a> -->
                   <b-button type="submit" variant="primary" v-on:click="goToBooking(location)">Book</b-button>&nbsp;
-                  <b-link href="#" class="card-link">Another link</b-link>
                 </b-card>
               </div>
             </li>

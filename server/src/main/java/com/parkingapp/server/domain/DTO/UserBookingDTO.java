@@ -11,6 +11,7 @@ public class UserBookingDTO {
     private LocalDateTime endDate;
     private boolean active;
     private int parkingSlot;
+    private boolean completed;
     private CarDTO car;
 
     public UserBookingDTO() {
@@ -103,6 +104,14 @@ public class UserBookingDTO {
 
     public void setCar(CarDTO car) {
         this.car = car;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
 }

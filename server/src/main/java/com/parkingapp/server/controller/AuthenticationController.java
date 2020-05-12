@@ -1,5 +1,7 @@
 package com.parkingapp.server.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,8 @@ public class AuthenticationController {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		System.out.println(authenticationRequest.toString());
 		UserInfo user = userInfoRepo.findByUsername(authenticationRequest.getUsername());
-		return ResponseEntity.ok(new JwtResponse(token, user.getUsername(), user.getRole().getRole(), user.isDefaultPassword(), user.getDeposit()));
+		BigDecimal bd = new BigDecimal(user.getDeposit()).setScale(3, RoundingMode.HALF_UP);
+		return ResponseEntity.ok(new JwtResponse(token, user.getUsername(), user.getRole().getRole(), user.isDefaultPassword(), bd.doubleValue()));
 	}
 	
 	private void authenticate(String username, String password) throws Exception {

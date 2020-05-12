@@ -85,29 +85,6 @@
             </b-input-group>
           </b-col>
         </b-row>
-        <b-row>
-          <b-col>
-            <b-form-group>
-              <b-form-radio-group
-                id="btn-radios-2"
-                v-model="form.sensors"
-                :options="options"
-                buttons
-                name="radios-btn-default"
-              ></b-form-radio-group>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <b-form-file
-              v-model="$v.form.imagetmp.$model"
-              :state="$v.form.imagetmp.$dirty ? !$v.form.imagetmp.$error : null"
-              placeholder="Choose a file or drop it here..."
-              drop-placeholder="Drop file here..."
-            ></b-form-file>
-          </b-col>
-        </b-row>
         <b-row align-v="end">
             <b-col>
               <button class="searchBtn" type="button" name="button" :disabled="$v.form.$invalid" v-on:click="emitToParent">Add location</button>
@@ -142,17 +119,11 @@ export default {
         postcode: '',
         spaces: null,
         costPerHour: null,
-        sensors: false,
         latitude: null,
         longitude: null,
         imagetmp: null,
         image: null
       },
-      options: [
-        { text: 'Sensors', value: 'true' },
-        { text: 'No Sensors', value: 'false' }
-        // { text: 'Radio 4', value: 'radio4' }
-      ],
       countryOptions: [
         { text: 'United Kingdom', value: 'United Kingdom' }
       ],
@@ -194,9 +165,6 @@ export default {
       },
       costPerHour: {
         required
-      },
-      imagetmp: {
-        required
       }
     }
   },
@@ -226,10 +194,6 @@ export default {
   methods: {
     async emitToParent (event) {
       this.validate()
-      console.log(this.form.image)
-      this.form.image = new FormData()
-      this.form.image.append('name', this.form.latitude + this.form.longitude)
-      this.form.image.append('file', this.form.imagetmp)
       console.log(this.form)
       this.invalidLoc = false
       this.invalidDate = false
@@ -270,10 +234,9 @@ export default {
     async addLocation (location) {
       console.log(location)
       const response = await PostsService.addLocation(location)
-      const resp = await PostsService.addImage(location.image)
-      console.log(resp)
       swal('Requested!', 'Your location has been requested - we will get back to you soon!', 'success')
       console.log(response)
+      this.$router.go()
       EventBus.$emit('addLocation', this.form)
     },
     validate () {

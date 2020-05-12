@@ -86,6 +86,7 @@ public class EParkingApplication implements CommandLineRunner {
 		// user.setId();
 		user.setUsername("adminuser");
 		user.setPassword(pe.encode("password"));
+		user.setEmail("adammoualdi@hotmail.co.uk");
 		user.setRole(new Role(ADMIN, "Admin"));
 		userRepo.save(user);
 
@@ -119,7 +120,7 @@ public class EParkingApplication implements CommandLineRunner {
 		// loc.setUserId(user3);
 		// locRepo.save(loc);
 
-		Location loc1 = new Location("United Kingdom", "Sheffield", "Sheffield Train Station", "Sheaf Street", "S1 2BP", 53.37701, -1.46814, 3);
+		Location loc1 = new Location("United Kingdom", "Sheffield", "Sheffield Train Station", "Sheaf Street", "S1 2BP", 53.37701, -1.46814, 1);
 		// loc1.setUserId(user3);
 		locations.add(loc1);
 		user3.setLocationsPermission(locations);
@@ -144,8 +145,8 @@ public class EParkingApplication implements CommandLineRunner {
 		booking1.setUserId(user2);
 		booking1.setIssue(false);
 		booking1.setCompleted(false);
-		String str = "2020-04-23 12:30";
-		String str1 = "2020-04-23 14:30";
+		String str = "2020-05-09 00:00";
+		String str1 = "2020-05-10 01:30";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
 		LocalDateTime dateTime1 = LocalDateTime.parse(str1, formatter);
@@ -157,7 +158,7 @@ public class EParkingApplication implements CommandLineRunner {
 		booking1.setCar(car1);
 		booking1.setFee(10);
 		// double depositFee = 10 * 0.8;
-		BigDecimal bd = new BigDecimal(10 * 0.8).setScale(2, RoundingMode.HALF_UP);
+		BigDecimal bd = new BigDecimal(10 * 0.8).setScale(3, RoundingMode.HALF_UP);
 		booking1.setDepositFee(bd.doubleValue());
 		bookingRepo.save(booking1);
 
